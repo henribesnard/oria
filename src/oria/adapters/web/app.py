@@ -1,4 +1,4 @@
-"""Adaptateur web FastAPI — /health + POST /chat."""
+"""Adaptateur web FastAPI — /health + POST /chat + /admin/*."""
 
 from __future__ import annotations
 
@@ -7,10 +7,12 @@ from typing import Any
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+from oria.adapters.web.admin import router as admin_router
 from oria.kernel.health import Availability, HealthRegistry
 from oria.kernel.models import IncomingRequest, Response
 
 app = FastAPI(title="Oria", version="0.1.0")
+app.include_router(admin_router)
 
 # Seront injectés au démarrage par main.py
 _health_registry: HealthRegistry | None = None

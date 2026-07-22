@@ -13,7 +13,13 @@ from oria.core.pipeline import Pipeline
 from oria.core.prerouter import PreRouter
 from oria.core.synthesis import Synthesis
 from oria.domain.fixtures import FixturesRepository
+from oria.domain.injuries import InjuriesRepository
+from oria.domain.lineups import LineupsRepository
+from oria.domain.live import LiveRepository
+from oria.domain.odds import OddsRepository
+from oria.domain.players import PlayersRepository
 from oria.domain.standings import StandingsRepository
+from oria.domain.teams import TeamsRepository
 from oria.kernel.logging import setup_logging
 from oria.providers.apifootball.client import ApiFootballClient
 from oria.providers.llm.deepseek import DeepSeekProvider
@@ -52,10 +58,7 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
 
     apifootball: ApiFootballClient | None = None
     if settings.apifootball_key:
-        apifootball = ApiFootballClient(
-            api_key=settings.apifootball_key,
-            daily_budget=settings.apifootball_daily_budget,
-        )
+        apifootball = ApiFootballClient(settings=settings)
         container.add(apifootball)
 
     if settings.enable_weather and settings.weather_api_key:
@@ -65,15 +68,38 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     userstore = UserStore(db=db)
     container.add(userstore)
 
-    # --- Repositories ---
-    fixtures = FixturesRepository(cache=cache)
-    standings = StandingsRepository(cache=cache)
+    # --- Repositories (client injecté si disponible) ---
+    fixtures = FixturesRepository(cache=cache, client=apifootball)
+    standings = StandingsRepository(cache=cache, client=apifootball)
+    teams = TeamsRepository(cache=cache, client=apifootball)
+    players = PlayersRepository(cache=cache, client=apifootball)
+    injuries = InjuriesRepository(cache=cache, client=apifootball)
+    lineups = LineupsRepository(cache=cache, client=apifootball)
+    odds = OddsRepository(cache=cache, client=apifootball)
+    live = LiveRepository(cache=cache, client=apifootball)
+
     container.add(fixtures)
     container.add(standings)
+    container.add(teams)
+    container.add(players)
+    container.add(injuries)
+    container.add(lineups)
+    container.add(odds)
+    container.add(live)
 
     # --- Tools ---
     tool_registry = ToolRegistry()
-    register_football_tools(tool_registry, fixtures=fixtures, standings=standings)
+    register_football_tools(
+        tool_registry,
+        fixtures=fixtures,
+        standings=standings,
+        teams=teams,
+        players=players,
+        injuries=injuries,
+        lineups=lineups,
+        odds=odds,
+        live=live,
+    )
     container.add(tool_registry)
 
     # --- Core ---

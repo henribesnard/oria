@@ -14,6 +14,11 @@ class Settings(BaseSettings):
     apifootball_key: str = ""
     deepseek_api_key: str = ""
     weather_api_key: str = ""
+    admin_token: str = ""
+
+    # --- API-Football ---
+    apifootball_base_url: str = "https://v3.football.api-sports.io"
+    apifootball_auth_mode: str = "direct"  # "direct" | "rapidapi"
 
     # --- Activation modules optionnels ---
     enable_llm: bool = True

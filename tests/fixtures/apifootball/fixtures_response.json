@@ -1,0 +1,61 @@
+{
+  "get": "fixtures",
+  "parameters": {"league": "61", "season": "2024"},
+  "errors": [],
+  "results": 2,
+  "paging": {"current": 1, "total": 1},
+  "response": [
+    {
+      "fixture": {
+        "id": 1001,
+        "referee": "M. Oliver",
+        "date": "2024-08-18T19:00:00+00:00",
+        "timestamp": 1724007600,
+        "status": {"long": "Match Finished", "short": "FT", "elapsed": 90},
+        "venue": {"id": 100, "name": "Parc des Princes", "city": "Paris"}
+      },
+      "league": {
+        "id": 61,
+        "name": "Ligue 1",
+        "country": "France",
+        "season": 2024,
+        "round": "Regular Season - 1"
+      },
+      "teams": {
+        "home": {"id": 85, "name": "Paris Saint Germain", "logo": "https://example.com/psg.png", "winner": true},
+        "away": {"id": 79, "name": "Lille", "logo": "https://example.com/lille.png", "winner": false}
+      },
+      "goals": {"home": 2, "away": 1},
+      "score": {
+        "halftime": {"home": 1, "away": 0},
+        "fulltime": {"home": 2, "away": 1}
+      }
+    },
+    {
+      "fixture": {
+        "id": 1002,
+        "referee": "B. Bastien",
+        "date": "2024-08-18T15:00:00+00:00",
+        "timestamp": 1723993200,
+        "status": {"long": "Match Finished", "short": "FT", "elapsed": 90},
+        "venue": {"id": 101, "name": "Groupama Stadium", "city": "Lyon"}
+      },
+      "league": {
+        "id": 61,
+        "name": "Ligue 1",
+        "country": "France",
+        "season": 2024,
+        "round": "Regular Season - 1"
+      },
+      "teams": {
+        "home": {"id": 80, "name": "Lyon", "logo": "https://example.com/lyon.png", "winner": false},
+        "away": {"id": 81, "name": "Monaco", "logo": "https://example.com/monaco.png", "winner": true}
+      },
+      "goals": {"home": 0, "away": 2},
+      "score": {
+        "halftime": {"home": 0, "away": 1},
+        "fulltime": {"home": 0, "away": 2}
+      }
+    }
+  ]
+}

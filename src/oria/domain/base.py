@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any
 from oria.kernel.health import Availability, ModuleStatus
 
 if TYPE_CHECKING:
+    from oria.providers.apifootball.client import ApiFootballClient
     from oria.storage.cache import Cache, CacheEntry
 
 logger = logging.getLogger(__name__)
@@ -21,9 +22,16 @@ class BaseRepository:
     provides: tuple[str, ...] = ()
     volatility: str = "lent"
 
-    def __init__(self, *, cache: Cache, domain: str) -> None:
+    def __init__(
+        self,
+        *,
+        cache: Cache,
+        domain: str,
+        client: ApiFootballClient | None = None,
+    ) -> None:
         self._cache = cache
         self._domain = domain
+        self._client = client
 
     async def start(self) -> None:
         pass

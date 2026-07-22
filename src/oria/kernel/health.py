@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import threading
 from enum import StrEnum
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -22,6 +23,7 @@ class ModuleStatus(BaseModel):
     name: str
     availability: Availability
     detail: str | None = None
+    details: dict[str, Any] | None = None
 
 
 class HealthRegistry:
