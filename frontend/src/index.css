@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-primary: #5B4FD6;
+  --color-primary-hover: #4A3FC0;
+  --color-primary-light: #7A5CE0;
+  --color-primary-muted: #9C90F5;
+  --color-primary-soft: #8B82D8;
+
+  --color-surface: #F6F6FB;
+  --color-surface-card: #FFFFFF;
+  --color-surface-alt: #FBFBFE;
+  --color-surface-light: #F8F7FD;
+  --color-surface-hover: #F5F4FC;
+  --color-surface-muted: #F3F2F9;
+
+  --color-purple-surface: #EEEDFA;
+  --color-purple-border: #DED9FA;
+  --color-purple-hover: #C9C3EC;
+
+  --color-border: #E9E7F2;
+  --color-border-light: #E1DEF0;
+  --color-border-inner: #F0EEF8;
+
+  --color-text: #191526;
+  --color-text-strong: #221E33;
+  --color-text-dark: #3F3B54;
+  --color-text-secondary: #605C74;
+  --color-text-muted: #86829A;
+  --color-text-disabled: #A5A0BC;
+  --color-text-faint: #B4AFCA;
+
+  --color-success: #3B9B6E;
+  --color-success-text: #207F53;
+  --color-success-surface: #E3F3EB;
+
+  --color-warning: #E0782A;
+  --color-warning-text: #C4691F;
+  --color-warning-surface: #FBEEE2;
+
+  --color-danger: #D5443B;
+  --color-danger-text: #B4362C;
+  --color-danger-surface: #FBE6E3;
+
+  --color-admin-bg: #191526;
+  --color-admin-active: #2E2947;
+  --color-admin-hover: #26223A;
+  --color-admin-border: #2C2842;
+  --color-admin-text: #B4AFC9;
+
+  /* Font families */
+  --font-sans: 'Manrope', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Border radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-light);
+  border-radius: 999px;
+}
+
+/* Animations */
+@keyframes oria-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(.85); }
+}
+@keyframes oria-blink {
+  0%, 60%, 100% { opacity: .3; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-3px); }
+}
+@keyframes oria-msg-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes oria-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv sync:*)",
+      "WebFetch(domain:www.educative.io)",
+      "Bash(\"C:\\\\Users\\\\henri\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\python.exe\" -m pytest tests/ -x -v)",
+      "Bash(\"C:\\\\Users\\\\henri\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\python.exe\" -c \"\nimport asyncio\nfrom oria.config import Settings\nfrom oria.providers.apifootball.client import ApiFootballClient\nfrom oria.providers.apifootball.mapper import map_fixtures, map_standings\n\nasync def test\\(\\):\n    s = Settings\\(\\)\n    client = ApiFootballClient\\(settings=s\\)\n    await client.start\\(\\)\n    try:\n        # Derniers matchs Ligue 1 saison 2024\n        raw = await client.fetch\\(''/fixtures'', {''league'': ''61'', ''season'': ''2024'', ''last'': ''3''}\\)\n        fixtures = map_fixtures\\(raw\\)\n        print\\(f''=== {len\\(fixtures\\)} derniers matchs Ligue 1 2024 ===''\\)\n        for f in fixtures:\n            status = f[''status''].get\\(''short'', ''?''\\)\n            home = f[''home''][''name'']\n            away = f[''away''][''name'']\n            gh = f[''goals_home'']\n            ga = f[''goals_away'']\n            date = f[''date''][:10] if f[''date''] else ''?''\n            print\\(f''  {date} | {home} {gh}-{ga} {away} [{status}]''\\)\n\n        # Classement Ligue 1 2024\n        raw2 = await client.fetch\\(''/standings'', {''league'': ''61'', ''season'': ''2024''}\\)\n        standings = map_standings\\(raw2\\)\n        print\\(f''\\\\n=== Classement Ligue 1 2024 \\(top 5\\) ===''\\)\n        for entry in standings[:5]:\n            rank = entry[''rank'']\n            team = entry[''team''][''name'']\n            pts = entry[''points'']\n            gd = entry[''goals_diff'']\n            print\\(f''  {rank}. {team} -- {pts} pts \\(diff: {gd:+d}\\)''\\)\n\n        print\\(f''\\\\nGovernor: {client.governor.calls_today} appels''\\)\n        print\\(f''Budget restant: {client.governor.remaining_budget}''\\)\n    finally:\n        await client.stop\\(\\)\n\nasyncio.run\\(test\\(\\)\\)\n\")",
+      "Bash(\"C:\\\\Users\\\\henri\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\python.exe\" -m pytest tests/test_admin.py -x -q)"
+    ]
+  }
+}
