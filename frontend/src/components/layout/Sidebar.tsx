@@ -1,12 +1,13 @@
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import OriaLogo from '../OriaLogo';
 
 const navItems = [
-  { to: '/app', label: 'Chat', icon: '\u{1F4AC}' },
-  { to: '/app/follows', label: 'Mes suivis', icon: '\u2B50' },
-  { to: '/app/notifications', label: 'Notifications', icon: '\u{1F514}' },
-  { to: '/app/profile', label: 'Profil', icon: '\u{1F464}' },
-  { to: '/app/billing', label: 'Abonnement', icon: '\u{1F48E}' },
+  { to: '/app', label: 'Chat' },
+  { to: '/app/follows', label: 'Mes suivis' },
+  { to: '/app/notifications', label: 'Notifications' },
+  { to: '/app/profile', label: 'Profil' },
+  { to: '/app/billing', label: 'Abonnement' },
 ];
 
 export function Sidebar() {
@@ -14,43 +15,41 @@ export function Sidebar() {
 
   return (
     <aside className="w-[248px] min-h-dvh border-r border-border bg-surface-card flex flex-col p-[18px_14px]">
-      <div className="mb-6 px-3">
-        <h1 className="font-serif text-[23px] text-text-strong">Oria</h1>
-      </div>
-      <nav className="flex-1 flex flex-col gap-1">
+      <Link to="/" className="flex items-center gap-2.5 px-2 py-1.5 mb-3.5">
+        <OriaLogo size={26} centerFill="#fff" />
+        <span className="font-serif text-[23px] leading-none">Oria</span>
+      </Link>
+      <nav className="flex-1 flex flex-col gap-0.5">
         {navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             end={item.to === '/app'}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-[10px] rounded-[11px] text-sm font-semibold transition-colors ${
+              `flex items-center text-left px-3 py-[10px] rounded-[11px] text-sm font-semibold whitespace-nowrap transition-colors ${
                 isActive
                   ? 'bg-purple-surface text-primary-hover'
                   : 'text-text-secondary hover:bg-surface-hover'
               }`
             }
           >
-            <span className="text-base">{item.icon}</span>
             {item.label}
           </NavLink>
         ))}
       </nav>
-      <div className="border-t border-border-inner pt-3 mt-3 flex flex-col gap-1">
+      <div className="border-t border-border-inner pt-3 mt-3 flex flex-col gap-0.5">
         {user?.role === 'admin' && (
           <NavLink
             to="/admin"
-            className="flex items-center gap-3 px-3 py-[10px] rounded-[11px] text-sm font-semibold text-text-secondary hover:bg-surface-hover"
+            className="flex items-center text-left px-3 py-[9px] rounded-[10px] text-[13px] font-semibold text-text-muted hover:bg-surface-hover hover:text-primary-hover transition-colors"
           >
-            <span className="text-base">{'\u2699\uFE0F'}</span>
-            Admin
+            Console admin →
           </NavLink>
         )}
         <button
           onClick={() => void logout()}
-          className="flex items-center gap-3 px-3 py-[10px] rounded-[11px] text-sm font-semibold text-text-secondary hover:bg-surface-hover w-full text-left"
+          className="flex items-center text-left px-3 py-[9px] rounded-[10px] text-[13px] font-semibold text-text-muted hover:bg-surface-hover w-full transition-colors"
         >
-          <span className="text-base">{'\u{1F6AA}'}</span>
           Déconnexion
         </button>
       </div>

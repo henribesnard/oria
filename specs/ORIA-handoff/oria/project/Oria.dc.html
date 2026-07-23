@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #F6F6FB; }
+  a { color: #5B4FD6; text-decoration: none; }
+  a:hover { color: #4A3FC0; }
+  ::selection { background: #DED9FA; }
+  .oria-sc::-webkit-scrollbar { width: 10px; height: 10px; }
+  .oria-sc::-webkit-scrollbar-thumb { background: #E1DEF0; border-radius: 999px; border: 3px solid #F6F6FB; }
+  .oria-sc::-webkit-scrollbar-track { background: transparent; }
+  button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid #5B4FD6; outline-offset: 2px; border-radius: 8px;
+  }
+  @keyframes oriaPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.8)} }
+  @keyframes oriaMsgIn { from{opacity:0;transform:translateY(6px)} to{opacity:none;transform:none} }
+  @keyframes oriaShimmer { 0%{background-position:-400px 0} 100%{background-position:400px 0} }
+  .oria-skel { background:#EFEDF7; background-image:linear-gradient(90deg,#EFEDF7 0px,#F6F5FC 200px,#EFEDF7 400px); background-size:800px 100%; animation:oriaShimmer 1.3s linear infinite; border-radius:8px; }
+  .app-shell { display:flex; min-height:100dvh; }
+  .app-side { width:248px; flex:none; }
+  .app-main { flex:1; min-width:0; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  @media (max-width:960px){ .grid-4{grid-template-columns:repeat(2,1fr)!important} .grid-3{grid-template-columns:1fr 1fr!important} }
+  @media (max-width:860px){
+    .app-shell{flex-direction:column!important}
+    .app-side{width:100%!important;position:static!important;height:auto!important}
+    .app-nav{flex-direction:row!important;overflow-x:auto!important;gap:4px!important}
+    .app-nav-foot{display:none!important}
+    .grid-2{grid-template-columns:1fr!important}
+  }
+  @media (max-width:640px){ .hide-sm{display:none!important} .stack-sm{flex-direction:column!important} .full-sm{width:100%!important} .grid-3{grid-template-columns:1fr!important} .grid-4{grid-template-columns:1fr 1fr!important} }
+  @media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none!important;transition:none!important} }
+</style>
+</helmet>
+<div style="font-family:'Manrope',system-ui,sans-serif;color:#191526;background:#F6F6FB;min-height:100dvh;overflow-x:hidden;">
+
+<!-- ============ PUBLIC ============ -->
+<sc-if value="{{ isPublic }}" hint-placeholder-val="{{ true }}">
+  <div>
+    <nav style="position:sticky;top:0;z-index:30;background:rgba(246,246,251,.85);backdrop-filter:blur(10px);border-bottom:1px solid #E9E7F2;">
+      <div style="max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px;">
+        <button onClick="{{ goLanding }}" style="display:flex;align-items:center;gap:11px;border:none;background:none;cursor:pointer;padding:0;">
+          <svg width="30" height="30" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="15.5" stroke="#5B4FD6" stroke-width="2.8"/><path d="M20 8.5a11.5 11.5 0 0 1 0 23" stroke="#5B4FD6" stroke-width="2.8" stroke-linecap="round" opacity=".36"/><circle cx="20" cy="20" r="4.2" fill="#5B4FD6"/><circle cx="20" cy="20" r="1.7" fill="#F6F6FB"/></svg>
+          <span style="font-family:'Instrument Serif',serif;font-size:26px;line-height:1;">Oria</span>
+        </button>
+        <div class="pub-links" style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+          <button onClick="{{ goPricing }}" style="border:none;background:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;color:#605C74;padding:9px 14px;border-radius:10px;" style-hover="background:#EEEDFA;color:#4A3FC0;">Tarifs</button>
+          <button onClick="{{ goLogin }}" class="hide-sm" style="border:none;background:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;color:#605C74;padding:9px 14px;border-radius:10px;" style-hover="background:#EEEDFA;color:#4A3FC0;">Connexion</button>
+          <button onClick="{{ goSignup }}" style="border:none;background:#5B4FD6;color:#fff;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;padding:9px 18px;border-radius:10px;" style-hover="background:#4A3FC0;">Essayer gratuitement</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- LANDING -->
+    <sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <section style="max-width:1120px;margin:0 auto;padding:72px 24px 40px;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;" class="grid-2">
+          <div>
+            <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:#EEEDFA;border:1px solid #DED9FA;font-size:12.5px;font-weight:600;color:#4A3FC0;">
+              <span style="width:7px;height:7px;border-radius:50%;background:#3B9B6E;"></span> Données à jour · Football
+            </span>
+            <h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:60px;line-height:1.02;letter-spacing:-.5px;margin:20px 0 0;">L'oracle du sport,<br>en langage naturel.</h1>
+            <p style="font-size:18px;line-height:1.6;color:#605C74;max-width:480px;margin:20px 0 0;">Pose n'importe quelle question sur le foot — résultats, forme, compos, cotes, tendances. Oria répond à partir de données fraîches, et te laisse cadrer la question au niveau ligue, match, équipe ou joueur.</p>
+            <div style="display:flex;gap:12px;margin-top:28px;" class="stack-sm">
+              <button onClick="{{ goSignup }}" style="border:none;background:#5B4FD6;color:#fff;cursor:pointer;font-family:inherit;font-size:15px;font-weight:700;padding:14px 26px;border-radius:12px;box-shadow:0 8px 20px -6px rgba(91,79,214,.5);" style-hover="background:#4A3FC0;">Commencer gratuitement</button>
+              <button onClick="{{ goChat }}" style="border:1px solid #E1DEF0;background:#fff;color:#221E33;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;padding:14px 26px;border-radius:12px;" style-hover="border-color:#C9C3EC;">Voir une démo</button>
+            </div>
+            <p style="font-size:13px;color:#A5A0BC;margin-top:16px;">Sans carte bancaire · 20 questions / jour offertes</p>
+          </div>
+          <div style="background:#fff;border:1px solid #EDEBF6;border-radius:22px;box-shadow:0 30px 60px -24px rgba(38,32,74,.28);padding:18px;">
+            <div style="display:flex;align-items:center;gap:10px;padding:2px 4px 14px;border-bottom:1px solid #F0EEF8;">
+              <svg width="24" height="24" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="15.5" stroke="#5B4FD6" stroke-width="2.8"/><path d="M20 8.5a11.5 11.5 0 0 1 0 23" stroke="#5B4FD6" stroke-width="2.8" stroke-linecap="round" opacity=".36"/><circle cx="20" cy="20" r="4.2" fill="#5B4FD6"/><circle cx="20" cy="20" r="1.7" fill="#fff"/></svg>
+              <span style="font-family:'Instrument Serif',serif;font-size:20px;">Oria</span>
+              <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#3B9B6E;"><span style="width:7px;height:7px;border-radius:50%;background:#3B9B6E;"></span>à jour il y a 2 h</span>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:6px;padding:16px 2px 8px;">
+              <span style="padding:5px 11px;border-radius:999px;background:#EEEDFA;border:1px solid #DED9FA;font-size:12px;font-weight:600;color:#4A3FC0;">Ligue 1</span>
+              <span style="padding:5px 11px;border-radius:999px;background:#EEEDFA;border:1px solid #DED9FA;font-size:12px;font-weight:600;color:#4A3FC0;">Paris SG</span>
+            </div>
+            <div style="display:flex;justify-content:flex-end;"><div style="background:#5B4FD6;color:#fff;border-radius:16px 4px 16px 16px;padding:11px 15px;font-size:14px;">Son prochain match ?</div></div>
+            <div style="background:#F8F7FD;border:1px solid #EEEDF6;border-radius:14px;padding:14px;margin-top:12px;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="flex:1;text-align:right;font-weight:700;font-size:14px;">Paris SG</div>
+                <span style="font-size:10px;color:#86829A;text-transform:uppercase;letter-spacing:.6px;font-weight:600;">reçoit</span>
+                <div style="flex:1;font-weight:700;font-size:14px;">Le Havre</div>
+              </div>
+              <div style="margin-top:10px;padding-top:10px;border-top:1px solid #EEEDF6;font-size:12px;color:#86829A;text-align:center;"><span style="color:#5B4FD6;font-weight:600;">Ligue 1</span> · sam. 17 août 21:00 · Parc des Princes</div>
+            </div>
+          </div>
+        </section>
+
+        <section style="max-width:1120px;margin:0 auto;padding:36px 24px;">
+          <div class="grid-3">
+            <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:24px;">
+              <div style="width:40px;height:40px;border-radius:11px;background:#EEEDFA;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:22px;color:#5B4FD6;">＋</div>
+              <h3 style="font-size:17px;margin:16px 0 6px;">Sélecteur de contexte</h3>
+              <p style="font-size:14px;line-height:1.55;color:#605C74;margin:0;">Cadre ta question en un geste : pays → ligue → match ou équipe → joueur. Optionnel, jamais imposé.</p>
+            </div>
+            <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:24px;">
+              <div style="width:40px;height:40px;border-radius:11px;background:#EAF6F0;display:flex;align-items:center;justify-content:center;"><span style="width:12px;height:12px;border-radius:50%;background:#3B9B6E;"></span></div>
+              <h3 style="font-size:17px;margin:16px 0 6px;">Fraîcheur affichée</h3>
+              <p style="font-size:14px;line-height:1.55;color:#605C74;margin:0;">Chaque réponse indique quand la donnée a été rafraîchie. Pas de réponse « au pif ».</p>
+            </div>
+            <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:24px;">
+              <div style="width:40px;height:40px;border-radius:11px;background:#FBEEE2;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:600;color:#C4691F;">1.9</div>
+              <h3 style="font-size:17px;margin:16px 0 6px;">Cotes & tendances</h3>
+              <p style="font-size:14px;line-height:1.55;color:#605C74;margin:0;">Compos probables, forme récente, cotes et statistiques, réservées au palier Premium.</p>
+            </div>
+          </div>
+        </section>
+
+        <section style="max-width:1120px;margin:0 auto;padding:24px 24px 8px;text-align:center;">
+          <p style="font-size:12.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#A5A0BC;margin:0 0 18px;">Couverture</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+            <sc-for list="{{ coverage }}" as="c" hint-placeholder-count="6">
+              <span style="padding:9px 16px;border-radius:999px;background:#fff;border:1px solid #E9E7F2;font-size:13.5px;font-weight:600;color:#3F3B54;">{{ c.name }}</span>
+            </sc-for>
+          </div>
+          <p style="font-size:13px;color:#A5A0BC;margin-top:16px;">…et bientôt d'autres sports. L'identité d'Oria reste neutre.</p>
+        </section>
+
+        <section style="max-width:1120px;margin:0 auto;padding:48px 24px 80px;">
+          <div style="background:linear-gradient(135deg,#5B4FD6,#7A5CE0);border-radius:24px;padding:52px 40px;text-align:center;color:#fff;">
+            <h2 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:38px;margin:0;">Prêt à interroger l'oracle ?</h2>
+            <p style="font-size:16px;opacity:.85;margin:12px 0 26px;">Commence gratuitement. Passe en Premium quand tu veux le direct et les analyses.</p>
+            <div style="display:flex;gap:12px;justify-content:center;" class="stack-sm">
+              <button onClick="{{ goSignup }}" style="border:none;background:#fff;color:#4A3FC0;cursor:pointer;font-family:inherit;font-size:15px;font-weight:700;padding:14px 28px;border-radius:12px;">Créer mon compte</button>
+              <button onClick="{{ goPricing }}" style="border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;padding:14px 28px;border-radius:12px;">Voir les tarifs</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </sc-if>
+
+    <!-- PRICING -->
+    <sc-if value="{{ isPricing }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:1000px;margin:0 auto;padding:64px 24px 80px;">
+        <div style="text-align:center;">
+          <h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:46px;margin:0;">Un palier gratuit généreux,<br>un Premium sans limite.</h1>
+          <p style="font-size:16px;color:#605C74;margin:16px 0 0;">Change ou annule à tout moment.</p>
+        </div>
+        <div class="grid-2" style="margin-top:44px;align-items:start;">
+          <div style="background:#fff;border:1px solid #E9E7F2;border-radius:20px;padding:32px;">
+            <p style="font-size:13px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#86829A;margin:0;">Free</p>
+            <p style="font-family:'Instrument Serif',serif;font-size:44px;margin:8px 0 0;">0€<span style="font-family:'Manrope';font-size:15px;color:#86829A;font-weight:600;"> / mois</span></p>
+            <button onClick="{{ goSignup }}" style="width:100%;margin:22px 0;border:1px solid #E1DEF0;background:#fff;color:#221E33;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;padding:13px;border-radius:12px;" style-hover="border-color:#C9C3EC;">Commencer</button>
+            <sc-for list="{{ freeFeatures }}" as="f" hint-placeholder-count="4">
+              <div style="display:flex;gap:10px;padding:9px 0;border-top:1px solid #F0EEF8;font-size:14px;color:#3F3B54;"><span style="color:#3B9B6E;font-weight:700;">✓</span>{{ f.t }}</div>
+            </sc-for>
+          </div>
+          <div style="background:#fff;border:2px solid #5B4FD6;border-radius:20px;padding:32px;position:relative;box-shadow:0 24px 50px -20px rgba(91,79,214,.35);">
+            <span style="position:absolute;top:-13px;left:32px;background:#5B4FD6;color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:999px;">Recommandé</span>
+            <p style="font-size:13px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#5B4FD6;margin:0;">Premium</p>
+            <p style="font-family:'Instrument Serif',serif;font-size:44px;margin:8px 0 0;">7,99€<span style="font-family:'Manrope';font-size:15px;color:#86829A;font-weight:600;"> / mois</span></p>
+            <button onClick="{{ goSignup }}" style="width:100%;margin:22px 0;border:none;background:#5B4FD6;color:#fff;cursor:pointer;font-family:inherit;font-size:15px;font-weight:700;padding:13px;border-radius:12px;" style-hover="background:#4A3FC0;">Passer en Premium</button>
+            <sc-for list="{{ premiumFeatures }}" as="f" hint-placeholder-count="5">
+              <div style="display:flex;gap:10px;padding:9px 0;border-top:1px solid #F0EEF8;font-size:14px;color:#3F3B54;"><span style="color:#5B4FD6;font-weight:700;">✓</span>{{ f.t }}</div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="margin-top:56px;">
+          <h2 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:30px;text-align:center;margin:0 0 24px;">Questions fréquentes</h2>
+          <sc-for list="{{ faq }}" as="q" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid #E9E7F2;border-radius:14px;padding:20px 22px;margin-bottom:12px;">
+              <p style="font-weight:700;font-size:15px;margin:0 0 6px;">{{ q.q }}</p>
+              <p style="font-size:14px;line-height:1.55;color:#605C74;margin:0;">{{ q.a }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- AUTH: SIGNUP / LOGIN / FORGOT -->
+    <sc-if value="{{ isAuth }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:440px;margin:0 auto;padding:56px 24px 80px;">
+        <div style="background:#fff;border:1px solid #E9E7F2;border-radius:20px;padding:36px;box-shadow:0 20px 44px -22px rgba(38,32,74,.22);">
+          <h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:32px;margin:0;">{{ authTitle }}</h1>
+          <p style="font-size:14px;color:#86829A;margin:8px 0 24px;">{{ authSub }}</p>
+
+          <sc-if value="{{ showOAuth }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <button style="display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid #E1DEF0;background:#fff;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;padding:12px;border-radius:12px;" style-hover="border-color:#C9C3EC;background:#FBFBFE;"><span style="font-family:'IBM Plex Mono';font-weight:600;color:#5B4FD6;">G</span> Continuer avec Google</button>
+                <button style="display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid #E1DEF0;background:#fff;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;padding:12px;border-radius:12px;" style-hover="border-color:#C9C3EC;background:#FBFBFE;"><span style="font-weight:700;">⌘</span> Continuer avec Apple</button>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;margin:20px 0;"><span style="flex:1;height:1px;background:#E9E7F2;"></span><span style="font-size:12px;color:#A5A0BC;">ou</span><span style="flex:1;height:1px;background:#E9E7F2;"></span></div>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <sc-if value="{{ showName }}" hint-placeholder-val="{{ false }}">
+              <label style="display:block;"><span style="font-size:13px;font-weight:600;color:#3F3B54;">Nom</span><input type="text" placeholder="Camille Roy" style="width:100%;margin-top:6px;padding:12px 14px;border:1px solid #E1DEF0;border-radius:12px;font-family:inherit;font-size:14px;outline:none;background:#FBFBFE;"></label>
+            </sc-if>
+            <label style="display:block;"><span style="font-size:13px;font-weight:600;color:#3F3B54;">Email</span><input type="email" placeholder="toi@exemple.com" style="width:100%;margin-top:6px;padding:12px 14px;border:1px solid #E1DEF0;border-radius:12px;font-family:inherit;font-size:14px;outline:none;background:#FBFBFE;"></label>
+            <sc-if value="{{ showPassword }}" hint-placeholder-val="{{ true }}">
+              <label style="display:block;"><span style="font-size:13px;font-weight:600;color:#3F3B54;">Mot de passe</span><input type="password" placeholder="••••••••" style="width:100%;margin-top:6px;padding:12px 14px;border:1px solid #E1DEF0;border-radius:12px;font-family:inherit;font-size:14px;outline:none;background:#FBFBFE;"></label>
+            </sc-if>
+          </div>
+
+          <button onClick="{{ authPrimary }}" style="width:100%;margin-top:20px;border:none;background:#5B4FD6;color:#fff;cursor:pointer;font-family:inherit;font-size:15px;font-weight:700;padding:13px;border-radius:12px;" style-hover="background:#4A3FC0;">{{ authCta }}</button>
+
+          <sc-if value="{{ isForgot }}" hint-placeholder-val="{{ false }}">
+            <p style="font-size:13px;color:#86829A;text-align:center;margin:16px 0 0;">On t'enverra un lien de réinitialisation par email.</p>
+          </sc-if>
+
+          <div style="margin-top:20px;padding-top:18px;border-top:1px solid #F0EEF8;text-align:center;font-size:13.5px;color:#86829A;">
+            <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}"><span>Déjà un compte ? <button onClick="{{ goLogin }}" style="border:none;background:none;color:#5B4FD6;font-weight:600;cursor:pointer;font-family:inherit;font-size:13.5px;">Se connecter</button></span></sc-if>
+            <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}"><div><div><button onClick="{{ goForgot }}" style="border:none;background:none;color:#5B4FD6;font-weight:600;cursor:pointer;font-family:inherit;font-size:13.5px;">Mot de passe oublié ?</button></div><div style="margin-top:8px;">Pas de compte ? <button onClick="{{ goSignup }}" style="border:none;background:none;color:#5B4FD6;font-weight:600;cursor:pointer;font-family:inherit;font-size:13.5px;">Créer un compte</button></div></div></sc-if>
+            <sc-if value="{{ isForgot }}" hint-placeholder-val="{{ false }}"><button onClick="{{ goLogin }}" style="border:none;background:none;color:#5B4FD6;font-weight:600;cursor:pointer;font-family:inherit;font-size:13.5px;">← Retour à la connexion</button></sc-if>
+          </div>
+        </div>
+        <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size:12px;color:#A5A0BC;text-align:center;margin-top:16px;line-height:1.5;">Un email de validation te sera envoyé pour confirmer ton adresse.</p>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ONBOARDING -->
+    <sc-if value="{{ isOnboarding }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:640px;margin:0 auto;padding:48px 24px 80px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <p style="font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#5B4FD6;margin:0;">Bienvenue sur Oria</p>
+          <button onClick="{{ goChat }}" style="border:none;background:none;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:600;color:#86829A;">Passer →</button>
+        </div>
+        <h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:34px;margin:12px 0 4px;">Choisis ce que tu suis</h1>
+        <p style="font-size:15px;color:#605C74;margin:0 0 28px;">On personnalisera tes réponses et tes alertes. Modifiable à tout moment.</p>
+
+        <sc-for list="{{ onbGroups }}" as="g" hint-placeholder-count="3">
+          <div style="margin-bottom:26px;">
+            <p style="font-size:14px;font-weight:700;margin:0 0 12px;">{{ g.title }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="5">
+                <button onClick="{{ it.onToggle }}" style="display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;border:1px solid {{ it.border }};background:{{ it.bg }};color:{{ it.color }};font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;">{{ it.name }}<span style="font-weight:700;">{{ it.mark }}</span></button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+
+        <div style="margin-bottom:28px;">
+          <p style="font-size:14px;font-weight:700;margin:0 0 12px;">Fuseau horaire</p>
+          <select style="width:100%;padding:12px 14px;border:1px solid #E1DEF0;border-radius:12px;font-family:inherit;font-size:14px;background:#fff;color:#221E33;">
+            <option>Europe/Paris (UTC+1)</option><option>Europe/London (UTC)</option><option>America/New_York (UTC−5)</option>
+          </select>
+        </div>
+        <button onClick="{{ goChat }}" style="width:100%;border:none;background:#5B4FD6;color:#fff;cursor:pointer;font-family:inherit;font-size:15px;font-weight:700;padding:14px;border-radius:12px;" style-hover="background:#4A3FC0;">Terminer et ouvrir Oria</button>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<!-- ============ APP ============ -->
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+  <div class="app-shell">
+    <aside class="app-side oria-sc" style="background:#fff;border-right:1px solid #E9E7F2;position:sticky;top:0;height:100dvh;overflow-y:auto;display:flex;flex-direction:column;padding:18px 14px;">
+      <button onClick="{{ goLandingFromApp }}" style="display:flex;align-items:center;gap:10px;border:none;background:none;cursor:pointer;padding:6px 8px;margin-bottom:14px;">
+        <svg width="26" height="26" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="15.5" stroke="#5B4FD6" stroke-width="2.8"/><path d="M20 8.5a11.5 11.5 0 0 1 0 23" stroke="#5B4FD6" stroke-width="2.8" stroke-linecap="round" opacity=".36"/><circle cx="20" cy="20" r="4.2" fill="#5B4FD6"/><circle cx="20" cy="20" r="1.7" fill="#fff"/></svg>
+        <span style="font-family:'Instrument Serif',serif;font-size:23px;line-height:1;">Oria</span>
+      </button>
+      <nav class="app-nav" style="display:flex;flex-direction:column;gap:2px;">
+        <sc-for list="{{ appNav }}" as="n" hint-placeholder-count="5">
+          <button onClick="{{ n.onClick }}" aria-current="{{ n.active }}" style="display:flex;align-items:center;gap:10px;text-align:left;border:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;padding:10px 12px;border-radius:11px;white-space:nowrap;background:{{ n.bg }};color:{{ n.color }};" style-hover="background:#F5F4FC;">{{ n.label }}</button>
+        </sc-for>
+      </nav>
+      <div class="app-nav-foot" style="margin-top:auto;display:flex;flex-direction:column;gap:2px;padding-top:12px;border-top:1px solid #F0EEF8;">
+        <button onClick="{{ goAdmin }}" style="display:flex;align-items:center;gap:8px;text-align:left;border:none;background:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#86829A;padding:9px 12px;border-radius:10px;" style-hover="background:#F5F4FC;color:#4A3FC0;">Console admin →</button>
+        <button onClick="{{ goLogin }}" style="display:flex;align-items:center;gap:8px;text-align:left;border:none;background:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#86829A;padding:9px 12px;border-radius:10px;" style-hover="background:#F5F4FC;">Déconnexion</button>
+      </div>
+    </aside>
+
+    <main class="app-main" ref="{{ topRef }}">
+      <!-- CHAT -->
+      <sc-if value="{{ isChat }}" hint-placeholder-val="{{ false }}">
+        <div style="height:100dvh;">
+          <dc-import name="Oria Chat" hint-size="100%,100%"></dc-import>
+        </div>
+      </sc-if>
+
+      <!-- FOLLOWS -->
+      <sc-if value="{{ isFollows }}" hint-placeholder-val="{{ false }}">
+        <div class="oria-sc" style="max-width:820px;margin:0 auto;padding:40px 28px 64px;">
+          <h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:34px;margin:0 0 4px;">Mes suivis</h1>
+          <p style="font-size:15px;color:#605C74;margin:0 0 28px;">Personnalise tes réponses et tes alertes.</p>
+
+          <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:22px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><h2 style="font-size:16px;margin:0;">Ligues</h2><button style="border:1px solid #E1DEF0;background:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#4A3FC0;padding:7px 13px;border-radius:9px;" style-hover="border-color:#C9C3EC;">＋ Ajouter</button></div>
+            <sc-if value="{{ hasLeagues }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <sc-for list="{{ followLeagues }}" as="f" hint-placeholder-count="2">
+                  <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 8px 7px 14px;border-radius:999px;background:#EEEDFA;border:1px solid #DED9FA;font-size:13px;font-weight:600;color:#4A3FC0;"><span style="white-space:nowrap;">{{ f.name }}</span><button onClick="{{ f.onRemove }}" aria-label="Retirer" style="border:none;background:none;cursor:pointer;color:#8B82D8;width:18px;height:18px;border-radius:50%;font-size:12px;" style-hover="background:#DED9FA;">✕</button></span>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ hasLeagues }}" hint-placeholder-val="{{ true }}"><span></span></sc-if>
+          </div>
+
+          <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:22px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><h2 style="font-size:16px;margin:0;">Équipes</h2><button style="border:1px solid #E1DEF0;background:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#4A3FC0;padding:7px 13px;border-radius:9px;" style-hover="border-color:#C9C3EC;">＋ Ajouter</button></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <sc-for list="{{ followTeams }}" as="f" hint-placeholder-count="2">
+                <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 8px 7px 14px;border-radius:999px;background:#EEEDFA;border:1px solid #DED9FA;font-size:13px;font-weight:600;color:#4A3FC0;"><span style="white-space:nowrap;">{{ f.name }}</span><button onClick="{{ f.onRemove }}" aria-label="Retirer" style="border:none;background:none;cursor:pointer;color:#8B82D8;width:18px;height:18px;border-radius:50%;font-size:12px;" style-hover="background:#DED9FA;">✕</button></span>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:22px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><h2 style="font-size:16px;margin:0;">Joueurs</h2><button style="border:1px solid #E1DEF0;background:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#4A3FC0;padding:7px 13px;border-radius:9px;" style-hover="border-color:#C9C3EC;">＋ Ajouter</button></div>
+            <sc-if value="{{ hasPlayers }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <sc-for list="{{ followPlayers }}" as="f" hint-placeholder-count="2">
+                  <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 8px 7px 14px;border-radius:999px;background:#EEEDFA;border:1px solid #DED9FA;font-size:13px;font-weight:600;color:#4A3FC0;"><span style="white-space:nowrap;">{{ f.name }}</span><button onClick="{{ f.onRemove }}" aria-label="Retirer" style="border:none;background:none;cursor:pointer;color:#8B82D8;width:18px;height:18px;border-radius:50%;font-size:12px;" style-hover="background:#DED9FA;">✕</button></span>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ hasPlayers }}" hint-placeholder-val="{{ true }}"><span></span></sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- NOTIFICATIONS -->
+      <sc-if value="{{ isNotifs }}" hint-placeholder-val="{{ false }}">
+        <div class="oria-sc" style="max-width:760px;margin:0 auto;padding:40px 28px 64px;">
+          <h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:34px;margin:0 0 4px;">Notifications</h1>
+          <p style="font-size:15px;color:#605C74;margin:0 0 28px;">Choisis ce qu'Oria t'envoie, et quand.</p>
+          <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;overflow:hidden;">
+            <sc-for list="{{ notifRows }}" as="n" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:16px;padding:18px 22px;border-top:1px solid #F0EEF8;">
+                <div style="flex:1;min-width:0;"><p style="font-weight:600;font-size:15px;margin:0;">{{ n.label }}</p><p style="font-size:13px;color:#86829A;margin:2px 0 0;">{{ n.desc }}</p></div>
+                <button onClick="{{ n.onToggle }}" role="switch" aria-checked="{{ n.on }}" aria-label="{{ n.label }}" style="flex:none;width:44px;height:24px;border-radius:999px;border:none;cursor:pointer;position:relative;transition:background .15s;background:{{ n.track }};">
+                  <span style="position:absolute;top:2px;left:{{ n.knobX }};width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .15s;"></span>
+                </button>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:22px;margin-top:16px;">
+            <h2 style="font-size:16px;margin:0 0 14px;">Horaires & fuseau</h2>
+            <div class="grid-2" style="gap:14px;">
+              <label style="display:block;"><span style="font-size:13px;font-weight:600;color:#3F3B54;">Fenêtre silencieuse</span><select style="width:100%;margin-top:6px;padding:11px 13px;border:1px solid #E1DEF0;border-radius:11px;font-family:inherit;font-size:14px;background:#FBFBFE;"><option>23:00 – 08:00</option><option>Aucune</option><option>00:00 – 07:00</option></select></label>
+              <label style="display:block;"><span style="font-size:13px;font-weight:600;color:#3F3B54;">Fuseau horaire</span><select style="width:100%;margin-top:6px;padding:11px 13px;border:1px solid #E1DEF0;border-radius:11px;font-family:inherit;font-size:14px;background:#FBFBFE;"><option>Europe/Paris (UTC+1)</option><option>Europe/London (UTC)</option><option>America/New_York</option></select></label>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- PROFILE -->
+      <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+        <div class="oria-sc" style="max-width:720px;margin:0 auto;padding:40px 28px 64px;">
+          <h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:34px;margin:0 0 28px;">Profil</h1>
+          <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:24px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;gap:16px;">
+              <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#5B4FD6,#8A6CF0);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Instrument Serif',serif;font-size:26px;">C</div>
+              <div><p style="font-weight:700;font-size:17px;margin:0;">Camille Roy</p><p style="font-size:13.5px;color:#86829A;margin:2px 0 0;">camille@roy.fr</p></div>
+              <button style="margin-left:auto;border:1px solid #E1DEF0;background:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#4A3FC0;padding:8px 14px;border-radius:10px;" style-hover="border-color:#C9C3EC;">Changer l'avatar</button>
+            </div>
+          </div>
+          <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:24px;margin-bottom:16px;">
+            <div class="grid-2" style="gap:14px;">
+              <label style="display:block;"><span style="font-size:13px;font-weight:600;color:#3F3B54;">Nom</span><input value="Camille Roy" style="width:100%;margin-top:6px;padding:11px 13px;border:1px solid #E1DEF0;border-radius:11px;font-family:inherit;font-size:14px;background:#FBFBFE;"></label>
+              <label style="display:block;"><span style="font-size:13px;font-weight:600;color:#3F3B54;">Email</span><input value="camille@roy.fr" style="width:100%;margin-top:6px;padding:11px 13px;border:1px solid #E1DEF0;border-radius:11px;font-family:inherit;font-size:14px;background:#FBFBFE;"></label>
+              <label style="display:block;"><span style="font-size:13px;font-weight:600;color:#3F3B54;">Langue</span><select style="width:100%;margin-top:6px;padding:11px 13px;border:1px solid #E1DEF0;border-radius:11px;font-family:inherit;font-size:14px;background:#FBFBFE;"><option>Français</option><option>English</option><option>Español</option></select></label>
+              <label style="display:block;"><span style="font-size:13px;font-weight:600;color:#3F3B54;">Fuseau</span><select style="width:100%;margin-top:6px;padding:11px 13px;border:1px solid #E1DEF0;border-radius:11px;font-family:inherit;font-size:14px;background:#FBFBFE;"><option>Europe/Paris</option><option>Europe/London</option></select></label>
+            </div>
+            <button style="margin-top:18px;border:none;background:#5B4FD6;color:#fff;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;padding:11px 20px;border-radius:11px;" style-hover="background:#4A3FC0;">Enregistrer</button>
+          </div>
+          <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:24px;margin-bottom:16px;">
+            <h2 style="font-size:16px;margin:0 0 6px;">Mot de passe</h2>
+            <p style="font-size:13.5px;color:#86829A;margin:0 0 14px;">Modifie ton mot de passe régulièrement.</p>
+            <button style="border:1px solid #E1DEF0;background:#fff;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;color:#221E33;padding:10px 18px;border-radius:11px;" style-hover="border-color:#C9C3EC;">Changer le mot de passe</button>
+          </div>
+          <div style="background:#FBF3F2;border:1px solid #F2D9D5;border-radius:16px;padding:24px;">
+            <h2 style="font-size:16px;margin:0 0 6px;color:#B4362C;">Supprimer le compte</h2>
+            <p style="font-size:13.5px;color:#9A6863;margin:0 0 14px;">Action irréversible. Toutes tes données seront effacées.</p>
+            <button style="border:1px solid #E0A69F;background:#fff;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;color:#B4362C;padding:10px 18px;border-radius:11px;" style-hover="background:#FBE6E3;">Supprimer mon compte</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- BILLING -->
+      <sc-if value="{{ isBilling }}" hint-placeholder-val="{{ false }}">
+        <div class="oria-sc" style="max-width:820px;margin:0 auto;padding:40px 28px 64px;">
+          <h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:34px;margin:0 0 28px;">Abonnement & facturation</h1>
+          <div style="background:linear-gradient(135deg,#5B4FD6,#7A5CE0);border-radius:18px;padding:26px;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:200px;"><p style="font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;opacity:.8;margin:0;">Palier actuel</p><p style="font-family:'Instrument Serif',serif;font-size:30px;margin:4px 0 0;">Free</p><p style="font-size:13.5px;opacity:.85;margin:6px 0 0;">20 questions / jour · pas de direct ni d'analyses avancées</p></div>
+            <button style="border:none;background:#fff;color:#4A3FC0;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;padding:12px 22px;border-radius:11px;" style-hover="background:#F0EEFF;">Passer en Premium — 7,99€/mois</button>
+          </div>
+          <div class="grid-2" style="margin-bottom:16px;">
+            <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:22px;">
+              <h2 style="font-size:15px;margin:0 0 14px;">Moyen de paiement</h2>
+              <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #E9E7F2;border-radius:11px;background:#FBFBFE;">
+                <span style="width:40px;height:26px;border-radius:5px;background:#191526;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'IBM Plex Mono';font-size:10px;font-weight:600;">VISA</span>
+                <span style="font-family:'IBM Plex Mono';font-size:13px;color:#3F3B54;">•••• 4242</span>
+                <button style="margin-left:auto;border:none;background:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#5B4FD6;">Modifier</button>
+              </div>
+            </div>
+            <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:22px;">
+              <h2 style="font-size:15px;margin:0 0 14px;">Gérer</h2>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <button style="text-align:left;border:1px solid #E1DEF0;background:#fff;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;color:#221E33;padding:11px 14px;border-radius:11px;" style-hover="border-color:#C9C3EC;">Changer de formule</button>
+                <button style="text-align:left;border:1px solid #E1DEF0;background:#fff;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;color:#B4362C;padding:11px 14px;border-radius:11px;" style-hover="background:#FBE6E3;">Annuler l'abonnement</button>
+              </div>
+            </div>
+          </div>
+          <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:22px;">
+            <h2 style="font-size:15px;margin:0 0 14px;">Historique de factures</h2>
+            <div>
+              <sc-for list="{{ invoices }}" as="inv" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:16px;padding:13px 0;border-top:1px solid #F0EEF8;font-size:14px;">
+                  <span style="flex:1;color:#221E33;font-weight:500;">{{ inv.date }}</span>
+                  <span style="font-family:'IBM Plex Mono';color:#3F3B54;">{{ inv.amount }}</span>
+                  <span style="color:#207F53;font-weight:600;font-size:12.5px;">{{ inv.status }}</span>
+                  <button style="border:none;background:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#5B4FD6;">PDF</button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+  </div>
+</sc-if>
+<!-- ============ ADMIN ============ -->
+<sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+  <div class="app-shell" style="background:#F4F3F9;">
+    <aside class="app-side oria-sc" style="background:#191526;color:#fff;position:sticky;top:0;height:100dvh;overflow-y:auto;display:flex;flex-direction:column;padding:18px 14px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;margin-bottom:16px;">
+        <svg width="24" height="24" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="15.5" stroke="#9C90F5" stroke-width="2.8"/><path d="M20 8.5a11.5 11.5 0 0 1 0 23" stroke="#9C90F5" stroke-width="2.8" stroke-linecap="round" opacity=".4"/><circle cx="20" cy="20" r="4.2" fill="#9C90F5"/><circle cx="20" cy="20" r="1.7" fill="#191526"/></svg>
+        <span style="font-family:'Instrument Serif',serif;font-size:20px;">Oria</span>
+        <span style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#9C90F5;border:1px solid #3A3556;padding:2px 7px;border-radius:6px;">Admin</span>
+      </div>
+      <nav class="app-nav" style="display:flex;flex-direction:column;gap:2px;">
+        <sc-for list="{{ adminNav }}" as="n" hint-placeholder-count="5">
+          <button onClick="{{ n.onClick }}" aria-current="{{ n.active }}" style="display:flex;align-items:center;gap:10px;text-align:left;border:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;padding:10px 12px;border-radius:11px;white-space:nowrap;background:{{ n.abg }};color:{{ n.acolor }};" style-hover="background:#26223A;">{{ n.label }}</button>
+        </sc-for>
+      </nav>
+      <div class="app-nav-foot" style="margin-top:auto;padding-top:12px;border-top:1px solid #2C2842;">
+        <button onClick="{{ goApp }}" style="display:flex;align-items:center;gap:8px;text-align:left;border:none;background:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#8B85A6;padding:9px 12px;border-radius:10px;width:100%;" style-hover="background:#26223A;color:#fff;">← Retour à l'app</button>
+      </div>
+    </aside>
+
+    <main class="app-main oria-sc" ref="{{ topRef }}" style="overflow-y:auto;max-height:100dvh;">
+      <div style="max-width:1080px;margin:0 auto;padding:32px 28px 64px;">
+
+        <!-- OVERVIEW -->
+        <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px;">
+              <div><h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:32px;margin:0;">Vue d'ensemble</h1><p style="font-size:14px;color:#86829A;margin:6px 0 0;">État des modules en temps réel · rafraîchi il y a 10 s</p></div>
+              <div style="display:flex;gap:8px;">
+                <span style="display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;background:#E3F3EB;color:#207F53;font-size:13px;font-weight:700;"><span style="width:8px;height:8px;border-radius:50%;background:#3B9B6E;"></span>{{ upCount }} up</span>
+                <span style="display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;background:#FBEEE2;color:#C4691F;font-size:13px;font-weight:700;"><span style="width:8px;height:8px;border-radius:50%;background:#E0782A;"></span>{{ degCount }} dégradé</span>
+                <span style="display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;background:#FBE6E3;color:#B4362C;font-size:13px;font-weight:700;"><span style="width:8px;height:8px;border-radius:50%;background:#D5443B;"></span>{{ downCount }} down</span>
+              </div>
+            </div>
+
+            <div class="grid-4" style="margin-bottom:20px;">
+              <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:18px;">
+                <p style="font-size:12px;font-weight:600;color:#86829A;margin:0;">Quota API-Football</p>
+                <p style="font-family:'IBM Plex Mono';font-size:22px;font-weight:600;margin:8px 0 2px;">{{ quotaUsed }} <span style="font-size:13px;color:#86829A;">/ {{ quotaLimit }}</span></p>
+                <div style="height:7px;border-radius:999px;background:#F0EEF8;overflow:hidden;margin-top:8px;"><div style="height:100%;width:{{ quotaPctLabel }};background:{{ quotaColor }};border-radius:999px;"></div></div>
+                <p style="font-size:11.5px;color:#86829A;margin:6px 0 0;">{{ quotaPctLabel }} de la limite quotidienne</p>
+              </div>
+              <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:18px;">
+                <p style="font-size:12px;font-weight:600;color:#86829A;margin:0;">Cache hit ratio</p>
+                <p style="font-family:'IBM Plex Mono';font-size:26px;font-weight:600;margin:8px 0 2px;color:#207F53;">{{ cacheHit }}</p>
+                <p style="font-size:11.5px;color:#86829A;margin:4px 0 0;">Sur 24 h glissantes</p>
+              </div>
+              <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:18px;">
+                <p style="font-size:12px;font-weight:600;color:#86829A;margin:0;">Pollers live actifs</p>
+                <p style="font-family:'IBM Plex Mono';font-size:26px;font-weight:600;margin:8px 0 2px;">{{ livePollers }}</p>
+                <p style="font-size:11.5px;color:#C4691F;margin:4px 0 0;">2 en attente (amont dégradé)</p>
+              </div>
+              <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:18px;">
+                <p style="font-size:12px;font-weight:600;color:#86829A;margin:0;">Fallbacks servis</p>
+                <p style="font-family:'IBM Plex Mono';font-size:26px;font-weight:600;margin:8px 0 2px;">{{ fallbacks }}</p>
+                <p style="font-size:11.5px;color:#86829A;margin:4px 0 0;">Aujourd'hui</p>
+              </div>
+            </div>
+
+            <div style="background:#FBEEE2;border:1px solid #F1D9C0;border-radius:14px;padding:14px 18px;margin-bottom:20px;">
+              <p style="font-size:13px;font-weight:700;color:#C4691F;margin:0 0 8px;">Alertes de goulots</p>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:9px;font-size:13px;color:#7A5A2E;"><span style="width:7px;height:7px;border-radius:50%;flex:none;background:{{ a.dot }};"></span>{{ a.text }}</div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div class="grid-4">
+              <sc-for list="{{ modules }}" as="m" hint-placeholder-count="8">
+                <div style="background:#fff;border:1px solid #E9E7F2;border-left:3px solid {{ m.dot }};border-radius:14px;padding:16px;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                    <span style="font-weight:700;font-size:14px;">{{ m.label }}</span>
+                    <span style="width:9px;height:9px;border-radius:50%;background:{{ m.dot }};flex:none;"></span>
+                  </div>
+                  <span style="display:inline-block;margin-top:8px;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;color:{{ m.fg }};background:{{ m.bg }};">{{ m.statusLabel }}</span>
+                  <p style="font-size:12px;color:#86829A;margin:10px 0 0;">{{ m.note }}</p>
+                  <p style="font-family:'IBM Plex Mono';font-size:12px;color:#605C74;margin:4px 0 0;">p95 {{ m.p95 }} ms</p>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- TRACES -->
+        <sc-if value="{{ isTraces }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:32px;margin:0 0 6px;">Traces</h1>
+            <p style="font-size:14px;color:#86829A;margin:0 0 24px;">Sélectionne une requête pour voir la répartition du temps par module.</p>
+            <div style="display:grid;grid-template-columns:340px 1fr;gap:20px;" class="grid-2">
+              <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;overflow:hidden;">
+                <sc-for list="{{ traces }}" as="t" hint-placeholder-count="4">
+                  <button onClick="{{ t.onClick }}" style="width:100%;text-align:left;border:none;border-top:1px solid #F0EEF8;cursor:pointer;font-family:inherit;padding:14px 16px;background:{{ t.rowBg }};" style-hover="background:#F5F4FC;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;"><span style="font-weight:600;font-size:14px;color:#221E33;">{{ t.q }}</span><span style="padding:2px 8px;border-radius:999px;font-size:10.5px;font-weight:700;color:{{ t.fg }};background:{{ t.bg }};">{{ t.statusLabel }}</span></div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-top:6px;font-size:11.5px;color:#86829A;"><span style="font-family:'IBM Plex Mono';">{{ t.id }}</span><span>·</span><span style="font-family:'IBM Plex Mono';">{{ t.dur }} ms</span><span>·</span><span>{{ t.when }}</span></div>
+                  </button>
+                </sc-for>
+              </div>
+              <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:22px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px;"><span style="font-weight:700;font-size:15px;">{{ selQ }}</span><span style="font-family:'IBM Plex Mono';font-size:13px;color:#5B4FD6;font-weight:600;">{{ selDur }} ms</span></div>
+                <p style="font-family:'IBM Plex Mono';font-size:11.5px;color:#A5A0BC;margin:0 0 18px;">{{ selId }} · waterfall des spans</p>
+                <div style="display:flex;flex-direction:column;gap:9px;">
+                  <sc-for list="{{ spans }}" as="sp" hint-placeholder-count="6">
+                    <div>
+                      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;font-size:12px;"><span style="color:#3F3B54;"><span style="font-family:'IBM Plex Mono';color:#8B85A6;">{{ sp.mod }}</span> · {{ sp.label }}</span><span style="font-family:'IBM Plex Mono';color:#86829A;">{{ sp.durLabel }}</span></div>
+                      <div style="height:12px;border-radius:5px;background:#F3F2F9;position:relative;"><div style="position:absolute;top:0;height:100%;border-radius:5px;left:{{ sp.left }};width:{{ sp.width }};background:{{ sp.barColor }};"></div></div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- BOTTLENECKS -->
+        <sc-if value="{{ isBottlenecks }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:32px;margin:0 0 6px;">Goulots d'étranglement</h1>
+            <p style="font-size:14px;color:#86829A;margin:0 0 24px;">Actions triées par part du temps total. Repère vite où ça coince.</p>
+            <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;overflow:hidden;">
+              <div style="display:grid;grid-template-columns:1fr 120px 90px 80px 90px;gap:12px;padding:13px 20px;font-size:11.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#A5A0BC;background:#FBFBFE;border-bottom:1px solid #F0EEF8;" class="hide-sm">
+                <span>Action</span><span>Part du temps</span><span style="text-align:right;">p95</span><span style="text-align:right;">Appels</span><span style="text-align:right;">Erreurs</span>
+              </div>
+              <sc-for list="{{ bottlenecks }}" as="b" hint-placeholder-count="6">
+                <div style="display:grid;grid-template-columns:1fr 120px 90px 80px 90px;gap:12px;align-items:center;padding:14px 20px;border-top:1px solid #F0EEF8;">
+                  <span style="font-family:'IBM Plex Mono';font-size:12.5px;color:#221E33;">{{ b.action }}</span>
+                  <span style="display:flex;align-items:center;gap:8px;"><span style="flex:1;height:7px;border-radius:999px;background:#F0EEF8;overflow:hidden;"><span style="display:block;height:100%;width:{{ b.barW }};background:#5B4FD6;border-radius:999px;"></span></span><span style="font-family:'IBM Plex Mono';font-size:12px;color:#605C74;">{{ b.share }}%</span></span>
+                  <span style="font-family:'IBM Plex Mono';font-size:12.5px;text-align:right;color:#3F3B54;">{{ b.p95 }}</span>
+                  <span style="font-family:'IBM Plex Mono';font-size:12.5px;text-align:right;color:#86829A;">{{ b.calls }}</span>
+                  <span style="font-family:'IBM Plex Mono';font-size:12.5px;text-align:right;font-weight:600;color:{{ b.errColor }};">{{ b.errLabel }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- METRICS -->
+        <sc-if value="{{ isMetrics }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:32px;margin:0 0 6px;">Métriques</h1>
+            <p style="font-size:14px;color:#86829A;margin:0 0 24px;">Latences, tokens LLM, circuit breakers.</p>
+            <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;overflow:hidden;margin-bottom:20px;">
+              <div style="display:grid;grid-template-columns:1fr 80px 80px 80px 110px;gap:12px;padding:13px 20px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#A5A0BC;background:#FBFBFE;border-bottom:1px solid #F0EEF8;" class="hide-sm">
+                <span>Module</span><span style="text-align:right;">p50</span><span style="text-align:right;">p95</span><span style="text-align:right;">p99</span><span style="text-align:right;">7 j</span>
+              </div>
+              <sc-for list="{{ metrics }}" as="m" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:1fr 80px 80px 80px 110px;gap:12px;align-items:center;padding:14px 20px;border-top:1px solid #F0EEF8;">
+                  <span style="font-weight:600;font-size:14px;">{{ m.label }}</span>
+                  <span style="font-family:'IBM Plex Mono';font-size:12.5px;text-align:right;color:#3F3B54;">{{ m.p50 }}</span>
+                  <span style="font-family:'IBM Plex Mono';font-size:12.5px;text-align:right;color:#3F3B54;">{{ m.p95 }}</span>
+                  <span style="font-family:'IBM Plex Mono';font-size:12.5px;text-align:right;color:#3F3B54;">{{ m.p99 }}</span>
+                  <span style="text-align:right;"><svg width="100" height="28" viewBox="0 0 100 28" preserveAspectRatio="none" style="overflow:visible;"><polyline points="{{ m.poly }}" fill="none" stroke="#5B4FD6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </div>
+              </sc-for>
+            </div>
+            <div class="grid-2">
+              <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:22px;">
+                <h2 style="font-size:15px;margin:0 0 16px;">Tokens LLM (aujourd'hui)</h2>
+                <div style="margin-bottom:16px;"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span style="font-weight:600;">Gemini Flash</span><span style="font-family:'IBM Plex Mono';color:#605C74;">{{ tokFlash }}</span></div><div style="height:8px;border-radius:999px;background:#F0EEF8;overflow:hidden;"><div style="height:100%;width:{{ tokFlashShare }};background:#5B4FD6;"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span style="font-weight:600;">Gemini Pro</span><span style="font-family:'IBM Plex Mono';color:#605C74;">{{ tokPro }}</span></div><div style="height:8px;border-radius:999px;background:#F0EEF8;overflow:hidden;"><div style="height:100%;width:{{ tokProShare }};background:#9C90F5;"></div></div></div>
+                <p style="font-size:12px;color:#86829A;margin:16px 0 0;">{{ fallbacks }} fallbacks servis · Pro réservé aux analyses avancées</p>
+              </div>
+              <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;padding:22px;">
+                <h2 style="font-size:15px;margin:0 0 16px;">Circuit breakers</h2>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                  <sc-for list="{{ breakers }}" as="b" hint-placeholder-count="4">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                      <span style="width:9px;height:9px;border-radius:50%;background:{{ b.dot }};flex:none;"></span>
+                      <span style="font-family:'IBM Plex Mono';font-size:13px;flex:1;">{{ b.name }}</span>
+                      <span style="padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:700;color:{{ b.fg }};background:{{ b.bg }};">{{ b.label }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- USERS -->
+        <sc-if value="{{ isUsers }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px;">
+              <div><h1 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:32px;margin:0;">Utilisateurs</h1><p style="font-size:14px;color:#86829A;margin:6px 0 0;">{{ userCount }} comptes</p></div>
+              <div style="display:flex;align-items:center;gap:8px;padding:9px 14px;background:#fff;border:1px solid #E9E7F2;border-radius:11px;min-width:240px;"><span style="color:#B4AFCA;">⌕</span><input placeholder="Rechercher un compte…" aria-label="Rechercher" style="border:none;background:none;outline:none;flex:1;font-family:inherit;font-size:14px;"></div>
+            </div>
+            <div style="background:#fff;border:1px solid #E9E7F2;border-radius:16px;overflow:hidden;">
+              <div style="display:grid;grid-template-columns:1.6fr 100px 100px 100px 80px;gap:12px;padding:13px 20px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#A5A0BC;background:#FBFBFE;border-bottom:1px solid #F0EEF8;" class="hide-sm">
+                <span>Compte</span><span>Rôle</span><span>Palier</span><span>Statut</span><span></span>
+              </div>
+              <sc-for list="{{ users }}" as="u" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:1.6fr 100px 100px 100px 80px;gap:12px;align-items:center;padding:14px 20px;border-top:1px solid #F0EEF8;">
+                  <div style="display:flex;align-items:center;gap:12px;min-width:0;"><span style="width:34px;height:34px;border-radius:9px;background:#EEEDFA;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:16px;color:#5B4FD6;flex:none;">{{ u.initial }}</span><div style="min-width:0;"><p style="font-weight:600;font-size:14px;margin:0;">{{ u.name }}</p><p style="font-size:12px;color:#86829A;margin:1px 0 0;font-family:'IBM Plex Mono';">{{ u.email }}</p></div></div>
+                  <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#3F3B54;"><span style="width:7px;height:7px;border-radius:50%;background:{{ u.roleBadge }};"></span>{{ u.roleLabel }}</span>
+                  <span style="padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:700;color:{{ u.tFg }};background:{{ u.tBg }};width:fit-content;">{{ u.tier }}</span>
+                  <span style="padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:700;color:{{ u.sFg }};background:{{ u.sBg }};width:fit-content;">{{ u.statusLabel }}</span>
+                  <button style="border:none;background:none;cursor:pointer;color:#86829A;font-size:18px;justify-self:end;" aria-label="Actions">⋯</button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </main>
+  </div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;860px&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      screen: 'landing',
+      follows: { leagues:['Ligue 1','Premier League'], teams:['Paris SG','Real Madrid'], players:['Dembélé','Mbappé'] },
+      onb: { leagues:{'Ligue 1':true,'Premier League':true,'LaLiga':false,'Serie A':false,'Bundesliga':false}, teams:{'Paris SG':true,'Real Madrid':false,'Marseille':false,'Arsenal':false}, players:{'Dembélé':true,'Mbappé':false,'Haaland':false} },
+      notif: { prematch:true, result:true, lineup:true, live:false, digest:true },
+      selTrace: 'tr_9f2a',
+      tier: 'free',
+    };
+    this.coverage = ['Ligue 1','Premier League','LaLiga','Serie A','Bundesliga','Champions League','Ligue 2','Championship'].map(name=>({name}));
+    this.freeFeatures = [{t:'20 questions par jour'},{t:'Résultats, classements, calendrier'},{t:'Sélecteur de contexte complet'},{t:'Fraîcheur des données affichée'}];
+    this.premiumFeatures = [{t:'Questions illimitées'},{t:'Scores & buts en direct'},{t:'Compos probables & forme détaillée'},{t:'Cotes, tendances & analyses avancées'},{t:'Alertes personnalisées'}];
+    this.faq = [
+      {q:'Les données sont-elles à jour ?',a:'Oui. Chaque réponse indique quand la donnée a été rafraîchie ; les classements et la forme sont mis à jour en continu.'},
+      {q:'Puis-je annuler à tout moment ?',a:'Oui, en un clic depuis Abonnement & facturation. Aucun engagement.'},
+      {q:'Quels sports sont couverts ?',a:'Le football pour l\u2019instant, sur les grandes ligues européennes. D\u2019autres sports arrivent — l\u2019identité d\u2019Oria reste neutre.'},
+      {q:'Que se passe-t-il si le direct est indisponible ?',a:'Oria te sert la dernière information connue en te le signalant clairement, plutôt qu\u2019une donnée hasardeuse.'},
+    ];
+    // ADMIN data
+    this.modules = [
+      {key:'config',label:'Config',status:'up',p95:12,note:'Chargée'},
+      {key:'storage',label:'Storage',status:'up',p95:34,note:'Postgres + Redis'},
+      {key:'apifootball',label:'API-Football',status:'degraded',p95:820,note:'Latence amont élevée'},
+      {key:'llm',label:'LLM',status:'up',p95:640,note:'Gemini Flash / Pro'},
+      {key:'ingestion',label:'Ingestion',status:'up',p95:120,note:'Batch 5 min'},
+      {key:'liveengine',label:'Live Engine',status:'degraded',p95:1500,note:'Dépend d\u2019API-Football'},
+      {key:'notifications',label:'Notifications',status:'up',p95:210,note:'Push + email'},
+      {key:'monitoring',label:'Monitoring',status:'up',p95:8,note:'OK'},
+    ];
+    this.apiQuota = { used:5240, limit:7500 };
+    this.alerts = [
+      {level:'warn',text:'API-Football : p95 820 ms (seuil 500 ms)'},
+      {level:'warn',text:'Live Engine dégradé — bascule sur dernière info connue'},
+      {level:'info',text:'Quota API-Football à 70 % de la limite quotidienne'},
+    ];
+    this.traces = [
+      {id:'tr_9f2a',q:'Prochain match du PSG ?',dur:1240,status:'ok',when:'il y a 12 s'},
+      {id:'tr_9f28',q:'Cotes Real — Girona',dur:2110,status:'degraded',when:'il y a 40 s'},
+      {id:'tr_9f19',q:'Classement Serie A',dur:680,status:'ok',when:'il y a 1 min'},
+      {id:'tr_9f04',q:'Compo probable Arsenal',dur:3400,status:'error',when:'il y a 2 min'},
+    ];
+    this.spans = {
+      tr_9f2a:[
+        {mod:'monitoring',label:'request.received',start:0,dur:6,status:'ok'},
+        {mod:'config',label:'resolve.context',start:6,dur:10,status:'ok'},
+        {mod:'storage',label:'cache.lookup',start:16,dur:22,status:'ok'},
+        {mod:'apifootball',label:'fixtures.next',start:40,dur:760,status:'degraded'},
+        {mod:'ingestion',label:'normalize',start:800,dur:90,status:'ok'},
+        {mod:'llm',label:'gemini.flash.compose',start:895,dur:320,status:'ok'},
+        {mod:'notifications',label:'schedule.prematch',start:1215,dur:22,status:'ok'},
+      ],
+    };
+    this.bottlenecks = [
+      {action:'apifootball.fixtures.next',share:38,p95:820,calls:'2.4k',err:2.1},
+      {action:'llm.gemini.pro.analyze',share:22,p95:1900,calls:'420',err:0.4},
+      {action:'apifootball.odds.get',share:14,p95:610,calls:'980',err:5.8},
+      {action:'storage.standings.read',share:9,p95:120,calls:'6.1k',err:0.0},
+      {action:'llm.gemini.flash.compose',share:8,p95:340,calls:'5.2k',err:0.2},
+      {action:'ingestion.normalize',share:5,p95:90,calls:'6.1k',err:0.1},
+    ];
+    this.metrics = [
+      {label:'API-Football',p50:210,p95:820,p99:1600,spark:[3,4,5,8,6,9,7]},
+      {label:'LLM Flash',p50:180,p95:340,p99:520,spark:[4,4,5,4,6,5,5]},
+      {label:'LLM Pro',p50:900,p95:1900,p99:2600,spark:[6,7,6,8,7,9,8]},
+      {label:'Storage',p50:12,p95:34,p99:60,spark:[2,2,3,2,2,3,2]},
+      {label:'Ingestion',p50:40,p95:90,p99:140,spark:[3,4,3,4,3,4,4]},
+    ];
+    this.breakers = [{name:'apifootball',state:'half-open'},{name:'llm',state:'closed'},{name:'liveengine',state:'open'},{name:'storage',state:'closed'}];
+    this.users = [
+      {name:'Camille Roy',email:'camille@roy.fr',role:'user',tier:'premium',status:'active'},
+      {name:'Ops',email:'ops@oria.gg',role:'admin',tier:'—',status:'active'},
+      {name:'Léo Fontaine',email:'leo@fontaine.fr',role:'user',tier:'free',status:'active'},
+      {name:'Sarah Kadi',email:'sarah@kadi.io',role:'user',tier:'premium',status:'suspended'},
+      {name:'Marc Weil',email:'marc@weil.de',role:'user',tier:'free',status:'active'},
+    ];
+    this.invoices = [
+      {date:'01 août 2026',amount:'7,99 €',status:'Payée'},
+      {date:'01 juil. 2026',amount:'7,99 €',status:'Payée'},
+      {date:'01 juin 2026',amount:'7,99 €',status:'Payée'},
+    ];
+  }
+
+  go(screen){ this.setState({screen}); try{ if(this._top) this._top.scrollTo(0,0); window.scrollTo&&window.scrollTo(0,0);}catch(e){} }
+
+  toggleOnb(group,name){ this.setState(s=>{ const g={...s.onb[group]}; g[name]=!g[name]; return {onb:{...s.onb,[group]:g}}; }); }
+  toggleNotif(key){ this.setState(s=>({notif:{...s.notif,[key]:!s.notif[key]}})); }
+  removeFollow(group,name){ this.setState(s=>({follows:{...s.follows,[group]:s.follows[group].filter(x=>x!==name)}})); }
+
+  statusColor(st){ return st==='up'||st==='ok'||st==='closed' ? {fg:'#207F53',bg:'#E3F3EB',dot:'#3B9B6E'} : st==='degraded'||st==='half-open' ? {fg:'#C4691F',bg:'#FBEEE2',dot:'#E0782A'} : {fg:'#B4362C',bg:'#FBE6E3',dot:'#D5443B'}; }
+  statusText(st){ return {up:'Opérationnel',degraded:'Dégradé',down:'Hors service',ok:'OK',error:'Erreur',closed:'Fermé','half-open':'Semi-ouvert',open:'Ouvert'}[st]||st; }
+
+  renderVals(){
+    const s=this.state, sc=s.screen;
+    const nav={ goLanding:()=>this.go('landing'), goPricing:()=>this.go('pricing'), goSignup:()=>this.go('signup'), goLogin:()=>this.go('login'), goForgot:()=>this.go('forgot'), goChat:()=>this.go('chat') };
+    const publicScreens=['landing','pricing','signup','login','forgot','onboarding'];
+    const appScreens=['chat','follows','notifications','profile','billing'];
+    const adminScreens=['admin_overview','admin_traces','admin_bottlenecks','admin_metrics','admin_users'];
+
+    // onboarding groups
+    const onbDef=[['Ligues','leagues'],['Équipes','teams'],['Joueurs','players']];
+    const onbGroups=onbDef.map(([title,key])=>({ title, items:Object.keys(s.onb[key]).map(name=>{ const on=s.onb[key][name]; return { name, mark:on?'✓':'＋', onToggle:()=>this.toggleOnb(key,name), border:on?'#C9C3EC':'#E9E7F2', bg:on?'#EEEDFA':'#fff', color:on?'#4A3FC0':'#605C74' }; }) }));
+
+    // app nav
+    const appNav=[['chat','Chat'],['follows','Mes suivis'],['notifications','Notifications'],['profile','Profil'],['billing','Abonnement']].map(([k,l])=>({label:l,active:sc===k,onClick:()=>this.go(k),bg:sc===k?'#EEEDFA':'transparent',color:sc===k?'#4A3FC0':'#605C74'}));
+    const adminNav=[['admin_overview','Vue d\u2019ensemble'],['admin_traces','Traces'],['admin_bottlenecks','Goulots'],['admin_metrics','Métriques'],['admin_users','Utilisateurs']].map(([k,l])=>({label:l,active:sc===k,onClick:()=>this.go(k),abg:sc===k?'#2E2947':'transparent',acolor:sc===k?'#fff':'#B4AFC9'}));
+
+    // follows chips
+    const mkFollow=(group)=>s.follows[group].map(name=>({name,onRemove:()=>this.removeFollow(group,name)}));
+
+    // notif rows
+    const notifDef=[['prematch','Rappel avant-match','2 h avant le coup d\u2019envoi'],['result','Résultat final','À la fin du match'],['lineup','Compositions','~1 h avant'],['live','But en direct','Buts de tes équipes suivies'],['digest','Digest quotidien','Résumé chaque matin']];
+    const notifRows=notifDef.map(([k,l,d])=>({label:l,desc:d,on:s.notif[k],knobX:s.notif[k]?'22px':'2px',track:s.notif[k]?'#5B4FD6':'#D8D4E8',onToggle:()=>this.toggleNotif(k)}));
+
+    // admin overview modules
+    const modules=this.modules.map(m=>{ const c=this.statusColor(m.status); return {...m, statusLabel:this.statusText(m.status), fg:c.fg, bg:c.bg, dot:c.dot }; });
+    const upCount=this.modules.filter(m=>m.status==='up').length;
+    const degCount=this.modules.filter(m=>m.status==='degraded').length;
+    const downCount=this.modules.filter(m=>m.status==='down').length;
+    const quotaPct=Math.round(this.apiQuota.used/this.apiQuota.limit*100);
+    const alerts=this.alerts.map(a=>{ const c=a.level==='warn'?this.statusColor('degraded'):{fg:'#4A3FC0',bg:'#EEEDFA',dot:'#5B4FD6'}; return {...a,fg:c.fg,bg:c.bg,dot:c.dot}; });
+
+    // traces
+    const traces=this.traces.map(t=>{ const c=this.statusColor(t.status); return {...t, active:t.id===s.selTrace, rowBg:t.id===s.selTrace?'#F5F4FC':'#fff', statusLabel:this.statusText(t.status), fg:c.fg, bg:c.bg, onClick:()=>this.setState({selTrace:t.id}) }; });
+    const sel=this.traces.find(t=>t.id===s.selTrace)||this.traces[0];
+    const total=Math.max.apply(null,this.spans[s.selTrace]?this.spans[s.selTrace].map(x=>x.start+x.dur):[1]);
+    const spans=(this.spans[s.selTrace]||[]).map(sp=>{ const c=this.statusColor(sp.status); return {...sp, left:(sp.start/total*100)+'%', width:Math.max(sp.dur/total*100,1.2)+'%', barColor:c.dot, durLabel:sp.dur+' ms' }; });
+    const selDur=sel?sel.dur:0;
+
+    // bottlenecks
+    const bottlenecks=this.bottlenecks.map(b=>{ const errC=b.err>=5?'#D5443B':b.err>=1?'#E0782A':'#3B9B6E'; return {...b, barW:b.share+'%', errColor:errC, errLabel:b.err.toFixed(1)+' %' }; });
+
+    // metrics
+    const metrics=this.metrics.map(m=>{ const max=Math.max.apply(null,m.spark); const pts=m.spark.map((v,i)=>`${i/(m.spark.length-1)*100},${28-(v/max*24)}`).join(' '); return {...m, poly:pts }; });
+    const breakers=this.breakers.map(b=>{ const c=this.statusColor(b.state); return {...b, label:this.statusText(b.state), fg:c.fg, bg:c.bg, dot:c.dot }; });
+
+    // users
+    const users=this.users.map(u=>{ const c=this.statusColor(u.status==='active'?'up':'degraded'); const tc=u.tier==='premium'?{fg:'#4A3FC0',bg:'#EEEDFA'}:{fg:'#86829A',bg:'#F3F2F9'}; return {...u, initial:u.name.charAt(0), statusLabel:u.status==='active'?'Actif':'Suspendu', sFg:c.fg,sBg:c.bg, tFg:tc.fg,tBg:tc.bg, roleLabel:u.role==='admin'?'Admin':'Utilisateur', roleBadge:u.role==='admin'?'#5B4FD6':'#B4AFCA' }; });
+
+    // invoices
+    const invoices=this.invoices;
+
+    // auth flavors
+    const authTitle={signup:'Créer ton compte',login:'Bon retour',forgot:'Mot de passe oublié'}[sc]||'';
+    const authSub={signup:'Gratuit, sans carte bancaire.',login:'Reprends là où tu t\u2019es arrêté.',forgot:'Saisis ton email pour recevoir un lien.'}[sc]||'';
+    const authCta={signup:'Créer mon compte',login:'Se connecter',forgot:'Envoyer le lien'}[sc]||'';
+
+    return {
+      ...nav,
+      isPublic: publicScreens.includes(sc),
+      isApp: appScreens.includes(sc),
+      isAdmin: adminScreens.includes(sc),
+      isLanding: sc==='landing', isPricing: sc==='pricing',
+      isAuth: ['signup','login','forgot'].includes(sc),
+      isSignup: sc==='signup', isLogin: sc==='login', isForgot: sc==='forgot',
+      isOnboarding: sc==='onboarding',
+      isChat: sc==='chat', isFollows: sc==='follows', isNotifs: sc==='notifications', isProfile: sc==='profile', isBilling: sc==='billing',
+      isOverview: sc==='admin_overview', isTraces: sc==='admin_traces', isBottlenecks: sc==='admin_bottlenecks', isMetrics: sc==='admin_metrics', isUsers: sc==='admin_users',
+      showOAuth: sc==='signup'||sc==='login', showName: sc==='signup', showPassword: sc!=='forgot',
+      authTitle, authSub, authCta, authPrimary:()=>this.go(sc==='signup'?'onboarding':sc==='login'?'chat':'login'),
+      coverage:this.coverage, freeFeatures:this.freeFeatures, premiumFeatures:this.premiumFeatures, faq:this.faq,
+      onbGroups,
+      appNav, adminNav,
+      goAdmin:()=>this.go('admin_overview'), goApp:()=>this.go('chat'), goLandingFromApp:()=>this.go('landing'),
+      followLeagues:mkFollow('leagues'), followTeams:mkFollow('teams'), followPlayers:mkFollow('players'),
+      hasLeagues:s.follows.leagues.length>0, hasTeams:s.follows.teams.length>0, hasPlayers:s.follows.players.length>0,
+      notifRows,
+      modules, upCount, degCount, downCount,
+      quotaUsed:this.apiQuota.used.toLocaleString('fr-FR'), quotaLimit:this.apiQuota.limit.toLocaleString('fr-FR'), quotaPct, quotaPctLabel:quotaPct+'%',
+      quotaColor: quotaPct>=90?'#D5443B':quotaPct>=70?'#E0782A':'#3B9B6E',
+      cacheHit:'94,2 %', livePollers:8,
+      alerts,
+      traces, spans, selQ:sel?sel.q:'', selDur, selId:s.selTrace,
+      bottlenecks,
+      metrics, breakers, fallbacks:342, tokFlash:'4,8 M', tokPro:'1,3 M', tokFlashShare:'78%', tokProShare:'22%',
+      users, userCount:this.users.length, invoices,
+      tier:s.tier, tierLabel:s.tier==='premium'?'Premium':'Free',
+      topRef:(el)=>{ this._top=el; },
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+.mypy_cache
+.ruff_cache
+.pytest_cache
+*.egg-info
+dist
+.git
+node_modules
+frontend
+docs
+specs
+tests
+*.db
+*.db-wal
+*.db-shm

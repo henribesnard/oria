@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import Any
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 from oria.adapters.web.account_routes import init_account_routes
 from oria.adapters.web.account_routes import router as account_router
@@ -55,7 +54,6 @@ def init_web(
     handle_message: Any,  # noqa: ANN401
     stream_message: Any = None,  # noqa: ANN401
     jwt_secret: str = "",
-    cors_origins: str = "*",
     auth_service: object | None = None,
     identity_service: object | None = None,
     billing_service: object | None = None,
@@ -76,16 +74,6 @@ def init_web(
     """Câble les dépendances depuis le conteneur."""
     global _health_registry  # noqa: PLW0603
     _health_registry = health
-
-    # CORS
-    origins = [o.strip() for o in cors_origins.split(",") if o.strip()]
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
 
     init_dependencies(
         jwt_secret=jwt_secret,

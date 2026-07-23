@@ -217,6 +217,20 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     )
     container._stream_fn = stream_fn  # type: ignore[attr-defined]
 
+    # Stocker les références pour le câblage web
+    container._auth_service = auth_service  # type: ignore[attr-defined]
+    container._identity_service = identity_service  # type: ignore[attr-defined]
+    container._billing_service = billing_service  # type: ignore[attr-defined]
+    container._entitlements = entitlements  # type: ignore[attr-defined]
+    container._follow_service = follow_service  # type: ignore[attr-defined]
+    container._notif_settings_service = notif_settings_service  # type: ignore[attr-defined]
+    container._conversation_service = conversation_service  # type: ignore[attr-defined]
+    container._standings = standings  # type: ignore[attr-defined]
+    container._teams = teams  # type: ignore[attr-defined]
+    container._players = players  # type: ignore[attr-defined]
+    container._fixtures = fixtures  # type: ignore[attr-defined]
+    container._apifootball = apifootball  # type: ignore[attr-defined]
+
     return container, pipeline
 
 
@@ -236,15 +250,85 @@ async def run_console(settings: Settings) -> None:
         await container.stop_all()
 
 
-def main() -> None:
-    """Point d'entrée CLI : python -m oria.main"""
+def create_app() -> "FastAPI":
+    """Crée l'application FastAPI câblée — utilisée par uvicorn."""
+    from fastapi.middleware.cors import CORSMiddleware
+
+    from oria.adapters.web.app import app, init_web
+
     settings = Settings()
     setup_logging(level=settings.log_level)
 
-    logger.info("Oria booting", extra={"log_level": settings.log_level})
+    container, pipeline = build_container(settings)
 
-    with contextlib.suppress(KeyboardInterrupt):
-        asyncio.run(run_console(settings))
+    # CORS doit être ajouté AVANT le startup (Starlette interdit après)
+    origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    @app.on_event("startup")
+    async def _startup() -> None:
+        await container.start_all()
+        init_web(
+            health=container.health,
+            handle_message=pipeline.handle_message,
+            stream_message=container._stream_fn,  # type: ignore[attr-defined]
+            jwt_secret=settings.jwt_secret,
+            auth_service=container._auth_service,  # type: ignore[attr-defined]
+            identity_service=container._identity_service,  # type: ignore[attr-defined]
+            billing_service=container._billing_service,  # type: ignore[attr-defined]
+            entitlements_service=container._entitlements,  # type: ignore[attr-defined]
+            follow_service=container._follow_service,  # type: ignore[attr-defined]
+            notif_settings_service=container._notif_settings_service,  # type: ignore[attr-defined]
+            conversation_service=container._conversation_service,  # type: ignore[attr-defined]
+            sse_port=container._sse_port,  # type: ignore[attr-defined]
+            standings_repo=container._standings,  # type: ignore[attr-defined]
+            teams_repo=container._teams,  # type: ignore[attr-defined]
+            players_repo=container._players,  # type: ignore[attr-defined]
+            fixtures_repo=container._fixtures,  # type: ignore[attr-defined]
+            admin_token=settings.admin_token,
+            admin_service=container._admin_service,  # type: ignore[attr-defined]
+            apifootball=container._apifootball,  # type: ignore[attr-defined]
+        )
+        logger.info("Oria web started")
+
+    @app.on_event("shutdown")
+    async def _shutdown() -> None:
+        await container.stop_all()
+        logger.info("Oria web stopped")
+
+    return app
+
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from fastapi import FastAPI
+
+
+def main() -> None:
+    """Point d'entrée CLI : python -m oria [web|console]"""
+    import sys
+
+    settings = Settings()
+    setup_logging(level=settings.log_level)
+
+    mode = sys.argv[1] if len(sys.argv) > 1 else "web"
+    logger.info("Oria booting", extra={"log_level": settings.log_level, "mode": mode})
+
+    if mode == "console":
+        with contextlib.suppress(KeyboardInterrupt):
+            asyncio.run(run_console(settings))
+    else:
+        import uvicorn
+
+        app = create_app()
+        uvicorn.run(app, host="0.0.0.0", port=8000, log_level=settings.log_level.lower())
 
 
 if __name__ == "__main__":

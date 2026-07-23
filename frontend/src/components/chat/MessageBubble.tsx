@@ -1,5 +1,6 @@
 import type { Message } from '../../hooks/useChat';
 import type { SuggestedAction } from '../../api/chat';
+import OriaLogo from '../OriaLogo';
 
 interface Props {
   message: Message;
@@ -14,8 +15,8 @@ export function MessageBubble({ message, onAction }: Props) {
       <div className={`max-w-[85%] ${isUser ? '' : 'flex gap-3'}`}>
         {/* Avatar for assistant */}
         {!isUser && (
-          <div className="w-8 h-8 rounded-xl bg-purple-surface flex items-center justify-center shrink-0 mt-0.5">
-            <span className="font-serif text-sm text-primary">O</span>
+          <div className="w-[30px] h-[30px] rounded-lg bg-purple-surface border border-border-light flex items-center justify-center shrink-0 mt-0.5">
+            <OriaLogo size={21} centerFill="#EEEDFA" />
           </div>
         )}
         <div>

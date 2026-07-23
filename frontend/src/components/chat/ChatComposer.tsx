@@ -23,7 +23,7 @@ export function ChatComposer({ onSend, disabled }: Props) {
 
   return (
     <div className="border-t border-border px-7 py-4">
-      <div className="max-w-[680px] mx-auto">
+      <div className="max-w-[760px] mx-auto">
         <form onSubmit={handleSubmit} className="flex items-center gap-3 bg-surface-card border border-border rounded-2xl px-4 py-3">
           <input
             ref={inputRef}
