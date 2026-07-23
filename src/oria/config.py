@@ -39,6 +39,33 @@ class Settings(BaseSettings):
     llm_model_fast: str = "deepseek-v4-flash"
     llm_model_deep: str = "deepseek-v4-pro"
 
+    # --- Auth ---
+    jwt_secret: str = "change-me-in-production"
+    access_token_ttl_minutes: int = 15
+    refresh_token_ttl_days: int = 7
+    oauth_google_client_id: str = ""
+    oauth_google_client_secret: str = ""
+    oauth_apple_client_id: str = ""
+    oauth_apple_client_secret: str = ""
+
+    # --- Mail ---
+    mail_smtp_host: str = ""
+    mail_smtp_port: int = 587
+    mail_from: str = "noreply@oria.gg"
+
+    # --- Billing ---
+    stripe_secret_key: str = ""
+    stripe_webhook_secret: str = ""
+    stripe_price_premium: str = ""
+    admin_bootstrap_token: str = ""
+
+    # --- Quotas freemium ---
+    free_daily_messages: int = 20
+    premium_daily_messages: int = 1000
+
+    # --- CORS ---
+    cors_origins: str = "*"
+
     # --- Base ---
     db_path: str = "./oria.db"
     log_level: str = "INFO"

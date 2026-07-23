@@ -130,7 +130,7 @@ class TestAdminEndpoints:
     def test_live_stub(self, client: TestClient) -> None:
         resp = client.get("/admin/live", headers=_auth_headers())
         data: dict[str, Any] = resp.json()
-        assert data["status"] == "not_implemented"
+        assert data["status"] == "ok"
 
 
 class TestAdminWithCollectorData:

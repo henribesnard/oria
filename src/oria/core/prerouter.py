@@ -4,24 +4,15 @@ from __future__ import annotations
 
 import logging
 import re
+from typing import TYPE_CHECKING, Any
 
 from oria.kernel.health import Availability, ModuleStatus
-from oria.kernel.models import IncomingRequest, Response
+from oria.kernel.models import Attachment, IncomingRequest, Response, SuggestedAction
+
+if TYPE_CHECKING:
+    from oria.tools.registry import ToolRegistry
 
 logger = logging.getLogger(__name__)
-
-# Patterns simples pour les questions fréquentes (famille A)
-_PATTERNS: list[tuple[re.Pattern[str], str]] = [
-    (
-        re.compile(r"\b(bonjour|salut|hello|hey|coucou)\b", re.IGNORECASE),
-        "Salut ! Je suis Oria, ton assistant football. Comment puis-je t'aider ?",
-    ),
-    (
-        re.compile(r"\b(aide|help)\b", re.IGNORECASE),
-        "Je peux t'aider avec les classements, résultats, matchs à venir, "
-        "compositions, blessures et plus encore. Pose-moi ta question !",
-    ),
-]
 
 
 class PreRouter:
@@ -30,6 +21,9 @@ class PreRouter:
     name: str = "prerouter"
     required: bool = False
     provides: tuple[str, ...] = ("prerouting",)
+
+    def __init__(self, *, tools: ToolRegistry | None = None) -> None:
+        self._tools = tools
 
     async def start(self) -> None:
         logger.info("prerouter ready")
@@ -42,7 +36,139 @@ class PreRouter:
 
     async def try_route(self, req: IncomingRequest) -> Response | None:
         """Renvoie une Response si la requête matche un pattern, sinon None."""
-        for pattern, reply in _PATTERNS:
-            if pattern.search(req.text):
-                return Response(text=reply)
+        text = req.text.strip().lower()
+
+        # Salutations
+        if re.search(r"\b(bonjour|salut|hello|hey|coucou)\b", text, re.IGNORECASE):
+            return Response(
+                text="Salut ! Je suis Oria, ton assistant football. "
+                "Comment puis-je t'aider ?",
+                suggested_actions=[
+                    SuggestedAction(label="Classement Ligue 1", payload={"text": "classement ligue 1"}),
+                    SuggestedAction(label="Prochain match PSG", payload={"text": "prochain match du PSG"}),
+                ],
+            )
+
+        # Aide
+        if re.search(r"\b(aide|help)\b", text, re.IGNORECASE):
+            return Response(
+                text="Je peux t'aider avec les classements, résultats, matchs à venir, "
+                "compositions, blessures et plus encore. Pose-moi ta question !",
+            )
+
+        # Famille A : classement
+        if re.search(r"\b(classement|standings?)\b", text, re.IGNORECASE):
+            return await self._handle_standings(req)
+
+        # Famille A : prochain match
+        if re.search(r"\b(prochain\s+match|next\s+match)\b", text, re.IGNORECASE):
+            return await self._handle_next_match(req)
+
+        # Famille A : dernier résultat
+        if re.search(r"\b(dernier\s+r[eé]sultat|last\s+result|score)\b", text, re.IGNORECASE):
+            return await self._handle_last_result(req)
+
+        # Famille A : forme récente
+        if re.search(r"\b(forme|form)\b", text, re.IGNORECASE):
+            return await self._handle_form(req)
+
+        # Famille A : calendrier
+        if re.search(r"\b(calendrier|programme|schedule)\b", text, re.IGNORECASE):
+            return await self._handle_schedule(req)
+
+        return None
+
+    # -- Handlers famille A (via outils, sans LLM) --
+
+    async def _handle_standings(self, req: IncomingRequest) -> Response | None:
+        if self._tools is None:
+            return None
+        try:
+            params: dict[str, Any] = {}
+            if req.context.league_id:
+                params["league_id"] = req.context.league_id
+            if req.context.season:
+                params["season"] = req.context.season
+            data = await self._tools.call("get_standings", params)
+            if data:
+                return Response(
+                    text="Voici le classement actuel.",
+                    attachments=[Attachment(kind="table", data={"standings": data})],
+                )
+        except Exception:
+            logger.debug("prerouter standings failed", exc_info=True)
+        return None
+
+    async def _handle_next_match(self, req: IncomingRequest) -> Response | None:
+        if self._tools is None:
+            return None
+        try:
+            params: dict[str, Any] = {"next": 1}
+            if req.context.team_id:
+                params["team_id"] = req.context.team_id
+            if req.context.league_id:
+                params["league_id"] = req.context.league_id
+            data = await self._tools.call("get_fixtures", params)
+            if data:
+                return Response(
+                    text="Voici le prochain match.",
+                    attachments=[Attachment(kind="fixture_card", data={"fixtures": data})],
+                )
+        except Exception:
+            logger.debug("prerouter next match failed", exc_info=True)
+        return None
+
+    async def _handle_last_result(self, req: IncomingRequest) -> Response | None:
+        if self._tools is None:
+            return None
+        try:
+            params: dict[str, Any] = {"last": 1}
+            if req.context.team_id:
+                params["team_id"] = req.context.team_id
+            if req.context.league_id:
+                params["league_id"] = req.context.league_id
+            data = await self._tools.call("get_fixtures", params)
+            if data:
+                return Response(
+                    text="Voici le dernier résultat.",
+                    attachments=[Attachment(kind="fixture_card", data={"fixtures": data})],
+                )
+        except Exception:
+            logger.debug("prerouter last result failed", exc_info=True)
+        return None
+
+    async def _handle_form(self, req: IncomingRequest) -> Response | None:
+        if self._tools is None:
+            return None
+        try:
+            params: dict[str, Any] = {"last": 5}
+            if req.context.team_id:
+                params["team_id"] = req.context.team_id
+            data = await self._tools.call("get_fixtures", params)
+            if data:
+                return Response(
+                    text="Voici la forme récente.",
+                    attachments=[Attachment(kind="table", data={"form": data})],
+                )
+        except Exception:
+            logger.debug("prerouter form failed", exc_info=True)
+        return None
+
+    async def _handle_schedule(self, req: IncomingRequest) -> Response | None:
+        if self._tools is None:
+            return None
+        try:
+            params: dict[str, Any] = {"next": 5}
+            if req.context.team_id:
+                params["team_id"] = req.context.team_id
+            if req.context.league_id:
+                params["league_id"] = req.context.league_id
+            data = await self._tools.call("get_fixtures", params)
+            if data:
+                return Response(
+                    text="Voici les prochains matchs.",
+                    attachments=[Attachment(kind="table", data={"schedule": data})],
+                )
+        except Exception:
+            logger.debug("prerouter schedule failed", exc_info=True)
         return None

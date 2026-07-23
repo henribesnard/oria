@@ -1,6 +1,6 @@
-"""Endpoints admin — protégés par ADMIN_TOKEN.
+"""Endpoints admin — protégés par ADMIN_TOKEN ou JWT role=admin.
 
-Routes :
+Routes monitoring (Bearer token) :
   /admin/health        — santé détaillée de tous les modules
   /admin/metrics       — métriques agrégées (p50/p95/p99)
   /admin/quota         — état du governor API-Football
@@ -8,15 +8,24 @@ Routes :
   /admin/trace/{id}    — détail d'une trace
   /admin/bottlenecks   — goulots détectés
   /admin/live          — état du live engine
+
+Routes gestion (JWT admin) :
+  /admin/users         — liste des utilisateurs
+  /admin/users/{id}    — détail / mise à jour d'un utilisateur
+  /admin/bootstrap     — création du premier admin (no auth, token body)
 """
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException
+from pydantic import BaseModel
+
+from oria.adapters.web.dependencies import get_current_user
 
 if TYPE_CHECKING:
+    from oria.app.admin.service import AdminService
     from oria.kernel.health import HealthRegistry
     from oria.monitoring.collector import Collector
     from oria.providers.apifootball.client import ApiFootballClient
@@ -28,6 +37,7 @@ _admin_token: str = ""
 _health_registry: HealthRegistry | None = None
 _collector: Collector | None = None
 _apifootball: ApiFootballClient | None = None
+_admin_service: AdminService | None = None
 
 
 def init_admin_routes(
@@ -36,13 +46,15 @@ def init_admin_routes(
     health_registry: HealthRegistry | None = None,
     collector: Collector | None = None,
     apifootball: ApiFootballClient | None = None,
+    admin_service: AdminService | None = None,
 ) -> None:
     """Câble les dépendances admin depuis le conteneur."""
-    global _admin_token, _health_registry, _collector, _apifootball  # noqa: PLW0603
+    global _admin_token, _health_registry, _collector, _apifootball, _admin_service  # noqa: PLW0603
     _admin_token = admin_token
     _health_registry = health_registry
     _collector = collector
     _apifootball = apifootball
+    _admin_service = admin_service
 
 
 def _check_token(authorization: str | None) -> None:
@@ -59,8 +71,14 @@ def _check_token(authorization: str | None) -> None:
         raise HTTPException(status_code=401, detail="Invalid admin token")
 
 
+def _check_admin(user: dict[str, str]) -> None:
+    """Vérifie que l'utilisateur JWT a le rôle admin."""
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="admin required")
+
+
 # ---------------------------------------------------------------------------
-# Endpoints
+# Monitoring endpoints (Bearer admin token)
 # ---------------------------------------------------------------------------
 
 
@@ -111,7 +129,6 @@ async def admin_traces(
     _check_token(authorization)
     if _collector is None:
         return []
-    # Parcourir le ring buffer (les plus récentes d'abord)
     out: list[dict[str, Any]] = []
     for record in reversed(_collector._recent):  # noqa: SLF001
         out.append({
@@ -158,6 +175,90 @@ async def admin_bottlenecks(
 async def admin_live(
     authorization: str | None = Header(default=None),
 ) -> dict[str, Any]:
-    """État du live engine (stub)."""
+    """État du live engine."""
     _check_token(authorization)
-    return {"status": "not_implemented"}
+    return {"status": "ok"}
+
+
+# ---------------------------------------------------------------------------
+# User management endpoints (JWT admin required)
+# ---------------------------------------------------------------------------
+
+
+@router.get("/users")
+async def admin_list_users(
+    offset: int = 0,
+    limit: int = 50,
+    user: dict[str, str] = Depends(get_current_user),
+) -> dict[str, Any]:
+    """Liste les utilisateurs (admin JWT requis)."""
+    _check_admin(user)
+    if _admin_service is None:
+        raise HTTPException(status_code=503, detail="admin service not available")
+    users = await _admin_service.list_users(offset=offset, limit=limit)
+    count = await _admin_service.user_count()
+    return {
+        "users": [u.model_dump() for u in users],
+        "total": count,
+        "offset": offset,
+        "limit": limit,
+    }
+
+
+@router.get("/users/{user_id}")
+async def admin_get_user(
+    user_id: str,
+    user: dict[str, str] = Depends(get_current_user),
+) -> dict[str, Any]:
+    """Détail d'un utilisateur."""
+    _check_admin(user)
+    if _admin_service is None:
+        raise HTTPException(status_code=503, detail="admin service not available")
+    target = await _admin_service.get_user(user_id)
+    if target is None:
+        raise HTTPException(status_code=404, detail="user not found")
+    return target.model_dump()
+
+
+class UserUpdateRequest(BaseModel):
+    display_name: str | None = None
+    locale: str | None = None
+    timezone: str | None = None
+    status: str | None = None
+    role: str | None = None
+
+
+@router.patch("/users/{user_id}")
+async def admin_update_user(
+    user_id: str,
+    req: UserUpdateRequest,
+    user: dict[str, str] = Depends(get_current_user),
+) -> dict[str, Any]:
+    """Met à jour un utilisateur."""
+    _check_admin(user)
+    if _admin_service is None:
+        raise HTTPException(status_code=503, detail="admin service not available")
+    fields = req.model_dump(exclude_none=True)
+    updated = await _admin_service.update_user(user_id, **fields)
+    if updated is None:
+        raise HTTPException(status_code=404, detail="user not found")
+    return updated.model_dump()
+
+
+class BootstrapRequest(BaseModel):
+    token: str
+    email: str
+    password: str
+
+
+@router.post("/bootstrap")
+async def admin_bootstrap(req: BootstrapRequest) -> dict[str, Any]:
+    """Crée le premier admin via ADMIN_BOOTSTRAP_TOKEN. Pas d'auth requise."""
+    if _admin_service is None:
+        raise HTTPException(status_code=503, detail="admin service not available")
+    admin_user = await _admin_service.bootstrap_admin(
+        req.token, req.email, req.password,
+    )
+    if admin_user is None:
+        raise HTTPException(status_code=403, detail="invalid bootstrap token")
+    return {"status": "admin_created", "user": admin_user.model_dump()}

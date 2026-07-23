@@ -5,11 +5,14 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+from oria.app.entitlements.models import DecisionKind
 from oria.kernel.health import Availability, ModuleStatus
 from oria.kernel.models import IncomingRequest, Response
 from oria.kernel.resilience import guard
 
 if TYPE_CHECKING:
+    from oria.app.conversations.service import ConversationService
+    from oria.app.entitlements.service import Entitlements
     from oria.core.orchestrator import Orchestrator
     from oria.core.prerouter import PreRouter
     from oria.core.synthesis import Synthesis
@@ -30,10 +33,14 @@ class Pipeline:
         synthesis: Synthesis,
         prerouter: PreRouter | None = None,
         orchestrator: Orchestrator | None = None,
+        entitlements: Entitlements | None = None,
+        conversations: ConversationService | None = None,
     ) -> None:
         self._synthesis = synthesis
         self._prerouter = prerouter
         self._orchestrator = orchestrator
+        self._entitlements = entitlements
+        self._conversations = conversations
 
     async def start(self) -> None:
         logger.info("pipeline ready")
@@ -61,19 +68,43 @@ class Pipeline:
 
     async def _process(self, req: IncomingRequest) -> Response:
         """Enchaîne les stages sous guard."""
+        # Stage 0 : entitlements (quotas)
+        if self._entitlements is not None:
+            async with guard("entitlements", on_error=lambda: None):
+                decision = await self._entitlements.check(req.user_id, "chat_message")
+                if decision.kind != DecisionKind.ALLOW:
+                    return await self._synthesis.quota_exceeded(decision.reason)
+
+        # Enrichir la requête avec le contexte persistant
+        if self._conversations is not None:
+            async with guard("context_merge", on_error=lambda: None):
+                req = await self._merge_context(req)
+
+        # Récupérer l'historique de conversation
+        conversation_history: list[dict[str, str]] | None = None
+        if self._conversations is not None:
+            async with guard("conversation_history", on_error=lambda: None):
+                conversation_history = await self._get_conversation_history(req.user_id)
+
         # Stage 1 : pré-routeur (templates, sans LLM)
         if self._prerouter is not None:
             async with guard("prerouter", on_error=lambda: None):
                 result = await self._prerouter.try_route(req)
                 if result is not None:
+                    await self._persist_turn(req, result)
                     return result
 
         # Stage 2 : orchestrateur (LLM + outils)
         if self._orchestrator is not None:
             async with guard("orchestrator", on_error=lambda: None):
-                text = await self._orchestrator.run(req)
+                text = await self._orchestrator.run(
+                    req,
+                    conversation_history=conversation_history,
+                )
                 if text:
-                    return await self._synthesis.render(text)
+                    resp = await self._synthesis.render(text)
+                    await self._persist_turn(req, resp)
+                    return resp
 
         # Stage 3 : fallback — réponse minimale
         return await self._synthesis.render(
@@ -81,3 +112,37 @@ class Pipeline:
             "Essaie de reformuler ou réessaie plus tard.",
             degraded=True,
         )
+
+    async def _merge_context(self, req: IncomingRequest) -> IncomingRequest:
+        """Fusionne le contexte persistant avec celui de la requête."""
+        if self._conversations is None:
+            return req
+        persisted = await self._conversations.get_context(req.user_id)
+        ctx = req.context
+        # Le contexte de la requête a priorité sur le persistant
+        merged = persisted.model_copy(
+            update={k: v for k, v in ctx.model_dump().items() if v is not None},
+        )
+        return req.model_copy(update={"context": merged})
+
+    async def _get_conversation_history(
+        self, user_id: str,
+    ) -> list[dict[str, str]] | None:
+        """Récupère l'historique récent pour l'orchestrateur."""
+        if self._conversations is None:
+            return None
+        turns = await self._conversations.recent(user_id)
+        if not turns:
+            return None
+        return [{"role": t.role, "content": t.text} for t in turns]
+
+    async def _persist_turn(self, req: IncomingRequest, resp: Response) -> None:
+        """Persiste le tour de conversation et consomme le quota."""
+        if self._conversations is not None:
+            async with guard("persist_turn", on_error=lambda: None):
+                await self._conversations.append(req.user_id, "user", req.text)
+                await self._conversations.append(req.user_id, "assistant", resp.text)
+
+        if self._entitlements is not None:
+            async with guard("consume_quota", on_error=lambda: None):
+                await self._entitlements.consume(req.user_id, "chat_message")
