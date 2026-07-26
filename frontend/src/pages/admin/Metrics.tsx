@@ -1,17 +1,15 @@
-const metricsData = [
-  { label: 'API-Football', p50: 210, p95: 820, p99: 1600, spark: [3, 4, 5, 8, 6, 9, 7] },
-  { label: 'LLM Flash', p50: 180, p95: 340, p99: 520, spark: [4, 4, 5, 4, 6, 5, 5] },
-  { label: 'LLM Pro', p50: 900, p95: 1900, p99: 2600, spark: [6, 7, 6, 8, 7, 9, 8] },
-  { label: 'Storage', p50: 12, p95: 34, p99: 60, spark: [2, 2, 3, 2, 2, 3, 2] },
-  { label: 'Ingestion', p50: 40, p95: 90, p99: 140, spark: [3, 4, 3, 4, 3, 4, 4] },
-];
+import { useEffect, useState } from 'react';
+import { getMetrics, getHealth, type HealthModule } from '../../api/admin';
 
-const breakers = [
-  { name: 'apifootball', state: 'half-open' as const },
-  { name: 'llm', state: 'closed' as const },
-  { name: 'liveengine', state: 'open' as const },
-  { name: 'storage', state: 'closed' as const },
-];
+interface MetricEntry {
+  name: string;
+  count: number;
+  avg_ms: number;
+  p50_ms: number;
+  p95_ms: number;
+  p99_ms: number;
+  max_ms: number;
+}
 
 function statusColor(st: string) {
   if (st === 'closed' || st === 'up' || st === 'ok') return { fg: '#207F53', bg: '#E3F3EB', dot: '#3B9B6E' };
@@ -27,129 +25,127 @@ function statusText(st: string) {
   return map[st] ?? st;
 }
 
-function sparkPoints(spark: number[]): string {
-  const max = Math.max(...spark);
-  return spark.map((v, i) => `${(i / (spark.length - 1)) * 100},${28 - (v / max) * 24}`).join(' ');
-}
-
 export function AdminMetrics() {
+  const [metrics, setMetrics] = useState<MetricEntry[]>([]);
+  const [modules, setModules] = useState<Record<string, HealthModule>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let cancelled = false;
+
+    Promise.all([getMetrics(), getHealth()])
+      .then(([metricsRes, healthRes]) => {
+        if (cancelled) return;
+
+        // Transform metrics dict → sorted array
+        const entries: MetricEntry[] = Object.values(metricsRes as Record<string, MetricEntry>)
+          .sort((a, b) => b.p95_ms - a.p95_ms);
+        setMetrics(entries);
+
+        setModules(healthRes.modules ?? {});
+      })
+      .catch(() => {
+        if (!cancelled) setError('Impossible de charger les métriques.');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, []);
+
   return (
     <div className="max-w-[1080px] mx-auto px-7 py-8">
       <h1 className="font-serif font-normal text-[clamp(25px,6vw,32px)] mb-1.5">Métriques</h1>
-      <p className="text-sm text-text-muted mb-6">Latences, tokens LLM, circuit breakers.</p>
+      <p className="text-sm text-text-muted mb-6">Latences, appels et circuit breakers.</p>
 
-      {/* Latency table */}
-      <div className="bg-white border border-border rounded-2xl overflow-hidden mb-5">
-        <div
-          className="hide-sm"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 80px 80px 80px 110px',
-            gap: '12px',
-            padding: '13px 20px',
-            fontSize: '11.5px',
-            fontWeight: 700,
-            textTransform: 'uppercase' as const,
-            letterSpacing: '.4px',
-            color: '#A5A0BC',
-            background: '#FBFBFE',
-            borderBottom: '1px solid #F0EEF8',
-          }}
-        >
-          <span>Module</span>
-          <span style={{ textAlign: 'right' }}>p50</span>
-          <span style={{ textAlign: 'right' }}>p95</span>
-          <span style={{ textAlign: 'right' }}>p99</span>
-          <span style={{ textAlign: 'right' }}>7 j</span>
-        </div>
-        {metricsData.map((m) => (
-          <div
-            key={m.label}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 80px 80px 80px 110px',
-              gap: '12px',
-              alignItems: 'center',
-              padding: '14px 20px',
-              borderTop: '1px solid #F0EEF8',
-            }}
-          >
-            <span className="font-semibold text-sm">{m.label}</span>
-            <span className="font-mono text-[12.5px] text-right text-text-dark">{m.p50}</span>
-            <span className="font-mono text-[12.5px] text-right text-text-dark">{m.p95}</span>
-            <span className="font-mono text-[12.5px] text-right text-text-dark">{m.p99}</span>
-            <span className="text-right">
-              <svg width="100" height="28" viewBox="0 0 100 28" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
-                <polyline
-                  points={sparkPoints(m.spark)}
-                  fill="none"
-                  stroke="#5B4FD6"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-          </div>
-        ))}
-      </div>
+      {loading && <p className="text-sm text-text-muted">Chargement…</p>}
+      {error && <p className="text-sm text-[#D5443B]">{error}</p>}
 
-      {/* Tokens + Circuit Breakers */}
-      <div className="grid-2">
-        {/* Tokens LLM */}
-        <div className="bg-white border border-border rounded-2xl p-[22px]">
-          <h2 className="text-[15px] font-semibold mb-4">Tokens LLM (aujourd'hui)</h2>
-
-          <div className="mb-4">
-            <div className="flex justify-between text-[13px] mb-1.5">
-              <span className="font-semibold">Gemini Flash</span>
-              <span className="font-mono text-text-secondary">4,8 M</span>
-            </div>
-            <div className="h-2 rounded-full bg-border-inner overflow-hidden">
-              <div className="h-full bg-primary rounded-full" style={{ width: '78%' }} />
-            </div>
-          </div>
-
-          <div>
-            <div className="flex justify-between text-[13px] mb-1.5">
-              <span className="font-semibold">Gemini Pro</span>
-              <span className="font-mono text-text-secondary">1,3 M</span>
-            </div>
-            <div className="h-2 rounded-full bg-border-inner overflow-hidden">
-              <div className="h-full rounded-full" style={{ width: '22%', background: '#9C90F5' }} />
-            </div>
-          </div>
-
-          <p className="text-xs text-text-muted mt-4">
-            342 fallbacks servis · Pro réservé aux analyses avancées
-          </p>
-        </div>
-
-        {/* Circuit Breakers */}
-        <div className="bg-white border border-border rounded-2xl p-[22px]">
-          <h2 className="text-[15px] font-semibold mb-4">Circuit breakers</h2>
-          <div className="flex flex-col gap-2.5">
-            {breakers.map((b) => {
-              const c = statusColor(b.state);
-              return (
-                <div key={b.name} className="flex items-center gap-3">
-                  <span
-                    className="w-[9px] h-[9px] rounded-full shrink-0"
-                    style={{ background: c.dot }}
-                  />
-                  <span className="font-mono text-[13px] flex-1">{b.name}</span>
-                  <span
-                    className="px-2.5 py-[2px] rounded-full text-[11.5px] font-bold"
-                    style={{ color: c.fg, background: c.bg }}
-                  >
-                    {statusText(b.state)}
-                  </span>
+      {!loading && !error && (
+        <>
+          {/* Latency table */}
+          {metrics.length > 0 && (
+            <div className="bg-white border border-border rounded-2xl overflow-hidden mb-5">
+              <div
+                className="hide-sm"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 80px 80px 80px 80px 80px',
+                  gap: '12px',
+                  padding: '13px 20px',
+                  fontSize: '11.5px',
+                  fontWeight: 700,
+                  textTransform: 'uppercase' as const,
+                  letterSpacing: '.4px',
+                  color: '#A5A0BC',
+                  background: '#FBFBFE',
+                  borderBottom: '1px solid #F0EEF8',
+                }}
+              >
+                <span>Module</span>
+                <span style={{ textAlign: 'right' }}>Appels</span>
+                <span style={{ textAlign: 'right' }}>p50</span>
+                <span style={{ textAlign: 'right' }}>p95</span>
+                <span style={{ textAlign: 'right' }}>p99</span>
+                <span style={{ textAlign: 'right' }}>max</span>
+              </div>
+              {metrics.map((m) => (
+                <div
+                  key={m.name}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 80px 80px 80px 80px 80px',
+                    gap: '12px',
+                    alignItems: 'center',
+                    padding: '14px 20px',
+                    borderTop: '1px solid #F0EEF8',
+                  }}
+                >
+                  <span className="font-semibold text-sm">{m.name}</span>
+                  <span className="font-mono text-[12.5px] text-right text-text-muted">{m.count.toLocaleString('fr-FR')}</span>
+                  <span className="font-mono text-[12.5px] text-right text-text-dark">{Math.round(m.p50_ms)}</span>
+                  <span className="font-mono text-[12.5px] text-right text-text-dark">{Math.round(m.p95_ms)}</span>
+                  <span className="font-mono text-[12.5px] text-right text-text-dark">{Math.round(m.p99_ms)}</span>
+                  <span className="font-mono text-[12.5px] text-right text-text-secondary">{Math.round(m.max_ms)}</span>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+              ))}
+            </div>
+          )}
+
+          {/* Circuit Breakers / Health modules */}
+          {Object.keys(modules).length > 0 && (
+            <div className="bg-white border border-border rounded-2xl p-[22px]">
+              <h2 className="text-[15px] font-semibold mb-4">État des modules</h2>
+              <div className="flex flex-col gap-2.5">
+                {Object.values(modules).map((mod) => {
+                  const c = statusColor(mod.availability);
+                  return (
+                    <div key={mod.name} className="flex items-center gap-3">
+                      <span
+                        className="w-[9px] h-[9px] rounded-full shrink-0"
+                        style={{ background: c.dot }}
+                      />
+                      <span className="font-mono text-[13px] flex-1">{mod.name}</span>
+                      <span
+                        className="px-2.5 py-[2px] rounded-full text-[11.5px] font-bold"
+                        style={{ color: c.fg, background: c.bg }}
+                      >
+                        {statusText(mod.availability)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {metrics.length === 0 && Object.keys(modules).length === 0 && (
+            <p className="text-sm text-text-muted">Aucune donnée disponible.</p>
+          )}
+        </>
+      )}
     </div>
   );
 }

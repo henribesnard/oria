@@ -1,13 +1,27 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { api } from '../api/client';
 
 export function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError('');
+    try {
+      await api.post('/auth/reset', { email });
+      setSubmitted(true);
+    } catch {
+      // The backend always returns ok to prevent email enumeration,
+      // so an error here means a network/server issue.
+      setError('Une erreur est survenue. Réessaie plus tard.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,11 +55,15 @@ export function ForgotPassword() {
                 className="h-11 px-4 rounded-xl border border-border bg-surface-alt text-sm text-text placeholder:text-text-faint focus:outline-none focus:border-primary-soft transition-colors"
               />
             </div>
+            {error && (
+              <p className="text-sm text-[#D5443B]">{error}</p>
+            )}
             <button
               type="submit"
-              className="h-11 mt-2 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl transition-colors"
+              disabled={loading}
+              className="h-11 mt-2 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl transition-colors disabled:opacity-50"
             >
-              Envoyer le lien
+              {loading ? 'Envoi…' : 'Envoyer le lien'}
             </button>
           </form>
         )}
