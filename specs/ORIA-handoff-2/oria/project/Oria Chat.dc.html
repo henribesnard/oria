@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #F6F6FB; }
+  a { color: #5B4FD6; text-decoration: none; }
+  a:hover { color: #4A3FC0; }
+  ::selection { background: #DED9FA; }
+  .oria-scroll::-webkit-scrollbar { width: 10px; }
+  .oria-scroll::-webkit-scrollbar-thumb { background: #E1DEF0; border-radius: 999px; border: 3px solid #F6F6FB; }
+  .oria-scroll::-webkit-scrollbar-track { background: transparent; }
+  button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid #5B4FD6; outline-offset: 2px; border-radius: 8px;
+  }
+  @keyframes oriaPulse { 0%,100% { opacity: 1; transform: scale(1);} 50% { opacity: .35; transform: scale(.8);} }
+  @keyframes oriaBlink { 0%,80%,100% { opacity: .25; transform: translateY(0);} 40% { opacity: 1; transform: translateY(-3px);} }
+  @keyframes oriaPanelIn { from { opacity: 0; transform: translateY(8px) scale(.99);} to { opacity: 1; transform: none;} }
+  @keyframes oriaMsgIn { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: none;} }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</helmet>
+<div style="height:100dvh;min-height:100dvh;display:flex;flex-direction:column;background:#F6F6FB;font-family:'Manrope',system-ui,sans-serif;color:#191526;">
+
+  <header style="flex:none;border-bottom:1px solid #E9E7F2;background:rgba(246,246,251,.82);backdrop-filter:blur(10px);position:sticky;top:0;z-index:20;">
+    <div style="max-width:760px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:14px;">
+      <div style="width:36px;height:36px;border-radius:10px;background:#EEEDFA;border:1px solid #E1DEF0;display:flex;align-items:center;justify-content:center;flex:none;">
+        <svg width="25" height="25" viewBox="0 0 40 40" fill="none" aria-hidden="true"><title>Oria</title><circle cx="20" cy="20" r="15.5" stroke="#5B4FD6" stroke-width="2.6"/><path d="M12.5 23.6 L20 15.4 L27.5 23.6" stroke="#5B4FD6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:1px;min-width:0;">
+        <span style="font-family:'Instrument Serif',serif;font-size:27px;line-height:1;letter-spacing:.2px;">Oria</span>
+        <span style="font-size:12px;color:#86829A;letter-spacing:.3px;">L'oracle du sport</span>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:7px;padding:6px 12px;border:1px solid #E1DEF0;background:#fff;border-radius:999px;font-size:12px;color:#605C74;font-weight:600;white-space:nowrap;">
+        <span style="width:7px;height:7px;border-radius:50%;background:#5B4FD6;flex:none;"></span>
+        Football · <span style="color:#86829A;font-weight:500;">bientôt plus</span>
+      </div>
+    </div>
+  </header>
+
+  <div style="flex:none;background:#fff;border-bottom:1px solid #E9E7F2;">
+    <div class="oria-scroll" style="max-width:760px;margin:0 auto;display:flex;align-items:center;gap:0;overflow-x:auto;">
+      <span style="flex:none;display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-right:1px solid #EEEDF6;position:sticky;left:0;background:#fff;z-index:1;">
+        <span style="width:7px;height:7px;border-radius:50%;background:#E0782A;animation:oriaPulse 1.5s infinite;flex:none;"></span>
+        <span style="font-size:10.5px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:#191526;">En direct</span>
+      </span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-right:1px solid #F3F2F9;white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;"><img src="https://media.api-sports.io/football/teams/85.png" alt="" style="width:16px;height:16px;object-fit:contain;"><span style="color:#3F3B54;">PSG</span><span style="color:#191526;">2–0</span><span style="color:#3F3B54;">LEH</span><img src="https://media.api-sports.io/football/teams/111.png" alt="" style="width:16px;height:16px;object-fit:contain;"><span style="padding:1px 7px;border-radius:999px;font-size:10px;color:#C4691F;background:#FBEEE2;">67'</span></span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-right:1px solid #F3F2F9;white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;"><img src="https://media.api-sports.io/football/teams/42.png" alt="" style="width:16px;height:16px;object-fit:contain;"><span style="color:#3F3B54;">ARS</span><span style="color:#191526;">2–2</span><span style="color:#3F3B54;">LIV</span><img src="https://media.api-sports.io/football/teams/40.png" alt="" style="width:16px;height:16px;object-fit:contain;"><span style="padding:1px 7px;border-radius:999px;font-size:10px;color:#C4691F;background:#FBEEE2;">81'</span></span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-right:1px solid #F3F2F9;white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;"><img src="https://media.api-sports.io/football/teams/492.png" alt="" style="width:16px;height:16px;object-fit:contain;"><span style="color:#3F3B54;">NAP</span><span style="color:#191526;">2–1</span><span style="color:#3F3B54;">MIL</span><img src="https://media.api-sports.io/football/teams/489.png" alt="" style="width:16px;height:16px;object-fit:contain;"><span style="padding:1px 7px;border-radius:999px;font-size:10px;color:#C4691F;background:#FBEEE2;">73'</span></span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-right:1px solid #F3F2F9;white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;"><img src="https://media.api-sports.io/football/teams/541.png" alt="" style="width:16px;height:16px;object-fit:contain;"><span style="color:#605C74;">RMA</span><span style="color:#4A3FC0;">—</span><span style="color:#605C74;">GIR</span><img src="https://media.api-sports.io/football/teams/547.png" alt="" style="width:16px;height:16px;object-fit:contain;"><span style="padding:1px 7px;border-radius:999px;font-size:10px;color:#4A3FC0;background:#EEEDFA;">21:00</span></span>
+    </div>
+  </div>
+
+  <main class="oria-scroll" style="flex:1;overflow-y:auto;">
+    <div style="max-width:760px;margin:0 auto;padding:28px 20px 8px;display:flex;flex-direction:column;gap:20px;">
+
+      <sc-for list="{{ messages }}" as="m" hint-placeholder-count="3">
+        <sc-if value="{{ m.isOria }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;gap:12px;align-items:flex-start;animation:oriaMsgIn .3s ease both;">
+            <div style="width:30px;height:30px;border-radius:8px;background:#EEEDFA;border:1px solid #E1DEF0;display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px;">
+              <svg width="21" height="21" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="15.5" stroke="#5B4FD6" stroke-width="2.8"/><path d="M12.5 23.6 L20 15.4 L27.5 23.6" stroke="#5B4FD6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div style="max-width:min(560px,90%);display:flex;flex-direction:column;gap:12px;">
+              <div style="background:#fff;border:1px solid #EDEBF6;border-radius:4px 16px 16px 16px;padding:13px 16px;font-size:15px;line-height:1.55;color:#221E33;box-shadow:0 1px 2px rgba(25,21,38,.03);">{{ m.text }}</div>
+
+              <sc-if value="{{ m.isRich }}" hint-placeholder-val="{{ true }}">
+                <div style="background:#fff;border:1px solid #EDEBF6;border-radius:16px;padding:16px;box-shadow:0 6px 20px rgba(38,32,74,.06);">
+                  <div style="display:flex;align-items:center;gap:14px;">
+                    <div style="flex:1;display:flex;align-items:center;gap:10px;justify-content:flex-end;text-align:right;">
+                      <span style="font-weight:700;font-size:15px;">{{ m.fixture.home }}</span>
+                      <span style="position:relative;width:34px;height:34px;border-radius:50%;background:#EEEDFA;border:1px solid #E1DEF0;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#5B4FD6;flex:none;overflow:hidden;">{{ m.fixture.homeMono }}{{ m.fixture.homeCrest }}</span>
+                    </div>
+                    <span style="font-size:11px;color:#86829A;text-transform:uppercase;letter-spacing:.7px;font-weight:600;flex:none;">reçoit</span>
+                    <div style="flex:1;display:flex;align-items:center;gap:10px;">
+                      <span style="position:relative;width:34px;height:34px;border-radius:50%;background:#F3F2F9;border:1px solid #E9E7F2;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#605C74;flex:none;overflow:hidden;">{{ m.fixture.awayMono }}{{ m.fixture.awayCrest }}</span>
+                      <span style="font-weight:700;font-size:15px;">{{ m.fixture.away }}</span>
+                    </div>
+                  </div>
+                  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #EEEDF6;display:flex;flex-wrap:wrap;gap:6px 10px;font-size:12.5px;color:#86829A;font-weight:500;">
+                    <span style="color:#5B4FD6;font-weight:600;">{{ m.fixture.comp }}</span>
+                    <span>·</span><span>{{ m.fixture.date }}</span>
+                    <span>·</span><span>{{ m.fixture.venue }}</span>
+                  </div>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:0 2px;">
+                  <span style="font-size:13px;color:#86829A;font-weight:500;">Forme récente</span>
+                  <div style="display:flex;gap:5px;">
+                    <sc-for list="{{ m.form }}" as="f" hint-placeholder-count="5">
+                      <span style="width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:{{ f.fg }};background:{{ f.bg }};">{{ f.letter }}</span>
+                    </sc-for>
+                  </div>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:7px;padding:0 2px;">
+                  <span style="width:8px;height:8px;border-radius:50%;background:#2E9E6B;flex:none;animation:oriaPulse 2.4s ease-in-out infinite;"></span>
+                  <span style="font-size:12px;color:#86829A;">{{ m.freshness }}</span>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ m.isUser }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;justify-content:flex-end;animation:oriaMsgIn .3s ease both;">
+            <div style="max-width:min(520px,88%);display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+              <sc-if value="{{ m.hasChips }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;">
+                  <sc-for list="{{ m.chips }}" as="c" hint-placeholder-count="2">
+                    <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:#EEEDFA;border:1px solid #DED9FA;font-size:12px;font-weight:600;color:#4A3FC0;white-space:nowrap;"><span style="flex:none;white-space:nowrap;">{{ c.label }}</span></span>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="background:#5B4FD6;color:#fff;border-radius:16px 4px 16px 16px;padding:12px 16px;font-size:15px;line-height:1.5;box-shadow:0 4px 14px rgba(91,79,214,.22);">{{ m.text }}</div>
+            </div>
+          </div>
+        </sc-if>
+      </sc-for>
+
+      <sc-if value="{{ thinking }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:12px;align-items:center;animation:oriaMsgIn .25s ease both;">
+          <div style="width:30px;height:30px;border-radius:8px;background:#EEEDFA;border:1px solid #E1DEF0;display:flex;align-items:center;justify-content:center;flex:none;">
+            <svg width="21" height="21" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="15.5" stroke="#5B4FD6" stroke-width="2.8"/><path d="M12.5 23.6 L20 15.4 L27.5 23.6" stroke="#5B4FD6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div style="display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #EDEBF6;border-radius:4px 16px 16px 16px;padding:11px 15px;box-shadow:0 1px 2px rgba(25,21,38,.03);">
+            <span style="width:8px;height:8px;border-radius:50%;background:#E0782A;animation:oriaPulse 1.4s ease-in-out infinite;"></span>
+            <span style="font-size:13.5px;color:#86829A;font-weight:500;">Oria consulte les données en direct</span>
+            <span style="display:inline-flex;gap:3px;">
+              <span style="width:5px;height:5px;border-radius:50%;background:#C6C1DC;animation:oriaBlink 1.2s infinite 0s;"></span>
+              <span style="width:5px;height:5px;border-radius:50%;background:#C6C1DC;animation:oriaBlink 1.2s infinite .2s;"></span>
+              <span style="width:5px;height:5px;border-radius:50%;background:#C6C1DC;animation:oriaBlink 1.2s infinite .4s;"></span>
+            </span>
+          </div>
+        </div>
+      </sc-if>
+
+      <div ref="{{ bottomRef }}" style="height:4px;"></div>
+    </div>
+  </main>
+
+  <sc-if value="{{ panelOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closePanel }}" style="position:fixed;inset:0;z-index:30;background:rgba(25,21,38,.04);"></div>
+  </sc-if>
+
+  <footer style="flex:none;position:relative;z-index:40;padding:8px 20px 20px;">
+    <div style="max-width:760px;margin:0 auto;position:relative;">
+
+      <sc-if value="{{ panelOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;bottom:calc(100% + 10px);left:0;right:0;background:#fff;border:1px solid #E4E1F0;border-radius:18px;box-shadow:0 20px 50px -12px rgba(38,32,74,.28);overflow:hidden;animation:oriaPanelIn .18s ease both;">
+          <div style="padding:14px 16px 12px;border-bottom:1px solid #F0EEF8;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+              <span style="font-size:13px;font-weight:700;color:#191526;">{{ panelTitle }}</span>
+              <button onClick="{{ closePanel }}" aria-label="Fermer le sélecteur de contexte" style="border:none;background:#F3F2F9;width:26px;height:26px;border-radius:8px;color:#86829A;cursor:pointer;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;">✕</button>
+            </div>
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:10px;">
+              <sc-for list="{{ crumbs }}" as="cr" hint-placeholder-count="2">
+                <button onClick="{{ cr.onClick }}" style="border:none;background:none;cursor:pointer;font-size:12px;font-weight:{{ cr.weight }};color:{{ cr.color }};padding:2px 2px;font-family:inherit;">{{ cr.text }}</button>
+                <sc-if value="{{ cr.showSep }}" hint-placeholder-val="{{ true }}"><span style="color:#C6C1DC;font-size:12px;">›</span></sc-if>
+              </sc-for>
+            </div>
+          </div>
+
+          <sc-if value="{{ showPickTabs }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:6px;padding:12px 16px 0;">
+              <button onClick="{{ setModeMatch }}" style="flex:1;padding:8px;border-radius:10px;border:1px solid {{ matchTabBorder }};background:{{ matchTabBg }};color:{{ matchTabColor }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;">Un match</button>
+              <button onClick="{{ setModeTeam }}" style="flex:1;padding:8px;border-radius:10px;border:1px solid {{ teamTabBorder }};background:{{ teamTabBg }};color:{{ teamTabColor }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;">Une équipe</button>
+            </div>
+          </sc-if>
+
+          <div style="padding:12px 16px 0;">
+            <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:#F6F6FB;border:1px solid #E9E7F2;border-radius:10px;">
+              <span style="color:#B4AFCA;font-size:14px;">⌕</span>
+              <input ref="{{ searchRef }}" value="{{ search }}" onInput="{{ onSearch }}" placeholder="{{ searchPlaceholder }}" aria-label="{{ searchPlaceholder }}" style="border:none;background:none;outline:none;flex:1;font-family:inherit;font-size:14px;color:#191526;min-width:0;">
+            </div>
+          </div>
+
+          <div class="oria-scroll" style="max-height:260px;overflow-y:auto;padding:8px 10px 6px;">
+            <sc-for list="{{ options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onClick }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:10px 12px;border:none;background:none;border-radius:11px;cursor:pointer;text-align:left;font-family:inherit;transition:background .12s;" style-hover="background:#F5F4FC;">
+                <span style="position:relative;width:30px;height:30px;border-radius:{{ o.imgRadius }};background:{{ o.iconBg }};display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;color:{{ o.iconColor }};flex:none;overflow:hidden;">
+                  {{ o.mono }}
+                  {{ o.crest }}
+                </span>
+                <span style="display:flex;flex-direction:column;gap:1px;min-width:0;flex:1;">
+                  <span style="font-size:14px;font-weight:600;color:#221E33;">{{ o.name }}</span>
+                  <sc-if value="{{ o.hasSub }}" hint-placeholder-val="{{ true }}"><span style="font-size:12px;color:#86829A;">{{ o.sub }}</span></sc-if>
+                </span>
+                <span style="color:#C6C1DC;font-size:15px;flex:none;">{{ o.arrow }}</span>
+              </button>
+            </sc-for>
+            <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:22px 12px;text-align:center;font-size:13px;color:#B4AFCA;">Aucun résultat</div>
+            </sc-if>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-top:1px solid #F0EEF8;background:#FBFBFE;">
+            <span style="font-size:11.5px;color:#B4AFCA;">Sélection dépendante · instantané depuis le cache</span>
+            <button onClick="{{ closePanel }}" style="border:none;background:#5B4FD6;color:#fff;padding:8px 18px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;" style-hover="background:#4A3FC0;">Terminé</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="background:#fff;border:1px solid {{ composerBorder }};border-radius:20px;box-shadow:0 8px 28px -10px rgba(38,32,74,.14);padding:10px;transition:border-color .15s;">
+        <sc-if value="{{ hasContext }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;padding:2px 4px 10px;">
+            <sc-for list="{{ contextChips }}" as="chip" hint-placeholder-count="2">
+              <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 6px 5px 11px;border-radius:999px;background:#EEEDFA;border:1px solid #DED9FA;font-size:12.5px;font-weight:600;color:#4A3FC0;white-space:nowrap;">
+                <span style="flex:none;white-space:nowrap;">{{ chip.label }}</span>
+                <button onClick="{{ chip.onRemove }}" aria-label="{{ chip.removeLabel }}" style="border:none;background:none;cursor:pointer;color:#8B82D8;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1;" style-hover="background:#DED9FA;color:#4A3FC0;">✕</button>
+              </span>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <div style="display:flex;align-items:flex-end;gap:8px;">
+          <button onClick="{{ togglePanel }}" aria-label="Ajouter un contexte" aria-expanded="{{ panelOpen }}" style="flex:none;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid {{ ctxBtnBorder }};background:{{ ctxBtnBg }};color:{{ ctxBtnColor }};font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s;" style-hover="border-color:#C9C3EC;">
+            <span style="font-size:16px;line-height:1;font-weight:500;">＋</span>
+            Contexte
+          </button>
+          <textarea ref="{{ taRef }}" value="{{ draft }}" onInput="{{ onDraft }}" onKeyDown="{{ onKeyDown }}" rows="1" placeholder="Pose ta question à Oria…" aria-label="Pose ta question à Oria" style="flex:1;resize:none;border:none;outline:none;background:none;font-family:inherit;font-size:15px;line-height:1.5;color:#191526;padding:9px 4px;max-height:150px;min-width:0;"></textarea>
+          <button onClick="{{ send }}" aria-label="Envoyer" disabled="{{ sendDisabled }}" style="flex:none;width:40px;height:40px;border-radius:12px;border:none;background:{{ sendBg }};color:#fff;cursor:{{ sendCursor }};display:flex;align-items:center;justify-content:center;transition:background .15s;" style-hover="{{ sendHover }}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <p style="margin:9px 4px 0;font-size:11.5px;color:#A5A0BC;text-align:center;line-height:1.4;">Le contexte reste actif pour toute la conversation — retire une puce pour l'oublier.</p>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;760px&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const mono = (s) => s.replace(/[^A-Za-zÀ-ÿ0-9 ]/g,'').split(/\s+/).map(w=>w[0]||'').join('').slice(0,3).toUpperCase();
+    this.mono = mono;
+    const CDN='https://media.api-sports.io/football';
+    const TEAM={'Paris SG':85,'Le Havre':111,'Marseille':81,'Monaco':91,'Lyon':80,'Lille':79,'Angers':77,'Grenoble':1063,'Man City':50,'Arsenal':42,'Liverpool':40,'Chelsea':49,'Leeds':63,'Southampton':41,'Real Madrid':541,'Barcelona':529,'Atlético':530,'Girona':547,'Inter':505,'Juventus':496,'Milan':489,'Napoli':492};
+    const LEAGUE={'Ligue 1':61,'Ligue 2':62,'Premier League':39,'Championship':40,'LaLiga':140,'Serie A':135};
+    const PLAYER={'Mbappé':278,'Haaland':1100,'Dembélé':2060,'Barcola':22105,'Vitinha':61931,'Marquinhos':5,'Greenwood':19220,'Harit':1150,'Foden':1485,'Bellingham':1120,'Yamal':400500,'Raphinha':1467,'Lautaro':30439,'Barella':5155};
+    this.teamLogo=(n)=>TEAM[n]!=null?`${CDN}/teams/${TEAM[n]}.png`:'';
+    this.leagueLogo=(n)=>LEAGUE[n]!=null?`${CDN}/leagues/${LEAGUE[n]}.png`:'';
+    this.playerPhoto=(n)=>PLAYER[n]!=null?`${CDN}/players/${PLAYER[n]}.png`:'';
+    this.crestEl=(url,pad)=>{ if(!url) return null; return React.createElement('img',{src:url,alt:'',style:{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'contain',padding:pad||'3px',background:'#fff'}}); };
+
+    this.data = {
+      countries: [
+        { id:'fr', name:'France', sub:'Ligue 1, Ligue 2' },
+        { id:'en', name:'Angleterre', sub:'Premier League, Championship' },
+        { id:'es', name:'Espagne', sub:'LaLiga' },
+        { id:'it', name:'Italie', sub:'Serie A' },
+      ],
+      leagues: {
+        fr: [ {id:'l1',name:'Ligue 1',sub:'20 clubs'}, {id:'l2',name:'Ligue 2',sub:'18 clubs'} ],
+        en: [ {id:'pl',name:'Premier League',sub:'20 clubs'}, {id:'ch',name:'Championship',sub:'24 clubs'} ],
+        es: [ {id:'la',name:'LaLiga',sub:'20 clubs'} ],
+        it: [ {id:'sa',name:'Serie A',sub:'20 clubs'} ],
+      },
+      teams: {
+        l1: [ {id:'psg',name:'Paris SG'}, {id:'om',name:'Marseille'}, {id:'asm',name:'Monaco'}, {id:'ol',name:'Lyon'}, {id:'losc',name:'Lille'} ],
+        l2: [ {id:'sco',name:'Angers'}, {id:'gf38',name:'Grenoble'} ],
+        pl: [ {id:'mci',name:'Man City'}, {id:'ars',name:'Arsenal'}, {id:'liv',name:'Liverpool'}, {id:'che',name:'Chelsea'} ],
+        ch: [ {id:'lee',name:'Leeds'}, {id:'sou',name:'Southampton'} ],
+        la: [ {id:'rma',name:'Real Madrid'}, {id:'fcb',name:'Barcelona'}, {id:'atm',name:'Atlético'}, {id:'gir',name:'Girona'} ],
+        sa: [ {id:'int',name:'Inter'}, {id:'juv',name:'Juventus'}, {id:'mil',name:'Milan'}, {id:'nap',name:'Napoli'} ],
+      },
+      players: {
+        psg: [ {id:'dem',name:'Dembélé',sub:'Ailier'}, {id:'bar',name:'Barcola',sub:'Ailier'}, {id:'vit',name:'Vitinha',sub:'Milieu'}, {id:'mar',name:'Marquinhos',sub:'Défenseur'} ],
+        om: [ {id:'gre',name:'Greenwood',sub:'Ailier'}, {id:'har',name:'Harit',sub:'Milieu'} ],
+        mci: [ {id:'hal',name:'Haaland',sub:'Attaquant'}, {id:'fod',name:'Foden',sub:'Milieu'} ],
+        rma: [ {id:'mba',name:'Mbappé',sub:'Attaquant'}, {id:'bel',name:'Bellingham',sub:'Milieu'} ],
+        fcb: [ {id:'yam',name:'Yamal',sub:'Ailier'}, {id:'raph',name:'Raphinha',sub:'Ailier'} ],
+        int: [ {id:'laut',name:'Lautaro',sub:'Attaquant'}, {id:'bar2',name:'Barella',sub:'Milieu'} ],
+      },
+      matches: {
+        l1: [
+          {id:'m1',name:'Paris SG — Le Havre',sub:'sam. 17 août · 21:00'},
+          {id:'m2',name:'Monaco — Lyon',sub:'dim. 18 août · 17:00'},
+          {id:'m3',name:'Marseille — Lille',sub:'dim. 18 août · 20:45'},
+        ],
+        pl: [
+          {id:'m4',name:'Man City — Chelsea',sub:'sam. 17 août · 18:30'},
+          {id:'m5',name:'Arsenal — Liverpool',sub:'dim. 18 août · 17:00'},
+        ],
+        la: [ {id:'m6',name:'Real Madrid — Girona',sub:'sam. 17 août · 21:00'} ],
+        sa: [ {id:'m7',name:'Inter — Juventus',sub:'dim. 18 août · 20:45'} ],
+      },
+    };
+    // decorate with API-Football media
+    Object.values(this.data.leagues).flat().forEach(l=>l.logo=this.leagueLogo(l.name));
+    Object.values(this.data.teams).flat().forEach(t=>t.logo=this.teamLogo(t.name));
+    Object.values(this.data.players).flat().forEach(p=>p.photo=this.playerPhoto(p.name));
+    Object.values(this.data.matches).flat().forEach(m=>{ const [h,a]=m.name.split(' — '); m.homeLogo=this.teamLogo(h); m.awayLogo=this.teamLogo(a); });
+
+    const initCtx = this.ctxFromProps(props && props.initialLeague, props && props.initialMatch);
+    this._appliedCtxSig = ((props&&props.initialLeague)||'')+'|'+((props&&props.initialMatch)||'');
+
+    this.state = {
+      draft: '',
+      panelOpen: false,
+      search: '',
+      thinking: false,
+      ctx: initCtx,
+      messages: [
+        { role:'oria', variant:'text', text:"Salut, je suis Oria. Pose-moi une question sur le foot — résultats, forme, compos, tendances, cotes. Tu peux cadrer ta question avec un contexte (pays, ligue, match, joueur…), mais rien ne t'y oblige." },
+        { role:'user', variant:'text', text:'Son prochain match ?', chips:[ {label:'Ligue 1'}, {label:'Paris SG'} ] },
+        { role:'oria', variant:'rich',
+          text:"Voici le prochain rendez-vous du Paris SG :",
+          fixture:{ home:'Paris SG', homeMono:'PSG', homeLogo:this.teamLogo('Paris SG'), away:'Le Havre', awayMono:'LH', awayLogo:this.teamLogo('Le Havre'), comp:'Ligue 1', date:'sam. 17 août, 21:00', venue:'Parc des Princes' },
+          form:[ {letter:'V',type:'w'}, {letter:'V',type:'w'}, {letter:'N',type:'d'}, {letter:'V',type:'w'}, {letter:'D',type:'l'} ],
+          freshness:'Classement et forme à jour il y a 2 h' },
+      ],
+    };
+  }
+
+  ctxFromProps(league,match){
+    const base={ country:null, league:null, mode:'match', match:null, team:null, player:null };
+    try{
+      const L2C={'Ligue 1':'France','Ligue 2':'France','Premier League':'Angleterre','Championship':'Angleterre','LaLiga':'Espagne','Serie A':'Italie'};
+      if(league){ base.country={ id:'x', name:L2C[league]||'—' }; base.league={ id:'x', name:league }; }
+      if(match){ base.match={ id:'x', name:match }; }
+    }catch(e){}
+    return base;
+  }
+
+  componentDidUpdate() {
+    const s = this.state;
+    const sig = ((this.props.initialLeague)||'')+'|'+((this.props.initialMatch)||'');
+    if (sig !== this._appliedCtxSig) {
+      this._appliedCtxSig = sig;
+      if (this.props.initialLeague || this.props.initialMatch) this.setState({ ctx: this.ctxFromProps(this.props.initialLeague, this.props.initialMatch), panelOpen:false });
+    }
+    if (this._pMsgs !== s.messages || this._pThinking !== s.thinking) this.scrollBottom();
+    if (!this._pPanel && s.panelOpen && this._search) setTimeout(()=>{ try{this._search.focus();}catch(e){} }, 40);
+    this._pMsgs = s.messages; this._pThinking = s.thinking; this._pPanel = s.panelOpen;
+  }
+  scrollBottom() { setTimeout(()=>{ try{ this._bottom && this._bottom.parentElement && this._bottom.parentElement.parentElement.scrollTo({top:1e9,behavior:'smooth'}); }catch(e){} }, 30); }
+
+  // ----- context helpers -----
+  step() {
+    const c = this.state.ctx;
+    if (!c.country) return 'country';
+    if (!c.league) return 'league';
+    if (c.match) return 'player';
+    if (!c.team) return 'pick';
+    return 'player';
+  }
+  patch(p) { this.setState(s => ({ ctx: { ...s.ctx, ...p }, search:'' })); }
+
+  chips() {
+    const c = this.state.ctx, out = [];
+    if (c.league) out.push({ label:c.league.name, lvl:'league' });
+    if (c.match) out.push({ label:c.match.name, lvl:'match' });
+    if (c.team) out.push({ label:c.team.name, lvl:'team' });
+    if (c.player) out.push({ label:c.player.name, lvl:'player' });
+    return out;
+  }
+  removeChip(lvl) {
+    this.setState(s => {
+      const c = { ...s.ctx };
+      if (lvl==='league') { c.league=null; c.match=null; c.team=null; c.player=null; }
+      else if (lvl==='match') { c.match=null; }
+      else if (lvl==='team') { c.team=null; c.player=null; }
+      else if (lvl==='player') { c.player=null; }
+      return { ctx:c };
+    });
+  }
+
+  filtered(list) {
+    const q = this.state.search.trim().toLowerCase();
+    if (!q) return list;
+    return list.filter(o => (o.name+' '+(o.sub||'')).toLowerCase().includes(q));
+  }
+  currentOptions() {
+    const c = this.state.ctx, d = this.data, st = this.step();
+    if (st==='country') return d.countries;
+    if (st==='league') return d.leagues[c.country.id] || [];
+    if (st==='pick') return (c.mode==='match' ? (d.matches[c.league.id]||[]) : (d.teams[c.league.id]||[]));
+    if (st==='player') return (c.team ? (d.players[c.team.id]||[]) : []);
+    return [];
+  }
+
+  renderVals() {
+    const s = this.state, c = s.ctx, st = this.step();
+    const purple = { iconBg:'#EEEDFA', iconColor:'#5B4FD6' };
+    const grey = { iconBg:'#F3F2F9', iconColor:'#605C74' };
+
+    const rawOpts = this.filtered(this.currentOptions());
+    const options = rawOpts.map(o => {
+      let onClick, arrow='›', style=purple, mono=this.mono(o.name), logo='', round=false;
+      if (st==='country') { onClick=()=>this.patch({country:o,league:null,match:null,team:null,player:null,mode:'match'}); }
+      else if (st==='league') { onClick=()=>this.patch({league:o,match:null,team:null,player:null,mode:'match'}); logo=o.logo||''; }
+      else if (st==='pick' && c.mode==='match') { onClick=()=>this.patch({match:o,team:null,player:null}); style=grey; arrow=''; mono='VS'; logo=o.homeLogo||''; }
+      else if (st==='pick' && c.mode==='team') { onClick=()=>this.patch({team:o,player:null}); logo=o.logo||''; }
+      else if (st==='player') { onClick=()=>this.patch({player:o}); style=grey; arrow=''; logo=o.photo||''; round=true; }
+      return { name:o.name, sub:o.sub||'', hasSub:!!o.sub, mono, arrow, iconBg:style.iconBg, iconColor:style.iconColor, logo, hasLogo:!!logo, imgRadius:round?'50%':'7px', imgPad:round?'0':'3px', crest:this.crestEl(logo,round?'0':'3px'), onClick };
+    });
+
+    const titles = { country:'Pays ou zone', league:'Choisis une ligue', pick:'Un match ou une équipe', player:'Affine sur un joueur (optionnel)' };
+    const placeholders = { country:'Rechercher un pays…', league:'Rechercher une ligue…', pick:(c.mode==='match'?'Rechercher un match…':'Rechercher une équipe…'), player:'Rechercher un joueur…' };
+
+    // breadcrumb
+    const crumbs = [];
+    const active = (on)=>({ color: on?'#5B4FD6':'#86829A', weight: on?'700':'500' });
+    const mk = (text, on, onClick) => { const a=active(on); crumbs.push({ text, color:a.color, weight:a.weight, onClick, showSep:true }); };
+    mk(c.country?c.country.name:'Pays', st==='country', ()=>this.patch({country:null,league:null,match:null,team:null,player:null}));
+    if (c.country) mk(c.league?c.league.name:'Ligue', st==='league', ()=>this.patch({league:null,match:null,team:null,player:null}));
+    if (c.league && c.match) mk(c.match.name, false, ()=>this.patch({match:null}));
+    else if (c.league) {
+      mk(c.team?c.team.name:'Match / Équipe', st==='pick', ()=>this.patch({match:null,team:null,player:null}));
+      if (c.team) mk(c.player?c.player.name:'Joueur', st==='player', ()=>this.patch({player:null}));
+    }
+    if (crumbs.length) crumbs[crumbs.length-1].showSep = false;
+
+    const chips = this.chips().map(ch => ({
+      label: ch.label,
+      removeLabel: 'Retirer '+ch.label,
+      onRemove: () => this.removeChip(ch.lvl),
+    }));
+
+    const draftEmpty = !s.draft.trim();
+    const tabOn = { bg:'#EEEDFA', border:'#D6D0F2', color:'#4A3FC0' };
+    const tabOff = { bg:'#fff', border:'#E9E7F2', color:'#86829A' };
+    const mt = c.mode==='match'?tabOn:tabOff, tt = c.mode==='team'?tabOn:tabOff;
+
+    return {
+      messages: s.messages.map(m => ({
+        isOria: m.role==='oria',
+        isUser: m.role==='user',
+        isRich: m.variant==='rich',
+        hasChips: !!(m.chips && m.chips.length),
+        chips: m.chips || [],
+        text: m.text,
+        fixture: m.fixture ? {...m.fixture, homeHasLogo:!!m.fixture.homeLogo, awayHasLogo:!!m.fixture.awayLogo, homeCrest:this.crestEl(m.fixture.homeLogo,'4px'), awayCrest:this.crestEl(m.fixture.awayLogo,'4px')} : {},
+        freshness: m.freshness || '',
+        form: (m.form||[]).map(f => f.type==='w' ? {letter:f.letter,bg:'#E3F3EB',fg:'#207F53'} : f.type==='l' ? {letter:f.letter,bg:'#FBEBDD',fg:'#C4691F'} : {letter:f.letter,bg:'#EFEEF5',fg:'#86829A'}),
+      })),
+      thinking: s.thinking,
+      draft: s.draft,
+      panelOpen: s.panelOpen,
+      search: s.search,
+      hasContext: this.chips().length>0,
+      contextChips: chips,
+      panelTitle: titles[st],
+      searchPlaceholder: placeholders[st],
+      crumbs,
+      options,
+      noResults: options.length===0,
+      showPickTabs: st==='pick',
+      matchTabBg:mt.bg, matchTabBorder:mt.border, matchTabColor:mt.color,
+      teamTabBg:tt.bg, teamTabBorder:tt.border, teamTabColor:tt.color,
+      setModeMatch: () => this.setState(x=>({ ctx:{...x.ctx,mode:'match'}, search:'' })),
+      setModeTeam: () => this.setState(x=>({ ctx:{...x.ctx,mode:'team'}, search:'' })),
+
+      composerBorder: s.panelOpen ? '#C9C3EC' : '#E9E7F2',
+      ctxBtnBg: s.panelOpen ? '#EEEDFA' : '#FBFBFE',
+      ctxBtnBorder: s.panelOpen ? '#C9C3EC' : '#E9E7F2',
+      ctxBtnColor: s.panelOpen ? '#4A3FC0' : '#605C74',
+      sendDisabled: draftEmpty,
+      sendBg: draftEmpty ? '#CFCADF' : '#5B4FD6',
+      sendCursor: draftEmpty ? 'default' : 'pointer',
+      sendHover: draftEmpty ? '' : 'background:#4A3FC0',
+
+      togglePanel: () => this.setState(x=>({ panelOpen: !x.panelOpen, search:'' })),
+      closePanel: () => this.setState({ panelOpen:false, search:'' }),
+      onSearch: (e) => this.setState({ search: e.target.value }),
+      onDraft: (e) => { const t=e.target; t.style.height='auto'; t.style.height=Math.min(t.scrollHeight,150)+'px'; this.setState({ draft:t.value }); },
+      onKeyDown: (e) => { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); this.send(); } },
+      send: () => this.send(),
+
+      bottomRef: (el)=>{ this._bottom = el; },
+      searchRef: (el)=>{ this._search = el; },
+      taRef: (el)=>{ this._ta = el; },
+      imgErr: (e)=>{ try{ e.target.style.display='none'; }catch(x){} },
+    };
+  }
+
+  send() {
+    const text = this.state.draft.trim();
+    if (!text) return;
+    const chips = this.chips().map(ch => ({ label: ch.label }));
+    const userMsg = { role:'user', variant:'text', text, chips };
+    if (this._ta) this._ta.style.height = 'auto';
+    this.setState(s => ({ messages:[...s.messages, userMsg], draft:'', thinking:true }));
+    setTimeout(() => {
+      const c = this.state.ctx;
+      const scope = c.player ? c.player.name : c.team ? c.team.name : c.match ? c.match.name : c.league ? c.league.name : null;
+      const reply = scope
+        ? `Je croise les dernières données pour ${scope}. Voici ce qui ressort — dis-moi si tu veux les cotes, la compo probable ou les stats détaillées.`
+        : "Bonne question. Ajoute un contexte (ligue, match, équipe, joueur) via ＋ Contexte pour que je précise ma réponse avec les données à jour.";
+      this.setState(s => ({ messages:[...s.messages, { role:'oria', variant:'text', text:reply }], thinking:false }));
+    }, 1500);
+  }
+}
+</script>
+</body>
+</html>

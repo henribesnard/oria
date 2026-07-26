@@ -14,12 +14,12 @@ export function Sidebar() {
   const { user, logout } = useAuth();
 
   return (
-    <aside className="w-[248px] min-h-dvh border-r border-border bg-surface-card flex flex-col p-[18px_14px]">
-      <Link to="/" className="flex items-center gap-2.5 px-2 py-1.5 mb-3.5">
+    <aside className="app-side bg-surface-card border-r border-border sticky top-0 h-dvh overflow-y-auto flex flex-col p-[18px_14px]">
+      <Link to="/" className="flex items-center gap-2.5 px-2 py-1.5 mb-4">
         <OriaLogo size={26} centerFill="#fff" />
         <span className="font-serif text-[23px] leading-none">Oria</span>
       </Link>
-      <nav className="flex-1 flex flex-col gap-0.5">
+      <nav className="app-nav flex-1 flex flex-col gap-0.5">
         {navItems.map((item) => (
           <NavLink
             key={item.to}
@@ -37,7 +37,7 @@ export function Sidebar() {
           </NavLink>
         ))}
       </nav>
-      <div className="border-t border-border-inner pt-3 mt-3 flex flex-col gap-0.5">
+      <div className="app-nav-foot border-t border-border-inner pt-3 mt-3 flex flex-col gap-0.5">
         {user?.role === 'admin' && (
           <NavLink
             to="/admin"

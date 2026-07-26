@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { listFollows, unfollow } from '../api/follows';
 import type { Follow } from '../api/follows';
-import { FollowCard } from '../components/follows/FollowCard';
 
 export function Follows() {
   const [follows, setFollows] = useState<Follow[]>([]);
@@ -25,15 +24,26 @@ export function Follows() {
     setFollows(prev => prev.filter(f => !(f.entity_type === entityType && f.entity_id === entityId)));
   };
 
-  const teams = follows.filter(f => f.entity_type === 'team');
   const leagues = follows.filter(f => f.entity_type === 'league');
+  const teams = follows.filter(f => f.entity_type === 'team');
   const players = follows.filter(f => f.entity_type === 'player');
 
+  const sections = [
+    { key: 'league', title: 'Ligues', items: leagues },
+    { key: 'team', title: '\u00c9quipes', items: teams },
+    { key: 'player', title: 'Joueurs', items: players },
+  ];
+
   return (
-    <div className="max-w-[720px] mx-auto px-7 py-10">
-      <h1 className="text-xl font-bold text-text-strong mb-1">Mes suivis</h1>
+    <div className="max-w-[820px] mx-auto px-7 py-10">
+      <h1
+        className="font-serif text-text-strong mb-1"
+        style={{ fontSize: 'clamp(26px, 6vw, 34px)' }}
+      >
+        Mes suivis
+      </h1>
       <p className="text-sm text-text-muted mb-8">
-        Joueurs et \u00e9quipes que vous suivez
+        Personnalise tes r&eacute;ponses et tes alertes.
       </p>
 
       {loading ? (
@@ -47,23 +57,50 @@ export function Follows() {
           </div>
           <p className="text-sm font-semibold text-text-dark mb-1">Aucun suivi</p>
           <p className="text-sm text-text-muted max-w-[280px]">
-            Demandez \u00e0 Oria de suivre un joueur ou une \u00e9quipe pour recevoir des mises \u00e0 jour.
+            Demandez &agrave; Oria de suivre un joueur ou une &eacute;quipe pour recevoir des mises &agrave; jour.
           </p>
         </div>
       ) : (
-        <div className="flex flex-col gap-8">
-          {[
-            { title: '\u00c9quipes', items: teams },
-            { title: 'Ligues', items: leagues },
-            { title: 'Joueurs', items: players },
-          ].filter(s => s.items.length > 0).map(section => (
-            <div key={section.title}>
-              <h2 className="text-sm font-bold text-text-dark mb-3">{section.title}</h2>
-              <div className="flex flex-col gap-2">
-                {section.items.map(f => (
-                  <FollowCard key={`${f.entity_type}-${f.entity_id}`} follow={f} onUnfollow={handleUnfollow} />
-                ))}
+        <div className="flex flex-col gap-5">
+          {sections.map(section => (
+            <div
+              key={section.key}
+              className="bg-white border border-border rounded-2xl p-6"
+            >
+              {/* Section header */}
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-[16px] font-semibold text-text-strong">
+                  {section.title}
+                </h2>
+                <button className="text-sm font-semibold text-primary hover:text-primary-hover transition-colors">
+                  + Ajouter
+                </button>
               </div>
+
+              {/* Follow chips */}
+              {section.items.length === 0 ? (
+                <p className="text-sm text-text-muted">Aucun suivi dans cette cat&eacute;gorie.</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {section.items.map(f => (
+                    <span
+                      key={`${f.entity_type}-${f.entity_id}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-surface border border-purple-border text-primary-hover text-sm font-medium rounded-full"
+                    >
+                      {f.entity_name}
+                      <button
+                        onClick={() => handleUnfollow(f.entity_type, f.entity_id)}
+                        className="w-4 h-4 flex items-center justify-center rounded-full hover:bg-primary/10 transition-colors text-primary-hover"
+                        aria-label={`Retirer ${f.entity_name}`}
+                      >
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M1 1L9 9M9 1L1 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                        </svg>
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>

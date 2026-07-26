@@ -7,8 +7,10 @@ import { AdminShell } from './components/layout/AdminShell';
 import { PublicLayout } from './components/layout/PublicLayout';
 
 import { Landing } from './pages/Landing';
+import { Pricing } from './pages/Pricing';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { ForgotPassword } from './pages/ForgotPassword';
 import { Chat } from './pages/Chat';
 import { Follows } from './pages/Follows';
 import { Notifications } from './pages/Notifications';
@@ -17,6 +19,8 @@ import { Billing } from './pages/Billing';
 import { Onboarding } from './pages/Onboarding';
 import { AdminOverview } from './pages/admin/Overview';
 import { AdminTraces } from './pages/admin/Traces';
+import { AdminBottlenecks } from './pages/admin/Bottlenecks';
+import { AdminMetrics } from './pages/admin/Metrics';
 import { AdminUsers } from './pages/admin/Users';
 
 export const router = createBrowserRouter([
@@ -27,8 +31,10 @@ export const router = createBrowserRouter([
         element: <PublicLayout />,
         children: [
           { path: '/', element: <Landing /> },
+          { path: '/pricing', element: <Pricing /> },
           { path: '/login', element: <Login /> },
           { path: '/register', element: <Register /> },
+          { path: '/forgot-password', element: <ForgotPassword /> },
           { path: '/onboarding', element: <Onboarding /> },
         ],
       },
@@ -57,6 +63,8 @@ export const router = createBrowserRouter([
             children: [
               { index: true, element: <AdminOverview /> },
               { path: 'traces', element: <AdminTraces /> },
+              { path: 'bottlenecks', element: <AdminBottlenecks /> },
+              { path: 'metrics', element: <AdminMetrics /> },
               { path: 'users', element: <AdminUsers /> },
             ],
           },

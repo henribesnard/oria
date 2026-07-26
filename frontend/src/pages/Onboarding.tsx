@@ -3,45 +3,77 @@ import { useNavigate } from 'react-router-dom';
 import { listTeams } from '../api/catalog';
 import type { Team } from '../api/catalog';
 import { follow } from '../api/follows';
+import OriaLogo from '../components/OriaLogo';
 
-const STEPS = ['Bienvenue', 'Vos \u00e9quipes', 'C\'est parti'] as const;
+interface OnbItem {
+  name: string;
+  selected: boolean;
+}
+
+const defaultLeagues: OnbItem[] = [
+  { name: 'Ligue 1', selected: true },
+  { name: 'Premier League', selected: true },
+  { name: 'LaLiga', selected: false },
+  { name: 'Serie A', selected: false },
+  { name: 'Bundesliga', selected: false },
+];
+const defaultTeamNames: OnbItem[] = [
+  { name: 'Paris SG', selected: true },
+  { name: 'Real Madrid', selected: false },
+  { name: 'Marseille', selected: false },
+  { name: 'Arsenal', selected: false },
+];
+const defaultPlayers: OnbItem[] = [
+  { name: 'Dembélé', selected: true },
+  { name: 'Mbappé', selected: false },
+  { name: 'Haaland', selected: false },
+];
 
 export function Onboarding() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(0);
   const [search, setSearch] = useState('');
-  const [results, setResults] = useState<Team[]>([]);
-  const [selected, setSelected] = useState<Team[]>([]);
+  const [apiResults, setApiResults] = useState<Team[]>([]);
+  const [apiSelected, setApiSelected] = useState<Team[]>([]);
   const [searching, setSearching] = useState(false);
+
+  const [leagues, setLeagues] = useState(defaultLeagues);
+  const [teamNames, setTeamNames] = useState(defaultTeamNames);
+  const [players, setPlayers] = useState(defaultPlayers);
 
   const doSearch = useCallback(async () => {
     if (!search.trim()) return;
     setSearching(true);
     try {
       const teams = await listTeams();
-      // Simple client-side filter since catalog may not have search param
       const filtered = teams.filter(t =>
         t.name.toLowerCase().includes(search.toLowerCase())
       );
-      setResults(filtered);
+      setApiResults(filtered);
     } catch {
-      setResults([]);
+      setApiResults([]);
     } finally {
       setSearching(false);
     }
   }, [search]);
 
-  const toggleTeam = (team: Team) => {
-    setSelected(prev =>
+  const toggleApiTeam = (team: Team) => {
+    setApiSelected(prev =>
       prev.some(t => t.id === team.id)
         ? prev.filter(t => t.id !== team.id)
         : [...prev, team]
     );
   };
 
+  const toggleItem = (
+    list: OnbItem[],
+    setter: React.Dispatch<React.SetStateAction<OnbItem[]>>,
+    name: string
+  ) => {
+    setter(list.map(item => item.name === name ? { ...item, selected: !item.selected } : item));
+  };
+
   const finishOnboarding = async () => {
-    // Follow all selected teams
-    for (const team of selected) {
+    for (const team of apiSelected) {
       try {
         await follow('team', team.id, team.name);
       } catch {
@@ -51,140 +83,138 @@ export function Onboarding() {
     navigate('/app');
   };
 
+  const groups = [
+    { title: 'Ligues', items: leagues, setter: setLeagues },
+    { title: 'Équipes', items: teamNames, setter: setTeamNames },
+    { title: 'Joueurs', items: players, setter: setPlayers },
+  ] as const;
+
   return (
-    <div className="flex items-center justify-center min-h-[calc(100dvh-56px)] px-6">
-      <div className="w-full max-w-[480px]">
-        {/* Progress */}
-        <div className="flex items-center gap-2 justify-center mb-8">
-          {STEPS.map((_, i) => (
-            <div
-              key={i}
-              className={`h-1.5 rounded-full transition-all ${
-                i <= step ? 'w-8 bg-primary' : 'w-4 bg-border'
-              }`}
-            />
+    <div className="flex items-center justify-center min-h-[calc(100dvh-56px)] px-6 py-10">
+      <div className="w-full max-w-[520px]">
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-14 h-14 rounded-2xl bg-purple-surface flex items-center justify-center mb-5">
+            <OriaLogo size={30} centerFill="#EEEDFA" />
+          </div>
+          <h1 className="font-serif font-normal text-[clamp(26px,5vw,34px)] text-center">
+            Bienvenue sur Oria
+          </h1>
+          <p className="text-[15px] text-text-secondary text-center mt-1 max-w-[400px]">
+            Sélectionne ce que tu veux suivre. Tu pourras modifier ça plus tard.
+          </p>
+        </div>
+
+        {/* Follow groups */}
+        <div className="flex flex-col gap-4 mb-8">
+          {groups.map(({ title, items, setter }) => (
+            <div key={title} className="bg-white border border-border rounded-2xl p-[22px]">
+              <h2 className="text-[16px] font-semibold mb-3.5">{title}</h2>
+              <div className="flex flex-wrap gap-2">
+                {items.map(item => (
+                  <button
+                    key={item.name}
+                    onClick={() => toggleItem(items as OnbItem[], setter as React.Dispatch<React.SetStateAction<OnbItem[]>>, item.name)}
+                    className="inline-flex items-center gap-2 px-3.5 py-[9px] rounded-[11px] border text-[13.5px] font-semibold transition-colors"
+                    style={{
+                      background: item.selected ? '#EEEDFA' : '#fff',
+                      borderColor: item.selected ? '#C9C3EC' : '#E9E7F2',
+                      color: item.selected ? '#4A3FC0' : '#605C74',
+                    }}
+                  >
+                    <span className="w-5 h-5 rounded-md border flex items-center justify-center text-[11px]"
+                      style={{
+                        borderColor: item.selected ? '#C9C3EC' : '#E9E7F2',
+                        background: item.selected ? '#5B4FD6' : 'transparent',
+                        color: item.selected ? '#fff' : 'transparent',
+                      }}
+                    >
+                      {item.selected ? '✓' : ''}
+                    </span>
+                    {item.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
 
-        {step === 0 && (
-          <div className="text-center">
-            <div className="w-14 h-14 rounded-2xl bg-purple-surface flex items-center justify-center mx-auto mb-5">
-              <span className="font-serif text-2xl text-primary">O</span>
-            </div>
-            <h1 className="text-2xl font-bold text-text-strong mb-2">Bienvenue sur Oria</h1>
-            <p className="text-sm text-text-muted max-w-[360px] mx-auto mb-8">
-              Configurons votre exp\u00e9rience pour vous offrir les meilleures recommandations football.
-            </p>
+        {/* API search */}
+        <div className="bg-white border border-border rounded-2xl p-[22px] mb-6">
+          <h2 className="text-[16px] font-semibold mb-3">Rechercher une équipe</h2>
+          <div className="flex gap-2 mb-3">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && doSearch()}
+              placeholder="Rechercher une équipe..."
+              className="flex-1 px-[13px] py-[11px] rounded-[11px] border border-border-light bg-surface-alt text-sm placeholder:text-text-faint focus:outline-none focus:border-primary-soft transition-colors"
+            />
             <button
-              onClick={() => setStep(1)}
-              className="h-11 px-8 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl transition-colors"
+              onClick={doSearch}
+              disabled={searching}
+              className="px-4 py-[11px] bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-[11px] transition-colors disabled:opacity-50"
             >
-              Commencer
+              {searching ? '...' : 'Chercher'}
             </button>
           </div>
-        )}
 
-        {step === 1 && (
-          <div>
-            <h2 className="text-xl font-bold text-text-strong mb-1 text-center">Vos \u00e9quipes favorites</h2>
-            <p className="text-sm text-text-muted text-center mb-6">
-              Recherchez et s\u00e9lectionnez les \u00e9quipes que vous souhaitez suivre.
-            </p>
-
-            {/* Search */}
-            <div className="flex gap-2 mb-4">
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && doSearch()}
-                placeholder="Rechercher une \u00e9quipe..."
-                className="flex-1 h-11 px-4 rounded-xl border border-border bg-surface-alt text-sm text-text placeholder:text-text-faint focus:outline-none focus:border-primary-soft transition-colors"
-              />
-              <button
-                onClick={doSearch}
-                disabled={searching}
-                className="h-11 px-4 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl transition-colors disabled:opacity-50"
-              >
-                {searching ? '...' : 'Chercher'}
-              </button>
-            </div>
-
-            {/* Results */}
-            {results.length > 0 && (
-              <div className="bg-surface-card border border-border rounded-xl divide-y divide-border-inner max-h-[240px] overflow-y-auto mb-4">
-                {results.map(team => {
-                  const isSelected = selected.some(t => t.id === team.id);
-                  return (
-                    <button
-                      key={team.id}
-                      onClick={() => toggleTeam(team)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-surface-hover transition-colors ${
-                        isSelected ? 'bg-purple-surface' : ''
-                      }`}
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-surface-muted flex items-center justify-center shrink-0">
-                        <span className="text-sm">{'\u26BD'}</span>
-                      </div>
-                      <span className="text-sm font-semibold text-text-strong flex-1">{team.name}</span>
-                      {isSelected && <span className="text-primary text-sm">{'\u2713'}</span>}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* Selected chips */}
-            {selected.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-6">
-                {selected.map(team => (
-                  <span
+          {apiResults.length > 0 && (
+            <div className="border border-border rounded-[11px] divide-y divide-border-inner max-h-[200px] overflow-y-auto mb-3">
+              {apiResults.map(team => {
+                const isSelected = apiSelected.some(t => t.id === team.id);
+                return (
+                  <button
                     key={team.id}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-surface text-primary text-xs font-semibold"
+                    onClick={() => toggleApiTeam(team)}
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-left hover:bg-surface-hover transition-colors ${
+                      isSelected ? 'bg-purple-surface' : ''
+                    }`}
                   >
-                    {team.name}
-                    <button onClick={() => toggleTeam(team)} className="text-primary-muted hover:text-primary">{'\u00d7'}</button>
-                  </span>
-                ))}
-              </div>
-            )}
-
-            <div className="flex justify-between">
-              <button
-                onClick={() => setStep(0)}
-                className="h-11 px-6 text-sm font-semibold text-text-secondary hover:text-text-dark transition-colors"
-              >
-                Retour
-              </button>
-              <button
-                onClick={() => setStep(2)}
-                className="h-11 px-8 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl transition-colors"
-              >
-                Continuer
-              </button>
+                    <span className="text-sm font-semibold text-text-strong flex-1">{team.name}</span>
+                    <span className="text-primary text-sm font-bold">{isSelected ? '✓' : '＋'}</span>
+                  </button>
+                );
+              })}
             </div>
-          </div>
-        )}
+          )}
 
-        {step === 2 && (
-          <div className="text-center">
-            <div className="w-14 h-14 rounded-2xl bg-success-surface flex items-center justify-center mx-auto mb-5">
-              <span className="text-2xl">{'\u2705'}</span>
+          {apiSelected.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {apiSelected.map(team => (
+                <span
+                  key={team.id}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-surface border border-purple-border text-[13px] font-semibold text-primary-hover"
+                >
+                  {team.name}
+                  <button
+                    onClick={() => toggleApiTeam(team)}
+                    className="text-primary-soft hover:text-primary w-[18px] h-[18px] rounded-full text-xs hover:bg-purple-border transition-colors"
+                  >
+                    ✕
+                  </button>
+                </span>
+              ))}
             </div>
-            <h2 className="text-xl font-bold text-text-strong mb-2">C'est parti !</h2>
-            <p className="text-sm text-text-muted max-w-[360px] mx-auto mb-2">
-              {selected.length > 0
-                ? `Vous suivez ${selected.length} \u00e9quipe${selected.length > 1 ? 's' : ''}. Oria vous enverra des mises \u00e0 jour personnalis\u00e9es.`
-                : 'Vous pouvez toujours ajouter des suivis plus tard depuis le chat.'}
-            </p>
-            <button
-              onClick={finishOnboarding}
-              className="h-11 px-8 mt-6 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl transition-colors"
-            >
-              Aller au chat
-            </button>
-          </div>
-        )}
+          )}
+        </div>
+
+        {/* Actions */}
+        <div className="flex justify-between items-center">
+          <button
+            onClick={() => navigate('/app')}
+            className="text-sm font-semibold text-text-muted hover:text-text-dark transition-colors"
+          >
+            Passer cette étape
+          </button>
+          <button
+            onClick={finishOnboarding}
+            className="px-7 py-3 bg-primary hover:bg-primary-hover text-white text-[15px] font-bold rounded-[11px] transition-colors"
+          >
+            C'est parti →
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ export function Navbar() {
         </Link>
         <div className="ml-auto flex items-center gap-1.5">
           <Link
-            to="/#tarifs"
+            to="/pricing"
             className="hidden sm:inline-flex px-3.5 py-2 text-sm font-semibold text-text-secondary hover:bg-purple-surface hover:text-primary-hover rounded-[10px] transition-colors"
           >
             Tarifs

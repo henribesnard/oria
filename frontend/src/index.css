@@ -38,10 +38,15 @@
   --color-warning: #E0782A;
   --color-warning-text: #C4691F;
   --color-warning-surface: #FBEEE2;
+  --color-warning-note: #7A5A2E;
+  --color-warning-border: #F1D9C0;
 
   --color-danger: #D5443B;
   --color-danger-text: #B4362C;
   --color-danger-surface: #FBE6E3;
+  --color-danger-note: #9A6863;
+  --color-danger-border-soft: #F2D9D5;
+  --color-danger-btn-border: #E0A69F;
 
   --color-admin-bg: #191526;
   --color-admin-active: #2E2947;
@@ -99,6 +104,79 @@ body {
 @keyframes oria-shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
+}
+@keyframes oria-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Responsive grid helpers */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 960px) {
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+  .hide-sm {
+    display: none !important;
+  }
+}
+
+/* App shell responsive */
+.app-shell {
+  display: grid;
+  grid-template-columns: 248px 1fr;
+  min-height: 100dvh;
+}
+
+@media (max-width: 860px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+  .app-shell > .app-side {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    flex-direction: row !important;
+    padding: 8px 12px !important;
+    z-index: 50;
+    border-top: 1px solid var(--color-border);
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .app-shell > .app-side .app-nav {
+    flex-direction: row !important;
+    gap: 2px !important;
+  }
+  .app-shell > .app-side .app-nav-foot {
+    display: none !important;
+  }
+  .app-shell > .app-main {
+    padding-bottom: 64px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
