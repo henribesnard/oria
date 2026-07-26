@@ -29,7 +29,7 @@ export function Chat() {
       <header className="border-b border-border bg-surface/82 backdrop-blur-[10px] sticky top-0 z-20 shrink-0">
         <div className="max-w-[760px] mx-auto px-5 py-3.5 flex items-center gap-3.5">
           <div className="w-9 h-9 rounded-[10px] bg-purple-surface border border-border-light flex items-center justify-center shrink-0">
-            <OriaLogo size={25} centerFill="#EEEDFA" />
+            <OriaLogo size={25} />
           </div>
           <div className="flex flex-col gap-px min-w-0">
             <span className="font-serif text-[27px] leading-none tracking-[.2px]">Oria</span>
@@ -51,7 +51,7 @@ export function Chat() {
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center min-h-[50vh]">
               <div className="w-12 h-12 rounded-2xl bg-purple-surface border border-border-light flex items-center justify-center mb-4">
-                <OriaLogo size={30} centerFill="#EEEDFA" />
+                <OriaLogo size={30} />
               </div>
               <h2 className="text-lg font-bold text-text-strong mb-2">
                 Bonjour, comment puis-je vous aider ?

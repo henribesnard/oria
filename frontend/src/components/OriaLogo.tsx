@@ -1,10 +1,9 @@
 interface OriaLogoProps {
   size?: number;
-  /** Fill color for the tiny center circle — should match the background */
-  centerFill?: string;
+  color?: string;
 }
 
-export default function OriaLogo({ size = 30, centerFill = "#F6F6FB" }: OriaLogoProps) {
+export default function OriaLogo({ size = 30, color = "#5B4FD6" }: OriaLogoProps) {
   return (
     <svg
       width={size}
@@ -13,16 +12,14 @@ export default function OriaLogo({ size = 30, centerFill = "#F6F6FB" }: OriaLogo
       fill="none"
       aria-hidden="true"
     >
-      <circle cx="20" cy="20" r="15.5" stroke="#5B4FD6" strokeWidth="2.8" />
+      <circle cx="20" cy="20" r="15.5" stroke={color} strokeWidth="2.8" />
       <path
-        d="M20 8.5a11.5 11.5 0 0 1 0 23"
-        stroke="#5B4FD6"
+        d="M12.5 23.6 L20 15.4 L27.5 23.6"
+        stroke={color}
         strokeWidth="2.8"
         strokeLinecap="round"
-        opacity=".36"
+        strokeLinejoin="round"
       />
-      <circle cx="20" cy="20" r="4.2" fill="#5B4FD6" />
-      <circle cx="20" cy="20" r="1.7" fill={centerFill} />
     </svg>
   );
 }

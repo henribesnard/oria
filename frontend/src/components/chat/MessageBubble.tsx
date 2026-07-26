@@ -16,7 +16,7 @@ export function MessageBubble({ message, onAction }: Props) {
         {/* Avatar for assistant */}
         {!isUser && (
           <div className="w-[30px] h-[30px] rounded-lg bg-purple-surface border border-border-light flex items-center justify-center shrink-0 mt-0.5">
-            <OriaLogo size={21} centerFill="#EEEDFA" />
+            <OriaLogo size={21} />
           </div>
         )}
         <div>

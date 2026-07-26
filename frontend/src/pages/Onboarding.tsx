@@ -95,7 +95,7 @@ export function Onboarding() {
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="w-14 h-14 rounded-2xl bg-purple-surface flex items-center justify-center mb-5">
-            <OriaLogo size={30} centerFill="#EEEDFA" />
+            <OriaLogo size={30} />
           </div>
           <h1 className="font-serif font-normal text-[clamp(26px,5vw,34px)] text-center">
             Bienvenue sur Oria

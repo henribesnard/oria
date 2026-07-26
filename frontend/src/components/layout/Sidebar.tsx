@@ -16,7 +16,7 @@ export function Sidebar() {
   return (
     <aside className="app-side bg-surface-card border-r border-border sticky top-0 h-dvh overflow-y-auto flex flex-col p-[18px_14px]">
       <Link to="/" className="flex items-center gap-2.5 px-2 py-1.5 mb-4">
-        <OriaLogo size={26} centerFill="#fff" />
+        <OriaLogo size={26} />
         <span className="font-serif text-[23px] leading-none">Oria</span>
       </Link>
       <nav className="app-nav flex-1 flex flex-col gap-0.5">
