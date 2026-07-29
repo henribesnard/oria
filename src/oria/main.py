@@ -252,27 +252,19 @@ async def run_console(settings: Settings) -> None:
 
 def create_app() -> "FastAPI":
     """Crée l'application FastAPI câblée — utilisée par uvicorn."""
+    from collections.abc import AsyncIterator
+
     from fastapi.middleware.cors import CORSMiddleware
 
-    from oria.adapters.web.app import app, init_web
+    from oria.adapters.web.app import create_fastapi_app, init_web
 
     settings = Settings()
     setup_logging(level=settings.log_level)
 
     container, pipeline = build_container(settings)
 
-    # CORS doit être ajouté AVANT le startup (Starlette interdit après)
-    origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
-    @app.on_event("startup")
-    async def _startup() -> None:
+    @contextlib.asynccontextmanager
+    async def lifespan(_app: "FastAPI") -> AsyncIterator[None]:
         await container.start_all()
         init_web(
             health=container.health,
@@ -296,11 +288,21 @@ def create_app() -> "FastAPI":
             apifootball=container._apifootball,  # type: ignore[attr-defined]
         )
         logger.info("Oria web started")
-
-    @app.on_event("shutdown")
-    async def _shutdown() -> None:
+        yield
         await container.stop_all()
         logger.info("Oria web stopped")
+
+    app = create_fastapi_app(lifespan=lifespan)
+
+    # CORS doit être ajouté AVANT le startup (Starlette interdit après)
+    origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     return app
 

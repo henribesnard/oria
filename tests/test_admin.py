@@ -1,4 +1,4 @@
-"""Tests des endpoints admin protégés par ADMIN__FAKE_ADMIN."""
+"""Tests des endpoints admin protégés par ADMIN_TOKEN ou JWT admin."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from fastapi.testclient import TestClient
 
 from oria.adapters.web.admin import init_admin_routes
 from oria.adapters.web.app import app
+from oria.app.auth.security import create_access_token
 from oria.kernel.health import Availability, HealthRegistry, ModuleStatus
 from oria.monitoring.collector import Collector
 
@@ -17,6 +18,7 @@ from oria.monitoring.collector import Collector
 # ---------------------------------------------------------------------------
 
 _FAKE_ADMIN = "fake-admin-value-for-tests"  # noqa: S105
+_FAKE_JWT_SIGN = "fake-jwt-signing-for-tests"  # noqa: S105
 
 
 @pytest.fixture(autouse=True)
@@ -205,13 +207,43 @@ class TestAdminWithCollectorData:
         assert data["apifootball.fetch"]["count"] == 5
 
 
-class TestAdminNoToken:
-    """Teste le cas où ADMIN__FAKE_ADMIN n'est pas configuré."""
+class TestAdminJwtAuth:
+    """Teste l'accès monitoring via JWT role=admin."""
 
-    def test_no_admin_token_returns_503(self, client: TestClient) -> None:
-        init_admin_routes(admin_token="")
+    def test_jwt_admin_accesses_monitoring(self, client: TestClient) -> None:
+        init_admin_routes(
+            admin_token=_FAKE_ADMIN,
+            jwt_secret=_FAKE_JWT_SIGN,
+            health_registry=HealthRegistry(),
+        )
+        token = create_access_token("user-1", "admin", secret=_FAKE_JWT_SIGN)
+        resp = client.get(
+            "/admin/health",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        assert resp.status_code == 200
+
+    def test_jwt_user_rejected_from_monitoring(self, client: TestClient) -> None:
+        init_admin_routes(
+            admin_token=_FAKE_ADMIN,
+            jwt_secret=_FAKE_JWT_SIGN,
+            health_registry=HealthRegistry(),
+        )
+        token = create_access_token("user-2", "user", secret=_FAKE_JWT_SIGN)
+        resp = client.get(
+            "/admin/health",
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        assert resp.status_code == 401
+
+
+class TestAdminNoToken:
+    """Teste le cas où ADMIN_TOKEN n'est pas configuré et pas de JWT admin."""
+
+    def test_no_admin_token_returns_401(self, client: TestClient) -> None:
+        init_admin_routes(admin_token="", jwt_secret="")
         resp = client.get(
             "/admin/health",
             headers={"Authorization": "Bearer anything"},
         )
-        assert resp.status_code == 503
+        assert resp.status_code == 401

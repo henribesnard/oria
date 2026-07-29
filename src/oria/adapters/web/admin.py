@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+import jwt
 from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel
 
@@ -34,6 +35,7 @@ router = APIRouter(prefix="/admin", tags=["admin"])
 
 # Injectés au démarrage
 _admin_token: str = ""
+_jwt_secret: str = ""
 _health_registry: HealthRegistry | None = None
 _collector: Collector | None = None
 _apifootball: ApiFootballClient | None = None
@@ -43,14 +45,16 @@ _admin_service: AdminService | None = None
 def init_admin_routes(
     *,
     admin_token: str,
+    jwt_secret: str = "",
     health_registry: HealthRegistry | None = None,
     collector: Collector | None = None,
     apifootball: ApiFootballClient | None = None,
     admin_service: AdminService | None = None,
 ) -> None:
     """Câble les dépendances admin depuis le conteneur."""
-    global _admin_token, _health_registry, _collector, _apifootball, _admin_service  # noqa: PLW0603
+    global _admin_token, _jwt_secret, _health_registry, _collector, _apifootball, _admin_service  # noqa: PLW0603
     _admin_token = admin_token
+    _jwt_secret = jwt_secret
     _health_registry = health_registry
     _collector = collector
     _apifootball = apifootball
@@ -58,17 +62,25 @@ def init_admin_routes(
 
 
 def _check_token(authorization: str | None) -> None:
-    """Vérifie le token admin. Lève 401 si invalide."""
-    if not _admin_token:
-        raise HTTPException(
-            status_code=503,
-            detail="Admin endpoints not configured (ADMIN_TOKEN missing)",
-        )
+    """Vérifie le token admin : accepte ADMIN_TOKEN ou JWT role=admin."""
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing Bearer token")
     token = authorization.removeprefix("Bearer ").strip()
-    if token != _admin_token:
-        raise HTTPException(status_code=401, detail="Invalid admin token")
+
+    # 1. Essayer le token statique ADMIN_TOKEN
+    if _admin_token and token == _admin_token:
+        return
+
+    # 2. Essayer un JWT avec role=admin
+    if _jwt_secret:
+        try:
+            payload = jwt.decode(token, _jwt_secret, algorithms=["HS256"])
+            if payload.get("role") == "admin":
+                return
+        except jwt.PyJWTError:
+            pass
+
+    raise HTTPException(status_code=401, detail="Invalid admin token")
 
 
 def _check_admin(user: dict[str, str]) -> None:

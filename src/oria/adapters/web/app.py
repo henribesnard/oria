@@ -28,24 +28,47 @@ from oria.adapters.web.settings_routes import init_settings_routes
 from oria.adapters.web.settings_routes import router as settings_router
 from oria.kernel.health import Availability, HealthRegistry
 
-app = FastAPI(title="Oria", version="0.1.0")
-
-# Routers
-app.include_router(admin_router)
-app.include_router(auth_router)
-app.include_router(account_router)
-app.include_router(billing_router)
-app.include_router(follows_router)
-app.include_router(settings_router)
-app.include_router(chat_router)
-app.include_router(catalog_router)
-app.include_router(live_router)
-
-# Error handlers
-install_error_handlers(app)
-
-# Sera injecté au démarrage par main.py
+# Sera injecté au démarrage par init_web
 _health_registry: HealthRegistry | None = None
+
+
+def _health_check() -> dict[str, Any]:
+    if _health_registry is None:
+        return {"status": "starting"}
+    snapshot = _health_registry.snapshot()
+    required_down = any(
+        s.availability == Availability.DOWN
+        for s in snapshot.values()
+    )
+    overall = "degraded" if required_down else "up"
+    return {
+        "status": overall,
+        "modules": {name: s.model_dump() for name, s in snapshot.items()},
+    }
+
+
+def create_fastapi_app(*, lifespan: Any = None) -> FastAPI:
+    """Factory : crée une instance FastAPI avec routers et error handlers."""
+    instance = FastAPI(title="Oria", version="0.1.0", lifespan=lifespan)
+
+    instance.include_router(admin_router)
+    instance.include_router(auth_router)
+    instance.include_router(account_router)
+    instance.include_router(billing_router)
+    instance.include_router(follows_router)
+    instance.include_router(settings_router)
+    instance.include_router(chat_router)
+    instance.include_router(catalog_router)
+    instance.include_router(live_router)
+
+    instance.get("/health")(_health_check)
+    install_error_handlers(instance)
+
+    return instance
+
+
+# Instance par défaut (utilisée par les tests)
+app = create_fastapi_app()
 
 
 def init_web(
@@ -100,27 +123,9 @@ def init_web(
         init_settings_routes(notif_settings_service, conversation_service)
     init_admin_routes(
         admin_token=admin_token,
+        jwt_secret=jwt_secret,
         health_registry=health,
         collector=collector,
         apifootball=apifootball,
         admin_service=admin_service,
     )
-
-
-# -- Endpoints --
-
-
-@app.get("/health")
-async def health_check() -> dict[str, Any]:
-    if _health_registry is None:
-        return {"status": "starting"}
-    snapshot = _health_registry.snapshot()
-    required_down = any(
-        s.availability == Availability.DOWN
-        for s in snapshot.values()
-    )
-    overall = "degraded" if required_down else "up"
-    return {
-        "status": overall,
-        "modules": {name: s.model_dump() for name, s in snapshot.items()},
-    }

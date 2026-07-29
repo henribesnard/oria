@@ -64,7 +64,7 @@ class Settings(BaseSettings):
     premium_daily_messages: int = 1000
 
     # --- CORS ---
-    cors_origins: str = "*"
+    cors_origins: str = "http://localhost:5173,http://localhost:3000"
 
     # --- Base ---
     db_path: str = "./oria.db"
