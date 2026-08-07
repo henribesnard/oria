@@ -233,6 +233,7 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     container._teams = teams  # type: ignore[attr-defined]
     container._players = players  # type: ignore[attr-defined]
     container._fixtures = fixtures  # type: ignore[attr-defined]
+    container._live = live  # type: ignore[attr-defined]
     container._apifootball = apifootball  # type: ignore[attr-defined]
 
     return container, pipeline
@@ -288,6 +289,7 @@ def create_app() -> "FastAPI":
             teams_repo=container._teams,  # type: ignore[attr-defined]
             players_repo=container._players,  # type: ignore[attr-defined]
             fixtures_repo=container._fixtures,  # type: ignore[attr-defined]
+            live_repo=container._live,  # type: ignore[attr-defined]
             admin_token=settings.admin_token,
             admin_service=container._admin_service,  # type: ignore[attr-defined]
             apifootball=container._apifootball,  # type: ignore[attr-defined]

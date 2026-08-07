@@ -73,6 +73,10 @@ export async function listPlayers(teamId?: number, season?: number): Promise<Pla
   return api.get<Player[]>(`/catalog/players${qs}`);
 }
 
+export async function listLiveFixtures(): Promise<Fixture[]> {
+  return api.get<Fixture[]>('/catalog/fixtures/live');
+}
+
 export async function listFixtures(opts?: {
   leagueId?: number;
   teamId?: number;

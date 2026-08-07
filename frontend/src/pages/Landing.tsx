@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import OriaLogo from '../components/OriaLogo';
-import { listFixtures, listLeagues } from '../api/catalog';
+import { listFixtures, listLiveFixtures, listLeagues } from '../api/catalog';
 import type { Fixture, League } from '../api/catalog';
 
 /* ------------------------------------------------------------------ */
@@ -325,17 +325,18 @@ export function Landing() {
     let cancelled = false;
     async function load() {
       try {
-        const [nextFixtures, lastFixtures, leagueData] = await Promise.all([
+        const [nextFixtures, lastFixtures, liveFixtures, leagueData] = await Promise.all([
           listFixtures({ nextCount: 20 }).catch(() => [] as Fixture[]),
           listFixtures({ lastCount: 20 }).catch(() => [] as Fixture[]),
+          listLiveFixtures().catch(() => [] as Fixture[]),
           listLeagues().catch(() => [] as League[]),
         ]);
         if (cancelled) return;
 
-        // Deduplicate by id
+        // Deduplicate by id (live first for freshest data)
         const seen = new Set<number>();
         const all: Fixture[] = [];
-        for (const f of [...lastFixtures, ...nextFixtures]) {
+        for (const f of [...liveFixtures, ...lastFixtures, ...nextFixtures]) {
           if (!seen.has(f.id)) {
             seen.add(f.id);
             all.push(f);

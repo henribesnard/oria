@@ -90,6 +90,7 @@ def init_web(
     teams_repo: object | None = None,
     players_repo: object | None = None,
     fixtures_repo: object | None = None,
+    live_repo: object | None = None,
     admin_token: str = "",
     admin_service: object | None = None,
     collector: object | None = None,
@@ -112,6 +113,7 @@ def init_web(
         teams=teams_repo,
         players=players_repo,
         fixtures=fixtures_repo,
+        live=live_repo,
     )
     if auth_service is not None:
         init_auth_routes(auth_service)

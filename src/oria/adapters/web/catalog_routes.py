@@ -47,6 +47,7 @@ _standings_repo: Any = None
 _teams_repo: Any = None
 _players_repo: Any = None
 _fixtures_repo: Any = None
+_live_repo: Any = None
 
 
 def init_catalog_routes(
@@ -56,13 +57,15 @@ def init_catalog_routes(
     teams: object | None = None,
     players: object | None = None,
     fixtures: object | None = None,
+    live: object | None = None,
 ) -> None:
-    global _leagues_repo, _standings_repo, _teams_repo, _players_repo, _fixtures_repo  # noqa: PLW0603
+    global _leagues_repo, _standings_repo, _teams_repo, _players_repo, _fixtures_repo, _live_repo  # noqa: PLW0603
     _leagues_repo = leagues
     _standings_repo = standings
     _teams_repo = teams
     _players_repo = players
     _fixtures_repo = fixtures
+    _live_repo = live
 
 
 @router.get("/leagues")
@@ -130,6 +133,19 @@ async def list_players(
     if isinstance(data, list):
         return data
     return [data]
+
+
+@router.get("/fixtures/live")
+async def list_live_fixtures() -> list[dict[str, Any]]:
+    """Liste les matchs en direct (live=all)."""
+    if _live_repo is None:
+        raise HTTPException(status_code=503, detail="catalog not available")
+    data = await _live_repo.get("")
+    if data is None:
+        return []
+    items = data if isinstance(data, list) else [data]
+    flat = [_flatten_fixture(f) for f in items]
+    return [f for f in flat if f.get("league_id") in COVERED_LEAGUE_IDS]
 
 
 @router.get("/fixtures")
