@@ -8,6 +8,32 @@ from fastapi import APIRouter, HTTPException
 
 router = APIRouter(prefix="/catalog", tags=["catalog"])
 
+# ── Ligues couvertes (whitelist) ──────────────────────────────────────
+# Championnats européens majeurs + coupes UEFA + coupes nationales top 5
+COVERED_LEAGUE_IDS: set[int] = {
+    # UEFA
+    2,    # Champions League
+    3,    # Europa League
+    848,  # Conference League
+    # Top 5 championnats
+    61,   # Ligue 1
+    39,   # Premier League
+    140,  # La Liga
+    78,   # Bundesliga
+    135,  # Serie A
+    # Championnats secondaires
+    94,   # Primeira Liga (Portugal)
+    88,   # Eredivisie (Pays-Bas)
+    144,  # Jupiler Pro League (Belgique)
+    # Coupes nationales top 5
+    66,   # Coupe de France
+    45,   # FA Cup
+    48,   # EFL Cup (Carabao Cup)
+    143,  # Copa del Rey
+    81,   # DFB Pokal
+    137,  # Coppa Italia
+}
+
 _leagues_repo: Any = None
 _standings_repo: Any = None
 _teams_repo: Any = None
@@ -48,9 +74,8 @@ async def list_leagues(
     data = await _leagues_repo.get(key)
     if data is None:
         return []
-    if isinstance(data, list):
-        return data
-    return [data]
+    items = data if isinstance(data, list) else [data]
+    return [l for l in items if l.get("id") in COVERED_LEAGUE_IDS]
 
 
 @router.get("/teams")
@@ -129,7 +154,8 @@ async def list_fixtures(
     if data is None:
         return []
     items = data if isinstance(data, list) else [data]
-    return [_flatten_fixture(f) for f in items]
+    flat = [_flatten_fixture(f) for f in items]
+    return [f for f in flat if f.get("league_id") in COVERED_LEAGUE_IDS]
 
 
 def _flatten_fixture(fx: dict[str, Any]) -> dict[str, Any]:
