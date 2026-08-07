@@ -11,6 +11,7 @@ class Follow(BaseModel):
     entity_type: str  # league | team | player
     entity_id: int
     entity_name: str = ""
+    logo_url: str = ""
     created_at: float = 0.0
 
 

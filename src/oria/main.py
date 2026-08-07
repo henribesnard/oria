@@ -23,6 +23,7 @@ from oria.core.streaming import stream_message
 from oria.core.synthesis import Synthesis
 from oria.domain.fixtures import FixturesRepository
 from oria.domain.injuries import InjuriesRepository
+from oria.domain.leagues import LeaguesRepository
 from oria.domain.lineups import LineupsRepository
 from oria.domain.live import LiveRepository
 from oria.domain.odds import OddsRepository
@@ -118,6 +119,7 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     container.add(userstore)
 
     # --- Repositories (client injecté si disponible) ---
+    leagues = LeaguesRepository(cache=cache, client=apifootball)
     fixtures = FixturesRepository(cache=cache, client=apifootball)
     standings = StandingsRepository(cache=cache, client=apifootball)
     teams = TeamsRepository(cache=cache, client=apifootball)
@@ -127,6 +129,7 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     odds = OddsRepository(cache=cache, client=apifootball)
     live = LiveRepository(cache=cache, client=apifootball)
 
+    container.add(leagues)
     container.add(fixtures)
     container.add(standings)
     container.add(teams)
@@ -225,6 +228,7 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     container._follow_service = follow_service  # type: ignore[attr-defined]
     container._notif_settings_service = notif_settings_service  # type: ignore[attr-defined]
     container._conversation_service = conversation_service  # type: ignore[attr-defined]
+    container._leagues = leagues  # type: ignore[attr-defined]
     container._standings = standings  # type: ignore[attr-defined]
     container._teams = teams  # type: ignore[attr-defined]
     container._players = players  # type: ignore[attr-defined]
@@ -279,6 +283,7 @@ def create_app() -> "FastAPI":
             notif_settings_service=container._notif_settings_service,  # type: ignore[attr-defined]
             conversation_service=container._conversation_service,  # type: ignore[attr-defined]
             sse_port=container._sse_port,  # type: ignore[attr-defined]
+            leagues_repo=container._leagues,  # type: ignore[attr-defined]
             standings_repo=container._standings,  # type: ignore[attr-defined]
             teams_repo=container._teams,  # type: ignore[attr-defined]
             players_repo=container._players,  # type: ignore[attr-defined]

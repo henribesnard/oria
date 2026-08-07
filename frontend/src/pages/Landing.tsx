@@ -1,119 +1,39 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import OriaLogo from '../components/OriaLogo';
+import { listFixtures, listLeagues } from '../api/catalog';
+import type { Fixture, League } from '../api/catalog';
 
 /* ------------------------------------------------------------------ */
-/*  Static demo data                                                  */
+/*  Status mapping                                                     */
 /* ------------------------------------------------------------------ */
-
-const coverageLeagues = [
-  'Ligue 1', 'Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Eredivisie',
-];
-
-type MatchStatus = 'live' | 'ft' | 'pre';
-
-interface Match {
-  id: number;
-  league: string;
-  leagueAbbr: string;
-  homeTeam: string;
-  homeAbbr: string;
-  awayTeam: string;
-  awayAbbr: string;
-  homeScore: number | null;
-  awayScore: number | null;
-  status: MatchStatus;
-  clock: string;
-  date: string;
-  venue: string;
-  homeForm: ('W' | 'D' | 'L')[];
-  awayForm: ('W' | 'D' | 'L')[];
-}
-
-const MATCHES: Match[] = [
-  {
-    id: 1, league: 'Ligue 1', leagueAbbr: 'L1',
-    homeTeam: 'Paris SG', homeAbbr: 'PSG',
-    awayTeam: 'Le Havre', awayAbbr: 'HAC',
-    homeScore: 2, awayScore: 0, status: 'live', clock: '67\'',
-    date: 'sam. 17 août 21:00', venue: 'Parc des Princes',
-    homeForm: ['W', 'W', 'D', 'W', 'L'], awayForm: ['L', 'D', 'W', 'W', 'D'],
-  },
-  {
-    id: 2, league: 'Premier League', leagueAbbr: 'PL',
-    homeTeam: 'Man City', homeAbbr: 'MCI',
-    awayTeam: 'Chelsea', awayAbbr: 'CHE',
-    homeScore: 1, awayScore: 1, status: 'live', clock: '54\'',
-    date: 'sam. 17 août 18:30', venue: 'Etihad Stadium',
-    homeForm: ['W', 'W', 'W', 'W', 'D'], awayForm: ['L', 'L', 'D', 'W', 'D'],
-  },
-  {
-    id: 3, league: 'Premier League', leagueAbbr: 'PL',
-    homeTeam: 'Arsenal', homeAbbr: 'ARS',
-    awayTeam: 'Liverpool', awayAbbr: 'LIV',
-    homeScore: 2, awayScore: 2, status: 'live', clock: '81\'',
-    date: 'sam. 17 août 18:30', venue: 'Emirates Stadium',
-    homeForm: ['W', 'W', 'W', 'D', 'W'], awayForm: ['W', 'L', 'W', 'D', 'W'],
-  },
-  {
-    id: 4, league: 'Serie A', leagueAbbr: 'SA',
-    homeTeam: 'Napoli', homeAbbr: 'NAP',
-    awayTeam: 'Milan', awayAbbr: 'MIL',
-    homeScore: 2, awayScore: 1, status: 'live', clock: '73\'',
-    date: 'sam. 17 août 20:45', venue: 'Stadio Diego Armando Maradona',
-    homeForm: ['W', 'D', 'W', 'W', 'D'], awayForm: ['L', 'W', 'D', 'L', 'W'],
-  },
-  {
-    id: 5, league: 'Ligue 1', leagueAbbr: 'L1',
-    homeTeam: 'Olympique de Marseille', homeAbbr: 'OM',
-    awayTeam: 'AS Monaco', awayAbbr: 'ASM',
-    homeScore: 1, awayScore: 1, status: 'ft', clock: '90\'',
-    date: 'ven. 16 août 21:00', venue: 'Orange Vélodrome',
-    homeForm: ['W', 'D', 'W', 'L', 'W'], awayForm: ['W', 'W', 'W', 'D', 'L'],
-  },
-  {
-    id: 6, league: 'La Liga', leagueAbbr: 'LL',
-    homeTeam: 'FC Barcelona', homeAbbr: 'FCB',
-    awayTeam: 'Real Madrid', awayAbbr: 'RMA',
-    homeScore: 2, awayScore: 2, status: 'ft', clock: '90\'',
-    date: 'ven. 16 août 21:00', venue: 'Camp Nou',
-    homeForm: ['W', 'D', 'W', 'W', 'D'], awayForm: ['W', 'W', 'L', 'W', 'W'],
-  },
-  {
-    id: 7, league: 'Premier League', leagueAbbr: 'PL',
-    homeTeam: 'Liverpool', homeAbbr: 'LIV',
-    awayTeam: 'Man City', awayAbbr: 'MCI',
-    homeScore: 1, awayScore: 2, status: 'ft', clock: '90\'',
-    date: 'jeu. 15 août 21:00', venue: 'Anfield',
-    homeForm: ['W', 'L', 'W', 'D', 'W'], awayForm: ['W', 'W', 'W', 'W', 'D'],
-  },
-  {
-    id: 8, league: 'Serie A', leagueAbbr: 'SA',
-    homeTeam: 'Juventus', homeAbbr: 'JUV',
-    awayTeam: 'AC Milan', awayAbbr: 'ACM',
-    homeScore: null, awayScore: null, status: 'pre', clock: '20:45',
-    date: 'dim. 18 août 20:45', venue: 'Allianz Stadium',
-    homeForm: ['W', 'D', 'D', 'W', 'W'], awayForm: ['L', 'W', 'D', 'L', 'W'],
-  },
-  {
-    id: 9, league: 'Bundesliga', leagueAbbr: 'BL',
-    homeTeam: 'Bayern München', homeAbbr: 'BAY',
-    awayTeam: 'Borussia Dortmund', awayAbbr: 'BVB',
-    homeScore: null, awayScore: null, status: 'pre', clock: '18:30',
-    date: 'dim. 18 août 18:30', venue: 'Allianz Arena',
-    homeForm: ['W', 'W', 'W', 'W', 'D'], awayForm: ['D', 'W', 'L', 'W', 'W'],
-  },
-  {
-    id: 10, league: 'Ligue 1', leagueAbbr: 'L1',
-    homeTeam: 'LOSC Lille', homeAbbr: 'LIL',
-    awayTeam: 'RC Lens', awayAbbr: 'RCL',
-    homeScore: null, awayScore: null, status: 'pre', clock: '17:00',
-    date: 'dim. 18 août 17:00', venue: 'Stade Pierre-Mauroy',
-    homeForm: ['D', 'W', 'L', 'W', 'D'], awayForm: ['W', 'D', 'W', 'L', 'L'],
-  },
-];
 
 type TabKey = 'live' | 'ft' | 'pre';
+
+function fixtureTab(status?: string): TabKey {
+  if (!status) return 'pre';
+  const s = status.toUpperCase();
+  if (['1H', '2H', 'HT', 'ET', 'BT', 'P', 'LIVE', 'INT'].includes(s)) return 'live';
+  if (['FT', 'AET', 'PEN', 'WO', 'AWD', 'CANC', 'ABD'].includes(s)) return 'ft';
+  return 'pre';
+}
+
+function statusLabel(tab: TabKey) {
+  if (tab === 'live') return 'En direct';
+  if (tab === 'ft') return 'Terminé';
+  return 'À venir';
+}
+
+function statusStyle(tab: TabKey): { fg: string; bg: string } {
+  if (tab === 'live') return { fg: '#C4691F', bg: '#FBEEE2' };
+  if (tab === 'ft') return { fg: '#86829A', bg: '#F3F2F9' };
+  return { fg: '#4A3FC0', bg: '#EEEDFA' };
+}
+
+function scoreColor(tab: TabKey) {
+  if (tab === 'live') return '#C4691F';
+  return '#191526';
+}
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: 'live', label: 'En direct' },
@@ -122,45 +42,42 @@ const TABS: { key: TabKey; label: string }[] = [
 ];
 
 /* ------------------------------------------------------------------ */
-/*  Helpers                                                           */
+/*  Logo helper                                                        */
 /* ------------------------------------------------------------------ */
 
-function statusStyle(s: MatchStatus): { fg: string; bg: string } {
-  if (s === 'live') return { fg: '#C4691F', bg: '#FBEEE2' };
-  if (s === 'ft') return { fg: '#86829A', bg: '#F3F2F9' };
-  return { fg: '#4A3FC0', bg: '#EEEDFA' };
-}
-
-function statusLabel(s: MatchStatus) {
-  if (s === 'live') return 'En direct';
-  if (s === 'ft') return 'Terminé';
-  return 'À venir';
-}
-
-function scoreColor(s: MatchStatus) {
-  if (s === 'live') return '#C4691F';
-  return '#191526';
-}
-
-function formChipStyle(r: 'W' | 'D' | 'L') {
-  if (r === 'W') return { fg: '#207F53', bg: '#E3F3EB' };
-  if (r === 'D') return { fg: '#C4691F', bg: '#FBEEE2' };
-  return { fg: '#B4362C', bg: '#FBE6E3' };
+function TeamLogo({ src, alt, size = 24 }: { src?: string; alt: string; size?: number }) {
+  const [error, setError] = useState(false);
+  if (!src || error) {
+    return (
+      <span style={{
+        width: size, height: size, borderRadius: size > 30 ? 12 : 6, background: '#F3F2F9',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: size > 30 ? 14 : 9, fontWeight: 700, color: '#86829A',
+        fontFamily: "'IBM Plex Mono', monospace", flexShrink: 0,
+      }}>{alt.slice(0, 3).toUpperCase()}</span>
+    );
+  }
+  return (
+    <img
+      src={src} alt={alt}
+      onError={() => setError(true)}
+      style={{ width: size, height: size, objectFit: 'contain', flexShrink: 0 }}
+    />
+  );
 }
 
 /* ------------------------------------------------------------------ */
-/*  Sub-components                                                    */
+/*  Sub-components                                                     */
 /* ------------------------------------------------------------------ */
 
-/* ----- League filter dropdown ----- */
 function LeagueFilter({
   value,
   onChange,
-  options,
+  leagues,
 }: {
   value: string;
   onChange: (v: string) => void;
-  options: string[];
+  leagues: League[];
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -193,7 +110,7 @@ function LeagueFilter({
       {open && (
         <div style={{
           position: 'absolute', top: 'calc(100% + 6px)', right: 0, zIndex: 21,
-          width: 220, maxHeight: 280, overflowY: 'auto',
+          width: 260, maxHeight: 280, overflowY: 'auto',
           background: '#fff', border: '1px solid #E4E1F0', borderRadius: 12,
           boxShadow: '0 18px 44px -14px rgba(38,32,74,.28)', padding: 6,
         }}>
@@ -210,20 +127,21 @@ function LeagueFilter({
             Toutes les ligues
             {value === '' && <span style={{ color: '#5B4FD6', fontWeight: 700, flex: 'none', marginLeft: 'auto' }}>✓</span>}
           </button>
-          {options.map((l) => (
+          {leagues.map((l) => (
             <button
-              key={l}
-              onClick={() => { onChange(l); setOpen(false); }}
+              key={l.id}
+              onClick={() => { onChange(l.name); setOpen(false); }}
               style={{
                 width: '100%', display: 'flex', alignItems: 'center', gap: 10,
                 padding: '9px 10px', border: 'none', borderRadius: 9, cursor: 'pointer',
                 textAlign: 'left', fontSize: 13.5, fontWeight: 600,
-                color: '#3F3B54', background: value === l ? '#F5F4FC' : 'transparent',
+                color: '#3F3B54', background: value === l.name ? '#F5F4FC' : 'transparent',
                 fontFamily: 'inherit',
               }}
             >
-              {l}
-              {value === l && <span style={{ color: '#5B4FD6', fontWeight: 700, flex: 'none', marginLeft: 'auto' }}>✓</span>}
+              {l.logo && <img src={l.logo} alt="" style={{ width: 18, height: 18, objectFit: 'contain' }} />}
+              {l.name}
+              {value === l.name && <span style={{ color: '#5B4FD6', fontWeight: 700, flex: 'none', marginLeft: 'auto' }}>✓</span>}
             </button>
           ))}
         </div>
@@ -232,10 +150,13 @@ function LeagueFilter({
   );
 }
 
-/* ----- Scoreboard match card (horizontal scroll) ----- */
-function BoardCard({ match, onClick }: { match: Match; onClick: () => void }) {
-  const ss = statusStyle(match.status);
-  const sc = scoreColor(match.status);
+/* ----- Scoreboard match card ----- */
+function BoardCard({ fixture, onClick }: { fixture: Fixture; onClick: () => void }) {
+  const tab = fixtureTab(fixture.status);
+  const ss = statusStyle(tab);
+  const sc = scoreColor(tab);
+  const clock = tab === 'live' && fixture.elapsed ? `${fixture.elapsed}'` : undefined;
+
   return (
     <button
       onClick={onClick}
@@ -251,28 +172,31 @@ function BoardCard({ match, onClick }: { match: Match; onClick: () => void }) {
     >
       {/* League & status */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-        <span style={{ fontSize: 11, fontWeight: 600, color: '#86829A' }}>{match.league}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          {fixture.league_logo && <img src={fixture.league_logo} alt="" style={{ width: 14, height: 14, objectFit: 'contain' }} />}
+          <span style={{ fontSize: 11, fontWeight: 600, color: '#86829A' }}>{fixture.league_name}</span>
+        </div>
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 5,
           padding: '2px 8px', borderRadius: 999, fontSize: 10.5, fontWeight: 700,
           color: ss.fg, background: ss.bg,
         }}>
-          {match.status === 'live' && <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#E0782A' }} />}
-          {match.status === 'live' ? match.clock : statusLabel(match.status)}
+          {tab === 'live' && <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#E0782A' }} />}
+          {clock || statusLabel(tab)}
         </span>
       </div>
 
       {/* Home row */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-          <span style={{ width: 24, height: 24, borderRadius: 6, background: '#F3F2F9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 700, color: '#86829A', fontFamily: "'IBM Plex Mono', monospace", flexShrink: 0 }}>{match.homeAbbr.slice(0, 3)}</span>
-          <span style={{ flex: 1, fontSize: 14, fontWeight: 600, color: '#221E33', minWidth: 0 }}>{match.homeTeam}</span>
-          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 16, fontWeight: 600, color: sc }}>{match.homeScore ?? ''}</span>
+          <TeamLogo src={fixture.home_logo} alt={fixture.home_team} size={24} />
+          <span style={{ flex: 1, fontSize: 14, fontWeight: 600, color: '#221E33', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{fixture.home_team}</span>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 16, fontWeight: 600, color: sc }}>{fixture.score_home ?? ''}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-          <span style={{ width: 24, height: 24, borderRadius: 6, background: '#F3F2F9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 700, color: '#86829A', fontFamily: "'IBM Plex Mono', monospace", flexShrink: 0 }}>{match.awayAbbr.slice(0, 3)}</span>
-          <span style={{ flex: 1, fontSize: 14, fontWeight: 600, color: '#221E33', minWidth: 0 }}>{match.awayTeam}</span>
-          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 16, fontWeight: 600, color: sc }}>{match.awayScore ?? ''}</span>
+          <TeamLogo src={fixture.away_logo} alt={fixture.away_team} size={24} />
+          <span style={{ flex: 1, fontSize: 14, fontWeight: 600, color: '#221E33', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{fixture.away_team}</span>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 16, fontWeight: 600, color: sc }}>{fixture.score_away ?? ''}</span>
         </div>
       </div>
     </button>
@@ -280,7 +204,7 @@ function BoardCard({ match, onClick }: { match: Match; onClick: () => void }) {
 }
 
 /* ----- Match detail modal ----- */
-function MatchModal({ match, onClose }: { match: Match; onClose: () => void }) {
+function MatchModal({ fixture, onClose }: { fixture: Fixture; onClose: () => void }) {
   useEffect(() => {
     function handleKey(e: KeyboardEvent) { if (e.key === 'Escape') onClose(); }
     document.addEventListener('keydown', handleKey);
@@ -292,7 +216,12 @@ function MatchModal({ match, onClose }: { match: Match; onClose: () => void }) {
     return () => { document.body.style.overflow = ''; };
   }, []);
 
-  const scoreLine = match.homeScore !== null ? `${match.homeScore} – ${match.awayScore}` : 'vs';
+  const tab = fixtureTab(fixture.status);
+  const scoreLine = fixture.score_home != null ? `${fixture.score_home} – ${fixture.score_away}` : 'vs';
+  const dateStr = fixture.date ? new Date(fixture.date).toLocaleDateString('fr-FR', {
+    weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+  }) : '';
+  const clock = tab === 'live' && fixture.elapsed ? `${fixture.elapsed}'` : fixture.status_long || '';
 
   return (
     <div
@@ -314,7 +243,11 @@ function MatchModal({ match, onClose }: { match: Match; onClose: () => void }) {
       >
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '16px 20px', borderBottom: '1px solid #F0EEF8' }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#4A3FC0' }}>{match.league}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {fixture.league_logo && <img src={fixture.league_logo} alt="" style={{ width: 20, height: 20, objectFit: 'contain' }} />}
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#4A3FC0' }}>{fixture.league_name}</span>
+            {fixture.round && <span style={{ fontSize: 11, color: '#86829A' }}>· {fixture.round}</span>}
+          </div>
           <button onClick={onClose} aria-label="Fermer" style={{ border: 'none', background: '#F3F2F9', width: 28, height: 28, borderRadius: 9, color: '#86829A', cursor: 'pointer', fontSize: 15 }}>✕</button>
         </div>
 
@@ -322,16 +255,16 @@ function MatchModal({ match, onClose }: { match: Match; onClose: () => void }) {
         <div style={{ padding: '24px 20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, textAlign: 'center' }}>
-              <span style={{ width: 48, height: 48, borderRadius: 12, background: '#F3F2F9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#86829A', fontFamily: "'IBM Plex Mono', monospace" }}>{match.homeAbbr.slice(0, 3)}</span>
-              <span style={{ fontSize: 14, fontWeight: 700 }}>{match.homeTeam}</span>
+              <TeamLogo src={fixture.home_logo} alt={fixture.home_team} size={48} />
+              <span style={{ fontSize: 14, fontWeight: 700 }}>{fixture.home_team}</span>
             </div>
             <div style={{ flex: 'none', textAlign: 'center' }}>
               <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 32, fontWeight: 600, color: '#191526' }}>{scoreLine}</span>
-              <p style={{ fontSize: 11, color: '#86829A', margin: '4px 0 0' }}>{match.clock}</p>
+              <p style={{ fontSize: 11, color: '#86829A', margin: '4px 0 0' }}>{clock}</p>
             </div>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, textAlign: 'center' }}>
-              <span style={{ width: 48, height: 48, borderRadius: 12, background: '#F3F2F9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#86829A', fontFamily: "'IBM Plex Mono', monospace" }}>{match.awayAbbr.slice(0, 3)}</span>
-              <span style={{ fontSize: 14, fontWeight: 700 }}>{match.awayTeam}</span>
+              <TeamLogo src={fixture.away_logo} alt={fixture.away_team} size={48} />
+              <span style={{ fontSize: 14, fontWeight: 700 }}>{fixture.away_team}</span>
             </div>
           </div>
 
@@ -339,26 +272,20 @@ function MatchModal({ match, onClose }: { match: Match; onClose: () => void }) {
           <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid #F0EEF8', display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', fontSize: 13, color: '#605C74' }}>
               <span style={{ color: '#86829A' }}>Quand</span>
-              <span style={{ marginLeft: 'auto', fontWeight: 600 }}>{match.date}</span>
+              <span style={{ marginLeft: 'auto', fontWeight: 600 }}>{dateStr}</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', fontSize: 13, color: '#605C74' }}>
-              <span style={{ color: '#86829A' }}>Stade</span>
-              <span style={{ marginLeft: 'auto', fontWeight: 600 }}>{match.venue}</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', fontSize: 13, color: '#605C74' }}>
-              <span style={{ color: '#86829A' }}>Forme {match.homeAbbr}</span>
-              <span style={{ marginLeft: 'auto', display: 'flex', gap: 4 }}>
-                {match.homeForm.map((r, i) => {
-                  const fs = formChipStyle(r);
-                  return <span key={i} style={{ width: 20, height: 20, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 600, color: fs.fg, background: fs.bg }}>{r}</span>;
-                })}
-              </span>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 14 }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#3B9B6E', flex: 'none' }} />
-            <span style={{ fontSize: 12, color: '#86829A' }}>Données à jour il y a 2 h</span>
+            {fixture.venue?.name && (
+              <div style={{ display: 'flex', alignItems: 'center', fontSize: 13, color: '#605C74' }}>
+                <span style={{ color: '#86829A' }}>Stade</span>
+                <span style={{ marginLeft: 'auto', fontWeight: 600 }}>{fixture.venue.name}{fixture.venue.city ? `, ${fixture.venue.city}` : ''}</span>
+              </div>
+            )}
+            {fixture.referee && (
+              <div style={{ display: 'flex', alignItems: 'center', fontSize: 13, color: '#605C74' }}>
+                <span style={{ color: '#86829A' }}>Arbitre</span>
+                <span style={{ marginLeft: 'auto', fontWeight: 600 }}>{fixture.referee}</span>
+              </div>
+            )}
           </div>
 
           <Link
@@ -386,37 +313,87 @@ function MatchModal({ match, onClose }: { match: Match; onClose: () => void }) {
 /* ------------------------------------------------------------------ */
 
 export function Landing() {
-  const [activeTab, setActiveTab] = useState<TabKey>('live');
+  const [activeTab, setActiveTab] = useState<TabKey>('pre');
   const [leagueFilter, setLeagueFilter] = useState('');
-  const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
+  const [selectedMatch, setSelectedMatch] = useState<Fixture | null>(null);
+  const [fixtures, setFixtures] = useState<Fixture[]>([]);
+  const [leagues, setLeagues] = useState<League[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  /* Load fixtures and leagues from API */
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const [nextFixtures, lastFixtures, leagueData] = await Promise.all([
+          listFixtures({ nextCount: 20 }).catch(() => [] as Fixture[]),
+          listFixtures({ lastCount: 20 }).catch(() => [] as Fixture[]),
+          listLeagues().catch(() => [] as League[]),
+        ]);
+        if (cancelled) return;
+
+        // Deduplicate by id
+        const seen = new Set<number>();
+        const all: Fixture[] = [];
+        for (const f of [...lastFixtures, ...nextFixtures]) {
+          if (!seen.has(f.id)) {
+            seen.add(f.id);
+            all.push(f);
+          }
+        }
+        setFixtures(all);
+        setLeagues(leagueData);
+
+        // Auto-select best tab
+        const liveCount = all.filter(f => fixtureTab(f.status) === 'live').length;
+        const ftCount = all.filter(f => fixtureTab(f.status) === 'ft').length;
+        if (liveCount > 0) setActiveTab('live');
+        else if (ftCount > 0) setActiveTab('ft');
+        else setActiveTab('pre');
+      } catch {
+        // silently fail
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   /* Derived */
-  const filteredMatches = MATCHES.filter((m) => {
-    if (m.status !== activeTab) return false;
-    if (leagueFilter && m.league !== leagueFilter) return false;
+  const filteredFixtures = fixtures.filter((f) => {
+    if (fixtureTab(f.status) !== activeTab) return false;
+    if (leagueFilter && f.league_name !== leagueFilter) return false;
     return true;
   });
 
   const counts: Record<TabKey, number> = {
-    live: MATCHES.filter((m) => m.status === 'live' && (!leagueFilter || m.league === leagueFilter)).length,
-    ft: MATCHES.filter((m) => m.status === 'ft' && (!leagueFilter || m.league === leagueFilter)).length,
-    pre: MATCHES.filter((m) => m.status === 'pre' && (!leagueFilter || m.league === leagueFilter)).length,
+    live: fixtures.filter((f) => fixtureTab(f.status) === 'live' && (!leagueFilter || f.league_name === leagueFilter)).length,
+    ft: fixtures.filter((f) => fixtureTab(f.status) === 'ft' && (!leagueFilter || f.league_name === leagueFilter)).length,
+    pre: fixtures.filter((f) => fixtureTab(f.status) === 'pre' && (!leagueFilter || f.league_name === leagueFilter)).length,
   };
 
-  const liveCount = MATCHES.filter((m) => m.status === 'live').length;
-  const availableLeagues = [...new Set(MATCHES.map((m) => m.league))];
+  const liveCount = fixtures.filter((f) => fixtureTab(f.status) === 'live').length;
+
+  // Unique leagues from loaded fixtures (for filter when no league API data)
+  const fixtureLeagues = [...new Map(
+    fixtures
+      .filter(f => f.league_name)
+      .map(f => [f.league_name!, { id: f.league_id ?? 0, name: f.league_name!, logo: f.league_logo, country: f.league_country ?? '' } as League])
+  ).values()];
+
+  const displayLeagues = leagues.length > 0 ? leagues : fixtureLeagues;
 
   return (
     <div className="min-h-screen bg-surface">
 
       {/* ============================================================ */}
-      {/*  SCOREBOARD — directly below navbar                         */}
+      {/*  SCOREBOARD                                                  */}
       {/* ============================================================ */}
       <div style={{ borderBottom: '1px solid #E9E7F2', background: '#fff' }}>
         <div style={{ maxWidth: 1120, margin: '0 auto', padding: '12px 20px' }}>
           {/* Tabs + League filter */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-            {/* Tab pills */}
             <div style={{ display: 'inline-flex', padding: 3, background: '#F3F2F9', borderRadius: 11, gap: 2 }}>
               {TABS.map((tab) => {
                 const isActive = activeTab === tab.key;
@@ -446,17 +423,20 @@ export function Landing() {
               })}
             </div>
 
-            {/* League filter — right side */}
             <div style={{ marginLeft: 'auto' }}>
-              <LeagueFilter value={leagueFilter} onChange={setLeagueFilter} options={availableLeagues} />
+              <LeagueFilter value={leagueFilter} onChange={setLeagueFilter} leagues={displayLeagues} />
             </div>
           </div>
 
           {/* Horizontal scrolling match cards */}
           <div className="oria-sc" style={{ display: 'flex', gap: 10, overflowX: 'auto', padding: '14px 2px 4px', scrollSnapType: 'x proximity' }}>
-            {filteredMatches.length > 0 ? (
-              filteredMatches.map((m) => (
-                <BoardCard key={m.id} match={m} onClick={() => setSelectedMatch(m)} />
+            {loading ? (
+              <div style={{ flex: 1, padding: 22, textAlign: 'center', fontSize: 13, color: '#B4AFCA' }}>
+                Chargement des matchs...
+              </div>
+            ) : filteredFixtures.length > 0 ? (
+              filteredFixtures.map((f) => (
+                <BoardCard key={f.id} fixture={f} onClick={() => setSelectedMatch(f)} />
               ))
             ) : (
               <div style={{ flex: 1, padding: 22, textAlign: 'center', fontSize: 13, color: '#B4AFCA' }}>
@@ -479,7 +459,7 @@ export function Landing() {
             fontSize: 12.5, fontWeight: 600, color: '#4A3FC0',
           }}>
             <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#E0782A', animation: 'oriaPulse 1.5s infinite' }} />
-            {liveCount} rencontres en direct maintenant
+            {liveCount > 0 ? `${liveCount} rencontres en direct maintenant` : 'Données fraîches en continu'}
           </span>
 
           <h1 className="font-serif" style={{ fontWeight: 400, fontSize: 'clamp(38px,9vw,60px)', lineHeight: 1.03, letterSpacing: '-.5px', margin: '20px 0 0' }}>
@@ -522,11 +502,11 @@ export function Landing() {
           {/* Stats counters */}
           <div style={{ display: 'flex', gap: 32, marginTop: 26, flexWrap: 'wrap' }}>
             <div>
-              <p className="font-mono" style={{ fontSize: 24, fontWeight: 600, margin: 0, color: '#191526' }}>8</p>
+              <p className="font-mono" style={{ fontSize: 24, fontWeight: 600, margin: 0, color: '#191526' }}>{displayLeagues.length || '—'}</p>
               <p style={{ fontSize: 12.5, color: '#86829A', margin: '2px 0 0' }}>ligues couvertes</p>
             </div>
             <div style={{ borderLeft: '1px solid #E9E7F2', paddingLeft: 32 }}>
-              <p className="font-mono" style={{ fontSize: 24, fontWeight: 600, margin: 0, color: '#191526' }}>2 400+</p>
+              <p className="font-mono" style={{ fontSize: 24, fontWeight: 600, margin: 0, color: '#191526' }}>{fixtures.length > 0 ? `${fixtures.length}+` : '—'}</p>
               <p style={{ fontSize: 12.5, color: '#86829A', margin: '2px 0 0' }}>matchs suivis</p>
             </div>
             <div style={{ borderLeft: '1px solid #E9E7F2', paddingLeft: 32 }}>
@@ -599,8 +579,11 @@ export function Landing() {
       <section style={{ maxWidth: 1120, margin: '0 auto', padding: '24px 24px 8px', textAlign: 'center' }}>
         <p style={{ fontSize: 12.5, fontWeight: 700, letterSpacing: 1.2, textTransform: 'uppercase', color: '#A5A0BC', marginBottom: 18 }}>Couverture</p>
         <div className="flex flex-wrap gap-2.5 justify-center">
-          {coverageLeagues.map((name) => (
-            <span key={name} className="px-4 py-[9px] rounded-full bg-white border border-border text-[13.5px] font-semibold text-text-dark">{name}</span>
+          {displayLeagues.map((league) => (
+            <span key={league.id} className="inline-flex items-center gap-2 px-4 py-[9px] rounded-full bg-white border border-border text-[13.5px] font-semibold text-text-dark">
+              {league.logo && <img src={league.logo} alt="" style={{ width: 18, height: 18, objectFit: 'contain' }} />}
+              {league.name}
+            </span>
           ))}
         </div>
         <p style={{ fontSize: 13, color: '#A5A0BC', marginTop: 16 }}>
@@ -632,7 +615,7 @@ export function Landing() {
       </footer>
 
       {/* Match detail modal */}
-      {selectedMatch && <MatchModal match={selectedMatch} onClose={() => setSelectedMatch(null)} />}
+      {selectedMatch && <MatchModal fixture={selectedMatch} onClose={() => setSelectedMatch(null)} />}
     </div>
   );
 }

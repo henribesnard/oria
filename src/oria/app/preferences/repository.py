@@ -19,21 +19,22 @@ class PreferencesRepository:
     # -- follows --
 
     async def add_follow(
-        self, *, user_id: str, entity_type: str, entity_id: int, entity_name: str = "",
+        self, *, user_id: str, entity_type: str, entity_id: int,
+        entity_name: str = "", logo_url: str = "",
     ) -> Follow:
         now = time.time()
         follow_id = uuid.uuid4().hex
         try:
             await self._db.conn.execute(
-                "INSERT INTO follows (id, user_id, entity_type, entity_id, entity_name, created_at) "
-                "VALUES (?, ?, ?, ?, ?, ?)",
-                (follow_id, user_id, entity_type, entity_id, entity_name, now),
+                "INSERT INTO follows (id, user_id, entity_type, entity_id, entity_name, logo_url, created_at) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (follow_id, user_id, entity_type, entity_id, entity_name, logo_url, now),
             )
             await self._db.conn.commit()
         except Exception:  # noqa: BLE001
             # UNIQUE constraint → déjà suivi, idempotent
             cursor = await self._db.conn.execute(
-                "SELECT id, user_id, entity_type, entity_id, entity_name, created_at "
+                "SELECT id, user_id, entity_type, entity_id, entity_name, logo_url, created_at "
                 "FROM follows WHERE user_id = ? AND entity_type = ? AND entity_id = ?",
                 (user_id, entity_type, entity_id),
             )
@@ -41,11 +42,13 @@ class PreferencesRepository:
             if row:
                 return Follow(
                     id=row[0], user_id=row[1], entity_type=row[2],
-                    entity_id=row[3], entity_name=row[4], created_at=row[5],
+                    entity_id=row[3], entity_name=row[4], logo_url=row[5],
+                    created_at=row[6],
                 )
         return Follow(
             id=follow_id, user_id=user_id, entity_type=entity_type,
-            entity_id=entity_id, entity_name=entity_name, created_at=now,
+            entity_id=entity_id, entity_name=entity_name, logo_url=logo_url,
+            created_at=now,
         )
 
     async def remove_follow(
@@ -63,20 +66,21 @@ class PreferencesRepository:
     ) -> list[Follow]:
         if entity_type:
             cursor = await self._db.conn.execute(
-                "SELECT id, user_id, entity_type, entity_id, entity_name, created_at "
+                "SELECT id, user_id, entity_type, entity_id, entity_name, logo_url, created_at "
                 "FROM follows WHERE user_id = ? AND entity_type = ? ORDER BY created_at DESC",
                 (user_id, entity_type),
             )
         else:
             cursor = await self._db.conn.execute(
-                "SELECT id, user_id, entity_type, entity_id, entity_name, created_at "
+                "SELECT id, user_id, entity_type, entity_id, entity_name, logo_url, created_at "
                 "FROM follows WHERE user_id = ? ORDER BY created_at DESC",
                 (user_id,),
             )
         rows = await cursor.fetchall()
         return [
             Follow(id=r[0], user_id=r[1], entity_type=r[2],
-                   entity_id=r[3], entity_name=r[4], created_at=r[5])
+                   entity_id=r[3], entity_name=r[4], logo_url=r[5],
+                   created_at=r[6])
             for r in rows
         ]
 

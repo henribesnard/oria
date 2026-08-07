@@ -30,6 +30,8 @@ def map_fixtures(raw: dict[str, Any]) -> list[dict[str, Any]]:
                 "id": league.get("id"),
                 "name": league.get("name"),
                 "country": league.get("country"),
+                "logo": league.get("logo"),
+                "flag": league.get("flag"),
                 "season": league.get("season"),
                 "round": league.get("round"),
             },
@@ -66,6 +68,9 @@ def map_standings(raw: dict[str, Any]) -> list[dict[str, Any]]:
                 out.append({
                     "league_id": league.get("id"),
                     "league_name": league.get("name"),
+                    "league_logo": league.get("logo"),
+                    "league_country": league.get("country"),
+                    "league_flag": league.get("flag"),
                     "season": league.get("season"),
                     "rank": entry.get("rank"),
                     "team": entry.get("team", {}),
@@ -223,6 +228,25 @@ def map_odds(raw: dict[str, Any]) -> list[dict[str, Any]]:
             "league": item.get("league", {}),
             "fixture": item.get("fixture", {}),
             "bookmakers": item.get("bookmakers", []),
+        })
+    return out
+
+
+def map_leagues(raw: dict[str, Any]) -> list[dict[str, Any]]:
+    """Convertit /leagues → liste de ligues avec logos et pays."""
+    items: list[dict[str, Any]] = raw.get("response", [])
+    out: list[dict[str, Any]] = []
+    for item in items:
+        league = item.get("league", {})
+        country = item.get("country", {})
+        out.append({
+            "id": league.get("id"),
+            "name": league.get("name"),
+            "type": league.get("type"),
+            "logo": league.get("logo"),
+            "country": country.get("name"),
+            "country_code": country.get("code"),
+            "country_flag": country.get("flag"),
         })
     return out
 

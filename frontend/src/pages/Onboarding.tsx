@@ -1,33 +1,13 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listTeams } from '../api/catalog';
-import type { Team } from '../api/catalog';
+import { listLeagues, listTeams } from '../api/catalog';
+import type { League, Team } from '../api/catalog';
 import { follow } from '../api/follows';
 import OriaLogo from '../components/OriaLogo';
 
-interface OnbItem {
-  name: string;
+interface SelectableLeague extends League {
   selected: boolean;
 }
-
-const defaultLeagues: OnbItem[] = [
-  { name: 'Ligue 1', selected: true },
-  { name: 'Premier League', selected: true },
-  { name: 'LaLiga', selected: false },
-  { name: 'Serie A', selected: false },
-  { name: 'Bundesliga', selected: false },
-];
-const defaultTeamNames: OnbItem[] = [
-  { name: 'Paris SG', selected: true },
-  { name: 'Real Madrid', selected: false },
-  { name: 'Marseille', selected: false },
-  { name: 'Arsenal', selected: false },
-];
-const defaultPlayers: OnbItem[] = [
-  { name: 'Dembélé', selected: true },
-  { name: 'Mbappé', selected: false },
-  { name: 'Haaland', selected: false },
-];
 
 export function Onboarding() {
   const navigate = useNavigate();
@@ -36,9 +16,31 @@ export function Onboarding() {
   const [apiSelected, setApiSelected] = useState<Team[]>([]);
   const [searching, setSearching] = useState(false);
 
-  const [leagues, setLeagues] = useState(defaultLeagues);
-  const [teamNames, setTeamNames] = useState(defaultTeamNames);
-  const [players, setPlayers] = useState(defaultPlayers);
+  const [leagues, setLeagues] = useState<SelectableLeague[]>([]);
+  const [loadingLeagues, setLoadingLeagues] = useState(true);
+
+  /* Load leagues from API on mount */
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const data = await listLeagues();
+        if (cancelled) return;
+        // Filter to major leagues (type=League, not Cup) and take first 10
+        const majorLeagues = data
+          .filter(l => l.type === 'League' || !l.type)
+          .slice(0, 10)
+          .map((l, i) => ({ ...l, selected: i < 2 }));
+        setLeagues(majorLeagues);
+      } catch {
+        // Fallback to empty
+      } finally {
+        if (!cancelled) setLoadingLeagues(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   const doSearch = useCallback(async () => {
     if (!search.trim()) return;
@@ -64,30 +66,29 @@ export function Onboarding() {
     );
   };
 
-  const toggleItem = (
-    list: OnbItem[],
-    setter: React.Dispatch<React.SetStateAction<OnbItem[]>>,
-    name: string
-  ) => {
-    setter(list.map(item => item.name === name ? { ...item, selected: !item.selected } : item));
+  const toggleLeague = (id: number) => {
+    setLeagues(prev => prev.map(l => l.id === id ? { ...l, selected: !l.selected } : l));
   };
 
   const finishOnboarding = async () => {
+    // Follow selected leagues
+    for (const league of leagues.filter(l => l.selected)) {
+      try {
+        await follow('league', league.id, league.name, league.logo);
+      } catch {
+        // ignore duplicates
+      }
+    }
+    // Follow selected teams
     for (const team of apiSelected) {
       try {
-        await follow('team', team.id, team.name);
+        await follow('team', team.id, team.name, team.logo);
       } catch {
         // ignore duplicates
       }
     }
     navigate('/app');
   };
-
-  const groups = [
-    { title: 'Ligues', items: leagues, setter: setLeagues },
-    { title: 'Équipes', items: teamNames, setter: setTeamNames },
-    { title: 'Joueurs', items: players, setter: setPlayers },
-  ] as const;
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100dvh-56px)] px-6 py-10">
@@ -105,38 +106,45 @@ export function Onboarding() {
           </p>
         </div>
 
-        {/* Follow groups */}
+        {/* Leagues */}
         <div className="flex flex-col gap-4 mb-8">
-          {groups.map(({ title, items, setter }) => (
-            <div key={title} className="bg-white border border-border rounded-2xl p-[22px]">
-              <h2 className="text-[16px] font-semibold mb-3.5">{title}</h2>
+          <div className="bg-white border border-border rounded-2xl p-[22px]">
+            <h2 className="text-[16px] font-semibold mb-3.5">Ligues</h2>
+            {loadingLeagues ? (
+              <p className="text-sm text-text-muted">Chargement des ligues...</p>
+            ) : leagues.length === 0 ? (
+              <p className="text-sm text-text-muted">Aucune ligue disponible</p>
+            ) : (
               <div className="flex flex-wrap gap-2">
-                {items.map(item => (
+                {leagues.map(league => (
                   <button
-                    key={item.name}
-                    onClick={() => toggleItem(items as OnbItem[], setter as React.Dispatch<React.SetStateAction<OnbItem[]>>, item.name)}
+                    key={league.id}
+                    onClick={() => toggleLeague(league.id)}
                     className="inline-flex items-center gap-2 px-3.5 py-[9px] rounded-[11px] border text-[13.5px] font-semibold transition-colors"
                     style={{
-                      background: item.selected ? '#EEEDFA' : '#fff',
-                      borderColor: item.selected ? '#C9C3EC' : '#E9E7F2',
-                      color: item.selected ? '#4A3FC0' : '#605C74',
+                      background: league.selected ? '#EEEDFA' : '#fff',
+                      borderColor: league.selected ? '#C9C3EC' : '#E9E7F2',
+                      color: league.selected ? '#4A3FC0' : '#605C74',
                     }}
                   >
                     <span className="w-5 h-5 rounded-md border flex items-center justify-center text-[11px]"
                       style={{
-                        borderColor: item.selected ? '#C9C3EC' : '#E9E7F2',
-                        background: item.selected ? '#5B4FD6' : 'transparent',
-                        color: item.selected ? '#fff' : 'transparent',
+                        borderColor: league.selected ? '#C9C3EC' : '#E9E7F2',
+                        background: league.selected ? '#5B4FD6' : 'transparent',
+                        color: league.selected ? '#fff' : 'transparent',
                       }}
                     >
-                      {item.selected ? '✓' : ''}
+                      {league.selected ? '✓' : ''}
                     </span>
-                    {item.name}
+                    {league.logo && (
+                      <img src={league.logo} alt="" style={{ width: 18, height: 18, objectFit: 'contain' }} />
+                    )}
+                    {league.name}
                   </button>
                 ))}
               </div>
-            </div>
-          ))}
+            )}
+          </div>
         </div>
 
         {/* API search */}
@@ -172,6 +180,9 @@ export function Onboarding() {
                       isSelected ? 'bg-purple-surface' : ''
                     }`}
                   >
+                    {team.logo && (
+                      <img src={team.logo} alt="" style={{ width: 22, height: 22, objectFit: 'contain', flexShrink: 0 }} />
+                    )}
                     <span className="text-sm font-semibold text-text-strong flex-1">{team.name}</span>
                     <span className="text-primary text-sm font-bold">{isSelected ? '✓' : '＋'}</span>
                   </button>
@@ -187,6 +198,9 @@ export function Onboarding() {
                   key={team.id}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-surface border border-purple-border text-[13px] font-semibold text-primary-hover"
                 >
+                  {team.logo && (
+                    <img src={team.logo} alt="" style={{ width: 16, height: 16, objectFit: 'contain' }} />
+                  )}
                   {team.name}
                   <button
                     onClick={() => toggleApiTeam(team)}

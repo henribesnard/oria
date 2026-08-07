@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Follow } from '../../api/follows';
 
 interface Props {
@@ -17,12 +18,26 @@ const typeIcons: Record<string, string> = {
   player: '\u{1F464}',
 };
 
+function LogoOrEmoji({ logoUrl, entityType }: { logoUrl?: string; entityType: string }) {
+  const [error, setError] = useState(false);
+  if (logoUrl && !error) {
+    return (
+      <img
+        src={logoUrl} alt=""
+        onError={() => setError(true)}
+        style={{ width: 24, height: 24, objectFit: 'contain' }}
+      />
+    );
+  }
+  return <span className="text-lg">{typeIcons[entityType] ?? '\u{1F4CC}'}</span>;
+}
+
 export function FollowCard({ follow, onUnfollow }: Props) {
   return (
     <div className="flex items-center justify-between bg-surface-card border border-border rounded-xl px-4 py-3">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-purple-surface flex items-center justify-center shrink-0">
-          <span className="text-lg">{typeIcons[follow.entity_type] ?? '\u{1F4CC}'}</span>
+          <LogoOrEmoji logoUrl={follow.logo_url} entityType={follow.entity_type} />
         </div>
         <div>
           <p className="text-sm font-semibold text-text-strong">{follow.entity_name || `#${follow.entity_id}`}</p>

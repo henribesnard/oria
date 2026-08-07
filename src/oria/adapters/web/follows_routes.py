@@ -23,6 +23,7 @@ class FollowRequest(BaseModel):
     entity_type: str  # league | team | player
     entity_id: int
     entity_name: str = ""
+    logo_url: str = ""
 
 
 class UnfollowRequest(BaseModel):
@@ -50,6 +51,7 @@ async def follow(
         raise HTTPException(status_code=503, detail="service not available")
     f = await _follow_service.follow(
         user["user_id"], req.entity_type, req.entity_id, req.entity_name,
+        logo_url=req.logo_url,
     )
     return f.model_dump()
 

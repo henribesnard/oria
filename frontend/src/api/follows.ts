@@ -5,6 +5,7 @@ export interface Follow {
   entity_type: 'league' | 'team' | 'player';
   entity_id: number;
   entity_name: string;
+  logo_url?: string;
   created_at: number;
 }
 
@@ -13,8 +14,15 @@ export async function listFollows(entityType?: string): Promise<Follow[]> {
   return api.get<Follow[]>(`/follows${params}`);
 }
 
-export async function follow(entityType: string, entityId: number, entityName: string): Promise<Follow> {
-  return api.post<Follow>('/follows', { entity_type: entityType, entity_id: entityId, entity_name: entityName });
+export async function follow(
+  entityType: string, entityId: number, entityName: string, logoUrl?: string,
+): Promise<Follow> {
+  return api.post<Follow>('/follows', {
+    entity_type: entityType,
+    entity_id: entityId,
+    entity_name: entityName,
+    logo_url: logoUrl ?? '',
+  });
 }
 
 export async function unfollow(entityType: string, entityId: number): Promise<{ status: string }> {

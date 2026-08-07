@@ -85,6 +85,7 @@ def init_web(
     notif_settings_service: object | None = None,
     conversation_service: object | None = None,
     sse_port: object | None = None,
+    leagues_repo: object | None = None,
     standings_repo: object | None = None,
     teams_repo: object | None = None,
     players_repo: object | None = None,
@@ -106,6 +107,7 @@ def init_web(
     init_chat_routes(handle_message, stream_message)
     init_live_routes(sse_port)
     init_catalog_routes(
+        leagues=leagues_repo,
         standings=standings_repo,
         teams=teams_repo,
         players=players_repo,

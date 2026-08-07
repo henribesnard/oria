@@ -36,11 +36,12 @@ class FollowService:
 
     async def follow(
         self, user_id: str, entity_type: str, entity_id: int,
-        entity_name: str = "",
+        entity_name: str = "", logo_url: str = "",
     ) -> Follow:
         return await self._repo.add_follow(
             user_id=user_id, entity_type=entity_type,
             entity_id=entity_id, entity_name=entity_name,
+            logo_url=logo_url,
         )
 
     async def unfollow(
