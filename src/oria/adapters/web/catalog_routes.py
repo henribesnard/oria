@@ -2,11 +2,19 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
 router = APIRouter(prefix="/catalog", tags=["catalog"])
+
+
+def _current_season() -> int:
+    """Saison courante : année en cours si >= août, sinon année précédente."""
+    now = datetime.now()
+    return now.year if now.month >= 7 else now.year - 1
+
 
 # ── Ligues couvertes (whitelist) ──────────────────────────────────────
 # Championnats européens majeurs + coupes UEFA + coupes nationales top 5
@@ -89,8 +97,10 @@ async def list_teams(
     parts = []
     if league_id:
         parts.append(f"league={league_id}")
-    if season:
-        parts.append(f"season={season}")
+    # API Football exige un season quand on filtre par ligue
+    effective_season = season or _current_season()
+    if league_id or season:
+        parts.append(f"season={effective_season}")
     key = "&".join(parts) if parts else "all"
     data = await _teams_repo.get(key)
     if data is None:

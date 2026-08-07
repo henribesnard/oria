@@ -34,8 +34,47 @@ class PreRouter:
     async def health(self) -> ModuleStatus:
         return ModuleStatus(name=self.name, availability=Availability.UP)
 
+    async def _resolve_team_id(self, req: IncomingRequest) -> int | None:
+        """Tente d'extraire un nom d'équipe du texte et de le résoudre en ID."""
+        if req.context.team_id or self._tools is None:
+            return req.context.team_id
+        text = req.text.strip()
+        m = re.search(
+            r"(?:du|de\s+l['']\s*|de\s+la\s+|de|d['']\s*)\s*"
+            r"([A-ZÀ-Üa-zà-ü][A-ZÀ-Üa-zà-ü\s''\-]{1,25})",
+            text,
+            re.IGNORECASE,
+        )
+        if not m:
+            return None
+        candidate = m.group(1).strip().rstrip("?!.,;: ")
+        skip = {
+            "la", "le", "les", "un", "une", "des", "ce", "cette", "mon",
+            "football", "foot", "ligue", "saison", "match", "équipe", "joueur",
+        }
+        if candidate.lower() in skip or len(candidate) < 2:
+            return None
+        try:
+            data = await self._tools.call("get_team_info", {"search": candidate})
+            if data and isinstance(data, list) and len(data) > 0:
+                team = data[0]
+                tid = team.get("id") or team.get("team", {}).get("id")
+                if tid:
+                    logger.info("prerouter resolved '%s' → team_id=%s", candidate, tid)
+                    return tid
+        except Exception:
+            logger.debug("team resolution failed for '%s'", candidate, exc_info=True)
+        return None
+
     async def try_route(self, req: IncomingRequest) -> Response | None:
         """Renvoie une Response si la requête matche un pattern, sinon None."""
+        # Auto-résolution du nom d'équipe dans le texte
+        if not req.context.team_id:
+            resolved = await self._resolve_team_id(req)
+            if resolved:
+                ctx = req.context.model_copy(update={"team_id": resolved})
+                req = req.model_copy(update={"context": ctx})
+
         text = req.text.strip().lower()
 
         # Salutations
