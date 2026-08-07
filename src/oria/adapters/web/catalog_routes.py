@@ -23,11 +23,12 @@ COVERED_LEAGUE_IDS: set[int] = {
     2,    # Champions League
     3,    # Europa League
     848,  # Conference League
-    # Top 5 championnats
+    # Top 5 championnats (+ divisions 2)
     61,   # Ligue 1
     39,   # Premier League
     140,  # La Liga
     78,   # Bundesliga
+    79,   # 2. Bundesliga
     135,  # Serie A
     # Championnats secondaires
     94,   # Primeira Liga (Portugal)

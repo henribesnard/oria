@@ -326,11 +326,8 @@ export function Landing() {
     async function load() {
       try {
         const today = new Date().toISOString().slice(0, 10);
-        const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-        const [todayFixtures, yesterdayFixtures, nextFixtures, liveFixtures, leagueData] = await Promise.all([
+        const [todayFixtures, liveFixtures, leagueData] = await Promise.all([
           listFixtures({ date: today }).catch(() => [] as Fixture[]),
-          listFixtures({ date: yesterday }).catch(() => [] as Fixture[]),
-          listFixtures({ nextCount: 20 }).catch(() => [] as Fixture[]),
           listLiveFixtures().catch(() => [] as Fixture[]),
           listLeagues().catch(() => [] as League[]),
         ]);
@@ -339,7 +336,7 @@ export function Landing() {
         // Deduplicate by id (live first for freshest data)
         const seen = new Set<number>();
         const all: Fixture[] = [];
-        for (const f of [...liveFixtures, ...todayFixtures, ...yesterdayFixtures, ...nextFixtures]) {
+        for (const f of [...liveFixtures, ...todayFixtures]) {
           if (!seen.has(f.id)) {
             seen.add(f.id);
             all.push(f);
