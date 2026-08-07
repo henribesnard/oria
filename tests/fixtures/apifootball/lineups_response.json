@@ -1,0 +1,33 @@
+{
+  "get": "fixtures/lineups",
+  "parameters": {"fixture": "1001"},
+  "errors": [],
+  "results": 2,
+  "paging": {"current": 1, "total": 1},
+  "response": [
+    {
+      "team": {"id": 85, "name": "Paris Saint Germain", "logo": "https://example.com/psg.png"},
+      "formation": "4-3-3",
+      "coach": {"id": 10, "name": "L. Enrique", "photo": "https://example.com/enrique.png"},
+      "startXI": [
+        {"player": {"id": 500, "name": "G. Donnarumma", "number": 99, "pos": "G"}},
+        {"player": {"id": 501, "name": "A. Hakimi", "number": 2, "pos": "D"}},
+        {"player": {"id": 502, "name": "Marquinhos", "number": 5, "pos": "D"}},
+        {"player": {"id": 503, "name": "L. Skriniar", "number": 37, "pos": "D"}},
+        {"player": {"id": 504, "name": "N. Mendes", "number": 25, "pos": "D"}}
+      ],
+      "substitutes": [
+        {"player": {"id": 510, "name": "C. Soler", "number": 28, "pos": "M"}}
+      ]
+    },
+    {
+      "team": {"id": 79, "name": "Lille", "logo": "https://example.com/lille.png"},
+      "formation": "4-4-2",
+      "coach": {"id": 20, "name": "B. Genesio", "photo": "https://example.com/genesio.png"},
+      "startXI": [
+        {"player": {"id": 600, "name": "L. Chevalier", "number": 1, "pos": "G"}}
+      ],
+      "substitutes": []
+    }
+  ]
+}

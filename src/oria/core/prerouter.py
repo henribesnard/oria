@@ -76,6 +76,30 @@ class PreRouter:
         if re.search(r"\b(calendrier|programme|schedule)\b", text, re.IGNORECASE):
             return await self._handle_schedule(req)
 
+        # Famille A : matchs (génériques)
+        if re.search(r"\b(matchs?|fixtures?|rencontres?)\b", text, re.IGNORECASE):
+            return await self._handle_matches(req)
+
+        # Famille B : blessures
+        if re.search(r"\b(blessures?|injur|bless[eé]s?)\b", text, re.IGNORECASE):
+            return await self._handle_injuries(req)
+
+        # Famille B : joueurs / stats
+        if re.search(r"\b(joueurs?|players?|effectif|stats?\b)", text, re.IGNORECASE):
+            return await self._handle_players(req)
+
+        # Famille B : infos équipe
+        if re.search(r"\b(infos?|informations?|qui\s+est)\b", text, re.IGNORECASE):
+            return await self._handle_team_info(req)
+
+        # Famille B : scores en direct
+        if re.search(r"\b(en\s+direct|live|en\s+cours)\b", text, re.IGNORECASE):
+            return await self._handle_live(req)
+
+        # Famille B : cotes
+        if re.search(r"\b(cotes?|odds?|pronostics?)\b", text, re.IGNORECASE):
+            return await self._handle_odds(req)
+
         return None
 
     # -- Handlers famille A (via outils, sans LLM) --
@@ -171,4 +195,128 @@ class PreRouter:
                 )
         except Exception:
             logger.debug("prerouter schedule failed", exc_info=True)
+        return None
+
+    async def _handle_matches(self, req: IncomingRequest) -> Response | None:
+        if self._tools is None:
+            return None
+        try:
+            params: dict[str, Any] = {}
+            if req.context.team_id:
+                params["team_id"] = req.context.team_id
+            if req.context.league_id:
+                params["league_id"] = req.context.league_id
+            if req.context.season:
+                params["season"] = req.context.season
+            data = await self._tools.call("get_fixtures", params)
+            if data:
+                return Response(
+                    text="Voici les matchs.",
+                    attachments=[Attachment(kind="table", data={"fixtures": data})],
+                )
+        except Exception:
+            logger.debug("prerouter matches failed", exc_info=True)
+        return None
+
+    # -- Handlers famille B (via outils, sans LLM) --
+
+    async def _handle_injuries(self, req: IncomingRequest) -> Response | None:
+        if self._tools is None:
+            return None
+        try:
+            params: dict[str, Any] = {}
+            if req.context.league_id:
+                params["league_id"] = req.context.league_id
+            if req.context.season:
+                params["season"] = req.context.season
+            if req.context.team_id:
+                params["team_id"] = req.context.team_id
+            if req.context.fixture_id:
+                params["fixture_id"] = req.context.fixture_id
+            data = await self._tools.call("get_injuries", params)
+            if data:
+                return Response(
+                    text="Voici les blessures et suspensions.",
+                    attachments=[Attachment(kind="table", data={"injuries": data})],
+                )
+        except Exception:
+            logger.debug("prerouter injuries failed", exc_info=True)
+        return None
+
+    async def _handle_players(self, req: IncomingRequest) -> Response | None:
+        if self._tools is None:
+            return None
+        try:
+            params: dict[str, Any] = {}
+            if req.context.team_id:
+                params["team_id"] = req.context.team_id
+            if req.context.league_id:
+                params["league_id"] = req.context.league_id
+            if req.context.season:
+                params["season"] = req.context.season
+            if req.context.player_id:
+                params["player_id"] = req.context.player_id
+            data = await self._tools.call("get_player_stats", params)
+            if data:
+                return Response(
+                    text="Voici les statistiques des joueurs.",
+                    attachments=[Attachment(kind="table", data={"players": data})],
+                )
+        except Exception:
+            logger.debug("prerouter players failed", exc_info=True)
+        return None
+
+    async def _handle_team_info(self, req: IncomingRequest) -> Response | None:
+        if self._tools is None:
+            return None
+        try:
+            params: dict[str, Any] = {}
+            if req.context.team_id:
+                params["team_id"] = req.context.team_id
+            data = await self._tools.call("get_team_info", params)
+            if data:
+                return Response(
+                    text="Voici les informations sur l'équipe.",
+                    attachments=[Attachment(kind="table", data={"team": data})],
+                )
+        except Exception:
+            logger.debug("prerouter team info failed", exc_info=True)
+        return None
+
+    async def _handle_live(self, req: IncomingRequest) -> Response | None:
+        if self._tools is None:
+            return None
+        try:
+            params: dict[str, Any] = {}
+            if req.context.league_id:
+                params["league_id"] = req.context.league_id
+            data = await self._tools.call("get_live_scores", params)
+            if data:
+                return Response(
+                    text="Voici les scores en direct.",
+                    attachments=[Attachment(kind="table", data={"live": data})],
+                )
+        except Exception:
+            logger.debug("prerouter live failed", exc_info=True)
+        return None
+
+    async def _handle_odds(self, req: IncomingRequest) -> Response | None:
+        if self._tools is None:
+            return None
+        try:
+            params: dict[str, Any] = {}
+            if req.context.fixture_id:
+                params["fixture_id"] = req.context.fixture_id
+            if req.context.league_id:
+                params["league_id"] = req.context.league_id
+            if req.context.season:
+                params["season"] = req.context.season
+            data = await self._tools.call("get_odds", params)
+            if data:
+                return Response(
+                    text="Voici les cotes pré-match.",
+                    attachments=[Attachment(kind="table", data={"odds": data})],
+                )
+        except Exception:
+            logger.debug("prerouter odds failed", exc_info=True)
         return None

@@ -1,0 +1,30 @@
+{
+  "get": "odds",
+  "parameters": {"fixture": "1001"},
+  "errors": [],
+  "results": 1,
+  "paging": {"current": 1, "total": 1},
+  "response": [
+    {
+      "league": {"id": 61, "name": "Ligue 1", "country": "France", "season": 2024},
+      "fixture": {"id": 1001, "date": "2024-08-18T19:00:00+00:00", "timestamp": 1724007600},
+      "bookmakers": [
+        {
+          "id": 1,
+          "name": "Bet365",
+          "bets": [
+            {
+              "id": 1,
+              "name": "Match Winner",
+              "values": [
+                {"value": "Home", "odd": "1.45"},
+                {"value": "Draw", "odd": "4.50"},
+                {"value": "Away", "odd": "6.00"}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

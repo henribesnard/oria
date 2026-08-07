@@ -1,0 +1,80 @@
+{
+  "get": "fixtures/events",
+  "parameters": {
+    "fixture": "1001"
+  },
+  "errors": [],
+  "results": 3,
+  "paging": {
+    "current": 1,
+    "total": 1
+  },
+  "response": [
+    {
+      "time": {
+        "elapsed": 23,
+        "extra": null
+      },
+      "team": {
+        "id": 85,
+        "name": "Paris Saint Germain",
+        "logo": "https://example.com/psg.png"
+      },
+      "player": {
+        "id": 276,
+        "name": "K. Mbappe"
+      },
+      "assist": {
+        "id": 501,
+        "name": "A. Hakimi"
+      },
+      "type": "Goal",
+      "detail": "Normal Goal",
+      "comments": null
+    },
+    {
+      "time": {
+        "elapsed": 55,
+        "extra": null
+      },
+      "team": {
+        "id": 79,
+        "name": "Lille",
+        "logo": "https://example.com/lille.png"
+      },
+      "player": {
+        "id": 700,
+        "name": "J. David"
+      },
+      "assist": {
+        "id": null,
+        "name": null
+      },
+      "type": "Goal",
+      "detail": "Normal Goal",
+      "comments": null
+    },
+    {
+      "time": {
+        "elapsed": 78,
+        "extra": null
+      },
+      "team": {
+        "id": 85,
+        "name": "Paris Saint Germain",
+        "logo": "https://example.com/psg.png"
+      },
+      "player": {
+        "id": 280,
+        "name": "O. Dembele"
+      },
+      "assist": {
+        "id": 276,
+        "name": "K. Mbappe"
+      },
+      "type": "Goal",
+      "detail": "Normal Goal",
+      "comments": null
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "get": "injuries",
+  "parameters": {"league": "61", "season": "2024"},
+  "errors": [],
+  "results": 2,
+  "paging": {"current": 1, "total": 1},
+  "response": [
+    {
+      "player": {"id": 1100, "name": "L. Hernandez", "photo": "https://example.com/hernandez.png", "type": "Missing Fixture", "reason": "Knee Injury"},
+      "team": {"id": 85, "name": "Paris Saint Germain", "logo": "https://example.com/psg.png"},
+      "fixture": {"id": 1001, "date": "2024-08-18T19:00:00+00:00", "timestamp": 1724007600},
+      "league": {"id": 61, "name": "Ligue 1", "country": "France", "season": 2024}
+    },
+    {
+      "player": {"id": 1200, "name": "W. Zaïre-Emery", "photo": "https://example.com/zaire.png", "type": "Missing Fixture", "reason": "Suspended"},
+      "team": {"id": 85, "name": "Paris Saint Germain", "logo": "https://example.com/psg.png"},
+      "fixture": {"id": 1001, "date": "2024-08-18T19:00:00+00:00", "timestamp": 1724007600},
+      "league": {"id": 61, "name": "Ligue 1", "country": "France", "season": 2024}
+    }
+  ]
+}

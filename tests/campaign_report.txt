@@ -1,0 +1,237 @@
+================================================================================
+  RAPPORT DE CAMPAGNE DE TESTS ORIA — E2E Pipeline
+================================================================================
+
+RESUME GLOBAL
+----------------------------------------
+  Questions testees      : 42
+  Succes                 : 42 (100%)
+  Echecs                 : 0
+  Route prerouter        : 32
+  Route fallback         : 10
+  Erreurs                : 0
+  Reponses degradees     : 10
+  Latence moyenne        : 66 ms
+  Appels API (questions) : 29
+  Appels API (total)     : 29
+  Budget avant campagne  : 7500
+  Budget apres campagne  : 7409
+  Duree totale           : 7435 ms
+
+================================================================================
+DETAIL PAR CATEGORIE
+================================================================================
+
+--- SALUTATION (5 questions) ---
+  Succes: 5/5 | Latence moy: 0 ms | Appels API: 0
+  [OK] "Bonjour" -> prerouter:salutation | 0ms | API:0
+         Response: Salut ! Je suis Oria, ton assistant football. Comment puis-je t'aider ?
+  [OK] "Salut !" -> prerouter:salutation | 0ms | API:0
+         Response: Salut ! Je suis Oria, ton assistant football. Comment puis-je t'aider ?
+  [OK] "Hello" -> prerouter:salutation | 0ms | API:0
+         Response: Salut ! Je suis Oria, ton assistant football. Comment puis-je t'aider ?
+  [OK] "Hey" -> prerouter:salutation | 0ms | API:0
+         Response: Salut ! Je suis Oria, ton assistant football. Comment puis-je t'aider ?
+  [OK] "Coucou" -> prerouter:salutation | 0ms | API:0
+         Response: Salut ! Je suis Oria, ton assistant football. Comment puis-je t'aider ?
+
+--- AIDE (2 questions) ---
+  Succes: 2/2 | Latence moy: 1 ms | Appels API: 0
+  [OK] "aide" -> prerouter:aide | 1ms | API:0
+         Response: Je peux t'aider avec les classements, résultats, matchs à venir, compositions, blessures et plus enc
+  [OK] "help" -> prerouter:aide | 0ms | API:0
+         Response: Je peux t'aider avec les classements, résultats, matchs à venir, compositions, blessures et plus enc
+
+--- CLASSEMENT (5 questions) ---
+  Succes: 5/5 | Latence moy: 52 ms | Appels API: 5
+  [OK] "classement ligue 1" -> prerouter:classement | 125ms | API:1 [table]
+         Response: Voici le classement actuel.
+  [OK] "standings Premier League" -> prerouter:classement | 34ms | API:1 [table]
+         Response: Voici le classement actuel.
+  [OK] "classement La Liga" -> prerouter:classement | 35ms | API:1 [table]
+         Response: Voici le classement actuel.
+  [OK] "classement Serie A" -> prerouter:classement | 34ms | API:1 [table]
+         Response: Voici le classement actuel.
+  [OK] "classement Bundesliga" -> prerouter:classement | 35ms | API:1 [table]
+         Response: Voici le classement actuel.
+
+--- PROCHAIN_MATCH (3 questions) ---
+  Succes: 3/3 | Latence moy: 36 ms | Appels API: 3
+  [OK] "prochain match du PSG" -> prerouter:fixture | 37ms | API:1 [fixture_card]
+         Response: Voici le prochain match.
+  [OK] "next match Real Madrid" -> prerouter:fixture | 34ms | API:1 [fixture_card]
+         Response: Voici le prochain match.
+  [OK] "prochain match de l'OM" -> prerouter:fixture | 37ms | API:1 [fixture_card]
+         Response: Voici le prochain match.
+
+--- DERNIER_RESULTAT (3 questions) ---
+  Succes: 3/3 | Latence moy: 24 ms | Appels API: 2
+  [OK] "dernier resultat du PSG" -> prerouter:fixture | 35ms | API:1 [fixture_card]
+         Response: Voici le dernier résultat.
+  [OK] "score PSG" -> prerouter:fixture | 1ms | API:0 [fixture_card]
+         Response: Voici le dernier résultat.
+  [OK] "last result Barcelona" -> prerouter:fixture | 36ms | API:1 [fixture_card]
+         Response: Voici le dernier résultat.
+
+--- FORME (2 questions) ---
+  Succes: 2/2 | Latence moy: 36 ms | Appels API: 2
+  [OK] "forme du PSG" -> prerouter:forme | 35ms | API:1 [table]
+         Response: Voici la forme récente.
+  [OK] "form Manchester City" -> prerouter:forme | 36ms | API:1 [table]
+         Response: Voici la forme récente.
+
+--- CALENDRIER (3 questions) ---
+  Succes: 3/3 | Latence moy: 35 ms | Appels API: 3
+  [OK] "calendrier PSG" -> prerouter:calendrier | 32ms | API:1 [table]
+         Response: Voici les prochains matchs.
+  [OK] "programme de l'OL" -> prerouter:calendrier | 38ms | API:1 [table]
+         Response: Voici les prochains matchs.
+  [OK] "schedule Real Madrid" -> prerouter:calendrier | 36ms | API:1 [table]
+         Response: Voici les prochains matchs.
+
+--- MATCHS_LIGUE (2 questions) ---
+  Succes: 2/2 | Latence moy: 57 ms | Appels API: 2
+  [OK] "matchs de Ligue 1 aujourd'hui" -> prerouter:outil | 59ms | API:1 [table]
+         Response: Voici les matchs.
+  [OK] "les matchs de Premier League" -> prerouter:outil | 55ms | API:1 [table]
+         Response: Voici les matchs.
+
+--- INFO_EQUIPE (2 questions) ---
+  Succes: 2/2 | Latence moy: 35 ms | Appels API: 2
+  [OK] "informations sur le PSG" -> prerouter:outil | 37ms | API:1 [table]
+         Response: Voici les informations sur l'équipe.
+  [OK] "qui est le Real Madrid ?" -> prerouter:outil | 34ms | API:1 [table]
+         Response: Voici les informations sur l'équipe.
+
+--- BLESSURES (2 questions) ---
+  Succes: 2/2 | Latence moy: 76 ms | Appels API: 2
+  [OK] "blessures en Ligue 1" -> prerouter:outil | 114ms | API:1 [table]
+         Response: Voici les blessures et suspensions.
+  [OK] "joueurs blesses au PSG" -> prerouter:outil | 37ms | API:1 [table]
+         Response: Voici les blessures et suspensions.
+
+--- JOUEURS (2 questions) ---
+  Succes: 2/2 | Latence moy: 43 ms | Appels API: 2
+  [OK] "joueurs du PSG cette saison" -> prerouter:outil | 47ms | API:1 [table]
+         Response: Voici les statistiques des joueurs.
+  [OK] "stats des joueurs de l'OM" -> prerouter:outil | 39ms | API:1 [table]
+         Response: Voici les statistiques des joueurs.
+
+--- LIVE (2 questions) ---
+  Succes: 2/2 | Latence moy: 828 ms | Appels API: 4
+  [OK] "scores en direct" -> prerouter:outil | 32ms | API:1 [table]
+         Response: Voici les scores en direct.
+  [OK] "matchs en cours en Ligue 1" -> fallback | 1624ms | API:3 [DEGRADE]
+         Response: Je n'ai pas pu traiter ta demande « matchs en cours en Ligue 1 » pour le moment. Essaie de reformule
+
+--- COTES (1 questions) ---
+  Succes: 1/1 | Latence moy: 34 ms | Appels API: 1
+  [OK] "cotes Ligue 1" -> fallback | 34ms | API:1 [DEGRADE]
+         Response: Je n'ai pas pu traiter ta demande « cotes Ligue 1 » pour le moment. Essaie de reformuler ou réessaie
+
+--- ANALYTIQUE (2 questions) ---
+  Succes: 2/2 | Latence moy: 0 ms | Appels API: 0
+  [OK] "qui va gagner le championnat de Ligue 1 ?" -> fallback | 0ms | API:0 [DEGRADE]
+         Response: Je n'ai pas pu traiter ta demande « qui va gagner le championnat de Ligue 1 ? » pour le moment. Essa
+  [OK] "compare le PSG et l'OM cette saison" -> fallback | 0ms | API:0 [DEGRADE]
+         Response: Je n'ai pas pu traiter ta demande « compare le PSG et l'OM cette saison » pour le moment. Essaie de 
+
+--- HORS_SCOPE (2 questions) ---
+  Succes: 2/2 | Latence moy: 0 ms | Appels API: 0
+  [OK] "quelle est la meteo aujourd'hui ?" -> fallback | 1ms | API:0 [DEGRADE]
+         Response: Je n'ai pas pu traiter ta demande « quelle est la meteo aujourd'hui ? » pour le moment. Essaie de re
+  [OK] "raconte-moi une blague" -> fallback | 0ms | API:0 [DEGRADE]
+         Response: Je n'ai pas pu traiter ta demande « raconte-moi une blague » pour le moment. Essaie de reformuler ou
+
+--- EDGE_CASE (4 questions) ---
+  Succes: 4/4 | Latence moy: 13 ms | Appels API: 1
+  [OK] "" -> fallback | 0ms | API:0 [DEGRADE]
+         Response: Je n'ai pas pu traiter ta demande «  » pour le moment. Essaie de reformuler ou réessaie plus tard.
+  [OK] "x" -> fallback | 0ms | API:0 [DEGRADE]
+         Response: Je n'ai pas pu traiter ta demande « x » pour le moment. Essaie de reformuler ou réessaie plus tard.
+  [OK] "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" -> fallback | 0ms | API:0 [DEGRADE]
+         Response: Je n'ai pas pu traiter ta demande « aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  [OK] "classement" -> fallback | 50ms | API:1 [DEGRADE]
+         Response: Je n'ai pas pu traiter ta demande « classement » pour le moment. Essaie de reformuler ou réessaie pl
+
+================================================================================
+TESTS DE CACHE
+================================================================================
+  Cache hits: 6/6 (100%)
+
+  [cache_classement] CACHE HIT
+    V1: "classement ligue 1" -> 1ms, 0 API calls
+    V2: "classement Ligue 1 saison en cours" -> 1ms, 0 API calls
+    Speedup: 0.7x
+  [cache_prochain_match] CACHE HIT
+    V1: "prochain match du PSG" -> 1ms, 0 API calls
+    V2: "next match PSG" -> 1ms, 0 API calls
+    Speedup: 1.2x
+  [cache_dernier_resultat] CACHE HIT
+    V1: "dernier resultat du PSG" -> 1ms, 0 API calls
+    V2: "score du PSG" -> 1ms, 0 API calls
+    Speedup: 1.1x
+  [cache_forme] CACHE HIT
+    V1: "forme du PSG" -> 1ms, 0 API calls
+    V2: "form PSG" -> 1ms, 0 API calls
+    Speedup: 0.9x
+  [cache_calendrier] CACHE HIT
+    V1: "calendrier PSG" -> 1ms, 0 API calls
+    V2: "schedule du PSG" -> 1ms, 0 API calls
+    Speedup: 1.0x
+  [cache_classement_pl] CACHE HIT
+    V1: "standings Premier League" -> 2ms, 0 API calls
+    V2: "classement PL" -> 2ms, 0 API calls
+    Speedup: 0.9x
+
+================================================================================
+ANALYSE DE ROUTAGE
+================================================================================
+  fallback                       :  10 (24%)
+  prerouter:outil                :   9 (21%)
+  prerouter:fixture              :   6 (14%)
+  prerouter:salutation           :   5 (12%)
+  prerouter:classement           :   5 (12%)
+  prerouter:calendrier           :   3 (7%)
+  prerouter:aide                 :   2 (5%)
+  prerouter:forme                :   2 (5%)
+
+================================================================================
+LATENCES PAR ROUTE
+================================================================================
+  fallback                       : avg=171ms  min=0ms  max=1624ms
+  prerouter:aide                 : avg=1ms  min=0ms  max=1ms
+  prerouter:calendrier           : avg=35ms  min=32ms  max=38ms
+  prerouter:classement           : avg=52ms  min=34ms  max=125ms
+  prerouter:fixture              : avg=30ms  min=1ms  max=37ms
+  prerouter:forme                : avg=36ms  min=35ms  max=36ms
+  prerouter:outil                : avg=51ms  min=32ms  max=114ms
+  prerouter:salutation           : avg=0ms  min=0ms  max=0ms
+
+================================================================================
+BUGS DECOUVERTS
+================================================================================
+
+  BUG #2 : Questions sans route (LLM desactive)
+  ------------------------------------------------------------
+  Sans LLM, ces categories de questions tombent
+  directement en fallback car aucun pattern prerouter
+  ne les couvre et l'orchestrateur est inactif :
+    - analytique (2 questions)
+    - cotes (1 questions)
+    - live (1 questions)
+  => Ces questions necessitent le LLM (orchestrateur)
+     ou des patterns prerouter supplementaires.
+
+================================================================================
+CONCLUSION
+================================================================================
+  La campagne s'est deroulee sans probleme majeur.
+
+  Recommandations :
+    1. Ajouter les parametres 'next' et 'last' a la signature
+       de get_fixtures dans tools/football.py
+    2. Tester avec enable_llm=True pour valider l'orchestrateur
+    3. Ajouter des patterns prerouter pour blessures, joueurs, cotes
+
+================================================================================

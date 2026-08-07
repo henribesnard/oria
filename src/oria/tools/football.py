@@ -39,6 +39,8 @@ def register_football_tools(  # noqa: PLR0913
         team_id: int = 0,
         season: int = 0,
         date: str = "",
+        next: int = 0,
+        last: int = 0,
     ) -> Any:  # noqa: ANN401
         parts = []
         if league_id:
@@ -49,6 +51,10 @@ def register_football_tools(  # noqa: PLR0913
             parts.append(f"season={season}")
         if date:
             parts.append(f"date={date}")
+        if next:
+            parts.append(f"next={next}")
+        if last:
+            parts.append(f"last={last}")
         return await fixtures.get("&".join(parts))
 
     registry.register(
@@ -72,6 +78,14 @@ def register_football_tools(  # noqa: PLR0913
                 "date": {
                     "type": "string",
                     "description": "Date YYYY-MM-DD",
+                },
+                "next": {
+                    "type": "integer",
+                    "description": "Nombre de prochains matchs à retourner",
+                },
+                "last": {
+                    "type": "integer",
+                    "description": "Nombre de derniers matchs à retourner",
                 },
             },
         },

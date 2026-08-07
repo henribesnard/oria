@@ -1,0 +1,25 @@
+{
+  "get": "teams",
+  "parameters": {"id": "85"},
+  "errors": [],
+  "results": 1,
+  "paging": {"current": 1, "total": 1},
+  "response": [
+    {
+      "team": {
+        "id": 85,
+        "name": "Paris Saint Germain",
+        "code": "PSG",
+        "country": "France",
+        "founded": 1970,
+        "logo": "https://media.api-sports.io/football/teams/85.png"
+      },
+      "venue": {
+        "id": 100,
+        "name": "Parc des Princes",
+        "city": "Paris",
+        "capacity": 47929
+      }
+    }
+  ]
+}

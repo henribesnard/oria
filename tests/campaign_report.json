@@ -1,0 +1,815 @@
+{
+  "summary": {
+    "total_questions": 42,
+    "successes": 42,
+    "failures": 0,
+    "total_api_calls": 29,
+    "budget_before": 7500,
+    "budget_after": 7409,
+    "duration_ms": 7434.889200143516
+  },
+  "questions": [
+    {
+      "category": "salutation",
+      "question": "Bonjour",
+      "context": {},
+      "route": "prerouter:salutation",
+      "response_text": "Salut ! Je suis Oria, ton assistant football. Comment puis-je t'aider ?",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": false,
+      "latency_ms": 0.3521000035107136,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "salutation",
+      "question": "Salut !",
+      "context": {},
+      "route": "prerouter:salutation",
+      "response_text": "Salut ! Je suis Oria, ton assistant football. Comment puis-je t'aider ?",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": false,
+      "latency_ms": 0.16949977725744247,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "salutation",
+      "question": "Hello",
+      "context": {},
+      "route": "prerouter:salutation",
+      "response_text": "Salut ! Je suis Oria, ton assistant football. Comment puis-je t'aider ?",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": false,
+      "latency_ms": 0.13660010881721973,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "salutation",
+      "question": "Hey",
+      "context": {},
+      "route": "prerouter:salutation",
+      "response_text": "Salut ! Je suis Oria, ton assistant football. Comment puis-je t'aider ?",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": false,
+      "latency_ms": 0.14690007083117962,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "salutation",
+      "question": "Coucou",
+      "context": {},
+      "route": "prerouter:salutation",
+      "response_text": "Salut ! Je suis Oria, ton assistant football. Comment puis-je t'aider ?",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": false,
+      "latency_ms": 0.1829999964684248,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "aide",
+      "question": "aide",
+      "context": {},
+      "route": "prerouter:aide",
+      "response_text": "Je peux t'aider avec les classements, résultats, matchs à venir, compositions, blessures et plus encore. Pose-moi ta question !",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": false,
+      "latency_ms": 1.271700020879507,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "aide",
+      "question": "help",
+      "context": {},
+      "route": "prerouter:aide",
+      "response_text": "Je peux t'aider avec les classements, résultats, matchs à venir, compositions, blessures et plus encore. Pose-moi ta question !",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": false,
+      "latency_ms": 0.28629996813833714,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "classement",
+      "question": "classement ligue 1",
+      "context": {
+        "league_id": 61,
+        "season": 2024
+      },
+      "route": "prerouter:classement",
+      "response_text": "Voici le classement actuel.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 125.11359993368387,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "classement",
+      "question": "standings Premier League",
+      "context": {
+        "league_id": 39,
+        "season": 2024
+      },
+      "route": "prerouter:classement",
+      "response_text": "Voici le classement actuel.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 34.09339999780059,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "classement",
+      "question": "classement La Liga",
+      "context": {
+        "league_id": 140,
+        "season": 2024
+      },
+      "route": "prerouter:classement",
+      "response_text": "Voici le classement actuel.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 34.643599996343255,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "classement",
+      "question": "classement Serie A",
+      "context": {
+        "league_id": 135,
+        "season": 2024
+      },
+      "route": "prerouter:classement",
+      "response_text": "Voici le classement actuel.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 33.959100022912025,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "classement",
+      "question": "classement Bundesliga",
+      "context": {
+        "league_id": 78,
+        "season": 2024
+      },
+      "route": "prerouter:classement",
+      "response_text": "Voici le classement actuel.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 34.51989986933768,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "prochain_match",
+      "question": "prochain match du PSG",
+      "context": {
+        "league_id": 61,
+        "season": 2024,
+        "team_id": 85
+      },
+      "route": "prerouter:fixture",
+      "response_text": "Voici le prochain match.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "fixture_card"
+      ],
+      "degraded": false,
+      "latency_ms": 37.042199866846204,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "prochain_match",
+      "question": "next match Real Madrid",
+      "context": {
+        "league_id": 140,
+        "season": 2024,
+        "team_id": 541
+      },
+      "route": "prerouter:fixture",
+      "response_text": "Voici le prochain match.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "fixture_card"
+      ],
+      "degraded": false,
+      "latency_ms": 34.40869995392859,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "prochain_match",
+      "question": "prochain match de l'OM",
+      "context": {
+        "league_id": 61,
+        "season": 2024,
+        "team_id": 81
+      },
+      "route": "prerouter:fixture",
+      "response_text": "Voici le prochain match.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "fixture_card"
+      ],
+      "degraded": false,
+      "latency_ms": 36.77499992772937,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "dernier_resultat",
+      "question": "dernier resultat du PSG",
+      "context": {
+        "league_id": 61,
+        "season": 2024,
+        "team_id": 85
+      },
+      "route": "prerouter:fixture",
+      "response_text": "Voici le dernier résultat.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "fixture_card"
+      ],
+      "degraded": false,
+      "latency_ms": 34.86139979213476,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "dernier_resultat",
+      "question": "score PSG",
+      "context": {
+        "league_id": 61,
+        "season": 2024,
+        "team_id": 85
+      },
+      "route": "prerouter:fixture",
+      "response_text": "Voici le dernier résultat.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "fixture_card"
+      ],
+      "degraded": false,
+      "latency_ms": 1.4669999945908785,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "dernier_resultat",
+      "question": "last result Barcelona",
+      "context": {
+        "league_id": 140,
+        "season": 2024,
+        "team_id": 529
+      },
+      "route": "prerouter:fixture",
+      "response_text": "Voici le dernier résultat.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "fixture_card"
+      ],
+      "degraded": false,
+      "latency_ms": 35.667600110173225,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "forme",
+      "question": "forme du PSG",
+      "context": {
+        "league_id": 61,
+        "season": 2024,
+        "team_id": 85
+      },
+      "route": "prerouter:forme",
+      "response_text": "Voici la forme récente.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 35.356099950149655,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "forme",
+      "question": "form Manchester City",
+      "context": {
+        "league_id": 39,
+        "season": 2024,
+        "team_id": 50
+      },
+      "route": "prerouter:forme",
+      "response_text": "Voici la forme récente.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 35.93900008127093,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "calendrier",
+      "question": "calendrier PSG",
+      "context": {
+        "league_id": 61,
+        "season": 2024,
+        "team_id": 85
+      },
+      "route": "prerouter:calendrier",
+      "response_text": "Voici les prochains matchs.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 31.83110011741519,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "calendrier",
+      "question": "programme de l'OL",
+      "context": {
+        "league_id": 61,
+        "season": 2024,
+        "team_id": 80
+      },
+      "route": "prerouter:calendrier",
+      "response_text": "Voici les prochains matchs.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 38.41620008461177,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "calendrier",
+      "question": "schedule Real Madrid",
+      "context": {
+        "league_id": 140,
+        "season": 2024,
+        "team_id": 541
+      },
+      "route": "prerouter:calendrier",
+      "response_text": "Voici les prochains matchs.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 35.59349989518523,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "matchs_ligue",
+      "question": "matchs de Ligue 1 aujourd'hui",
+      "context": {
+        "league_id": 61,
+        "season": 2024
+      },
+      "route": "prerouter:outil",
+      "response_text": "Voici les matchs.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 58.777199825271964,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "matchs_ligue",
+      "question": "les matchs de Premier League",
+      "context": {
+        "league_id": 39,
+        "season": 2024
+      },
+      "route": "prerouter:outil",
+      "response_text": "Voici les matchs.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 55.291400058194995,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "info_equipe",
+      "question": "informations sur le PSG",
+      "context": {
+        "team_id": 85
+      },
+      "route": "prerouter:outil",
+      "response_text": "Voici les informations sur l'équipe.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 37.14850009419024,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "info_equipe",
+      "question": "qui est le Real Madrid ?",
+      "context": {
+        "team_id": 541
+      },
+      "route": "prerouter:outil",
+      "response_text": "Voici les informations sur l'équipe.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 33.59559993259609,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "blessures",
+      "question": "blessures en Ligue 1",
+      "context": {
+        "league_id": 61,
+        "season": 2024
+      },
+      "route": "prerouter:outil",
+      "response_text": "Voici les blessures et suspensions.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 114.06240006908774,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "blessures",
+      "question": "joueurs blesses au PSG",
+      "context": {
+        "league_id": 61,
+        "season": 2024,
+        "team_id": 85
+      },
+      "route": "prerouter:outil",
+      "response_text": "Voici les blessures et suspensions.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 37.28839987888932,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "joueurs",
+      "question": "joueurs du PSG cette saison",
+      "context": {
+        "season": 2024,
+        "team_id": 85
+      },
+      "route": "prerouter:outil",
+      "response_text": "Voici les statistiques des joueurs.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 47.35939996317029,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "joueurs",
+      "question": "stats des joueurs de l'OM",
+      "context": {
+        "season": 2024,
+        "team_id": 81
+      },
+      "route": "prerouter:outil",
+      "response_text": "Voici les statistiques des joueurs.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 38.7510999571532,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "live",
+      "question": "scores en direct",
+      "context": {},
+      "route": "prerouter:outil",
+      "response_text": "Voici les scores en direct.",
+      "has_attachments": true,
+      "attachment_kinds": [
+        "table"
+      ],
+      "degraded": false,
+      "latency_ms": 32.42459986358881,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "live",
+      "question": "matchs en cours en Ligue 1",
+      "context": {
+        "league_id": 61
+      },
+      "route": "fallback",
+      "response_text": "Je n'ai pas pu traiter ta demande « matchs en cours en Ligue 1 » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": true,
+      "latency_ms": 1624.0635998547077,
+      "success": true,
+      "error": "",
+      "api_calls": 3
+    },
+    {
+      "category": "cotes",
+      "question": "cotes Ligue 1",
+      "context": {
+        "league_id": 61,
+        "season": 2024
+      },
+      "route": "fallback",
+      "response_text": "Je n'ai pas pu traiter ta demande « cotes Ligue 1 » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": true,
+      "latency_ms": 33.62370003014803,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    },
+    {
+      "category": "analytique",
+      "question": "qui va gagner le championnat de Ligue 1 ?",
+      "context": {
+        "league_id": 61,
+        "season": 2024
+      },
+      "route": "fallback",
+      "response_text": "Je n'ai pas pu traiter ta demande « qui va gagner le championnat de Ligue 1 ? » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": true,
+      "latency_ms": 0.2722002100199461,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "analytique",
+      "question": "compare le PSG et l'OM cette saison",
+      "context": {
+        "league_id": 61,
+        "season": 2024
+      },
+      "route": "fallback",
+      "response_text": "Je n'ai pas pu traiter ta demande « compare le PSG et l'OM cette saison » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": true,
+      "latency_ms": 0.17850007861852646,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "hors_scope",
+      "question": "quelle est la meteo aujourd'hui ?",
+      "context": {},
+      "route": "fallback",
+      "response_text": "Je n'ai pas pu traiter ta demande « quelle est la meteo aujourd'hui ? » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": true,
+      "latency_ms": 0.5896000657230616,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "hors_scope",
+      "question": "raconte-moi une blague",
+      "context": {},
+      "route": "fallback",
+      "response_text": "Je n'ai pas pu traiter ta demande « raconte-moi une blague » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": true,
+      "latency_ms": 0.18449989147484303,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "edge_case",
+      "question": "",
+      "context": {},
+      "route": "fallback",
+      "response_text": "Je n'ai pas pu traiter ta demande «  » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": true,
+      "latency_ms": 0.16319984570145607,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "edge_case",
+      "question": "x",
+      "context": {},
+      "route": "fallback",
+      "response_text": "Je n'ai pas pu traiter ta demande « x » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": true,
+      "latency_ms": 0.1666999887675047,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "edge_case",
+      "question": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "context": {},
+      "route": "fallback",
+      "response_text": "Je n'ai pas pu traiter ta demande « aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": true,
+      "latency_ms": 0.4110999871045351,
+      "success": true,
+      "error": "",
+      "api_calls": 0
+    },
+    {
+      "category": "edge_case",
+      "question": "classement",
+      "context": {
+        "league_id": 99999,
+        "season": 2024
+      },
+      "route": "fallback",
+      "response_text": "Je n'ai pas pu traiter ta demande « classement » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": true,
+      "latency_ms": 50.173299852758646,
+      "success": true,
+      "error": "",
+      "api_calls": 1
+    }
+  ],
+  "cache_tests": [
+    {
+      "category": "cache_classement",
+      "question_v1": "classement ligue 1",
+      "question_v2": "classement Ligue 1 saison en cours",
+      "latency_v1_ms": 1.017899950966239,
+      "latency_v2_ms": 1.3633999042212963,
+      "speedup_ratio": 0.7465894253143658,
+      "api_calls_v1": 0,
+      "api_calls_v2": 0,
+      "cache_hit": true
+    },
+    {
+      "category": "cache_prochain_match",
+      "question_v1": "prochain match du PSG",
+      "question_v2": "next match PSG",
+      "latency_v1_ms": 1.2306999415159225,
+      "latency_v2_ms": 1.0104000102728605,
+      "speedup_ratio": 1.2180323921251441,
+      "api_calls_v1": 0,
+      "api_calls_v2": 0,
+      "cache_hit": true
+    },
+    {
+      "category": "cache_dernier_resultat",
+      "question_v1": "dernier resultat du PSG",
+      "question_v2": "score du PSG",
+      "latency_v1_ms": 1.128499861806631,
+      "latency_v2_ms": 1.0317000560462475,
+      "speedup_ratio": 1.0938255311639185,
+      "api_calls_v1": 0,
+      "api_calls_v2": 0,
+      "cache_hit": true
+    },
+    {
+      "category": "cache_forme",
+      "question_v1": "forme du PSG",
+      "question_v2": "form PSG",
+      "latency_v1_ms": 1.0681001003831625,
+      "latency_v2_ms": 1.1922998819500208,
+      "speedup_ratio": 0.8958317588996755,
+      "api_calls_v1": 0,
+      "api_calls_v2": 0,
+      "cache_hit": true
+    },
+    {
+      "category": "cache_calendrier",
+      "question_v1": "calendrier PSG",
+      "question_v2": "schedule du PSG",
+      "latency_v1_ms": 1.313100103288889,
+      "latency_v2_ms": 1.316600013524294,
+      "speedup_ratio": 0.9973417057576687,
+      "api_calls_v1": 0,
+      "api_calls_v2": 0,
+      "cache_hit": true
+    },
+    {
+      "category": "cache_classement_pl",
+      "question_v1": "standings Premier League",
+      "question_v2": "classement PL",
+      "latency_v1_ms": 1.5279999934136868,
+      "latency_v2_ms": 1.6707999166101217,
+      "speedup_ratio": 0.9145320024397888,
+      "api_calls_v1": 0,
+      "api_calls_v2": 0,
+      "cache_hit": true
+    }
+  ]
+}
