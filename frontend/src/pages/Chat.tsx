@@ -2,8 +2,7 @@ import { useRef, useEffect } from 'react';
 import { useChat } from '../hooks/useChat';
 import { MessageBubble } from '../components/chat/MessageBubble';
 import { ChatComposer } from '../components/chat/ChatComposer';
-import { ContextChips } from '../components/chat/ContextChips';
-import type { ChatContext } from '../api/chat';
+import { ContextSelector } from '../components/chat/ContextSelector';
 import OriaLogo from '../components/OriaLogo';
 
 export function Chat() {
@@ -14,14 +13,6 @@ export function Chat() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-
-  const clearContextKey = (key: keyof ChatContext) => {
-    setContext(prev => {
-      const next = { ...prev };
-      delete next[key];
-      return next;
-    });
-  };
 
   return (
     <div className="flex flex-col h-dvh">
@@ -42,8 +33,12 @@ export function Chat() {
         </div>
       </header>
 
-      {/* Context chips */}
-      <ContextChips context={context} onClear={clearContextKey} />
+      {/* Context selector */}
+      <div className="border-b border-border bg-surface-alt/60 px-5 py-2.5">
+        <div className="max-w-[760px] mx-auto">
+          <ContextSelector context={context} onChange={setContext} />
+        </div>
+      </div>
 
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto px-7 py-8">
