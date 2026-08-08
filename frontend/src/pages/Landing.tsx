@@ -290,6 +290,11 @@ function MatchModal({ fixture, onClose }: { fixture: Fixture; onClose: () => voi
 
           <Link
             to="/app"
+            state={{
+              fixture_id: fixture.id,
+              league_id: fixture.league_id,
+              team_id: fixture.home_id,
+            }}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               width: '100%', marginTop: 20, border: 'none', background: '#5B4FD6', color: '#fff',

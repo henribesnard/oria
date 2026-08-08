@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from './useAuth';
 import { streamMessage } from '../api/chat';
 import type { Attachment, SuggestedAction, ChatContext } from '../api/chat';
@@ -15,9 +16,11 @@ export interface Message {
 
 export function useChat() {
   const { token } = useAuth();
+  const location = useLocation();
+  const initCtx = (location.state as ChatContext | null) ?? {};
   const [messages, setMessages] = useState<Message[]>([]);
   const [sending, setSending] = useState(false);
-  const [context, setContext] = useState<ChatContext>({});
+  const [context, setContext] = useState<ChatContext>(initCtx);
   const abortRef = useRef<AbortController | null>(null);
 
   const send = useCallback((text: string) => {
