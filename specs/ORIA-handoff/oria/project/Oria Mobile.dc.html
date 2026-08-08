@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #EEECF4; }
+  ::selection { background: #DED9FA; }
+  .oria-sc::-webkit-scrollbar { width: 0; height: 0; }
+  .oria-sc { scrollbar-width: none; }
+  button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 2px solid #5B4FD6; outline-offset: 2px; border-radius: 10px; }
+  @keyframes oriaPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.8)} }
+  @keyframes oriaMsgIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+  @keyframes oriaBlink { 0%,80%,100%{opacity:.25;transform:translateY(0)} 40%{opacity:1;transform:translateY(-3px)} }
+  @keyframes oriaTabPop { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
+  .phones { display:flex; gap:56px; justify-content:center; align-items:flex-start; flex-wrap:wrap; }
+  @media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation:none!important;transition:none!important} }
+</style>
+</helmet>
+<div style="min-height:100dvh;background:radial-gradient(1200px 600px at 50% -10%,#F3F1FA,#EAE8F2);font-family:'Manrope',system-ui,sans-serif;color:#191526;padding:44px 24px 64px;">
+  <div style="max-width:920px;margin:0 auto 34px;text-align:center;">
+    <div style="display:inline-flex;align-items:center;gap:10px;">
+      <svg width="30" height="30" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="15.5" stroke="#5B4FD6" stroke-width="2.8"/><path d="M12.5 23.6 L20 15.4 L27.5 23.6" stroke="#5B4FD6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span style="font-family:'Instrument Serif',serif;font-size:30px;line-height:1;">Oria</span>
+    </div>
+    <p style="font-size:14px;color:#6B6684;margin:10px 0 0;">Application mobile — navigation native iOS & Android</p>
+  </div>
+
+  <div class="phones">
+    <!-- iOS -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+      <span style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8B85A6;">iOS</span>
+      <div style="position:relative;width:340px;height:720px;background:#0E0B18;border-radius:52px;padding:11px;box-shadow:0 40px 80px -30px rgba(38,32,74,.55),0 0 0 2px #2A2540;">
+        <div style="position:relative;width:100%;height:100%;background:#F6F6FB;border-radius:42px;overflow:hidden;display:flex;flex-direction:column;">
+          <!-- status bar -->
+          <div style="flex:none;height:46px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 6px;position:relative;z-index:5;">
+            <span style="font-family:'Manrope';font-size:14px;font-weight:700;letter-spacing:.2px;">9:41</span>
+            <div style="position:absolute;left:50%;top:9px;transform:translateX(-50%);width:104px;height:30px;background:#0E0B18;border-radius:18px;"></div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="#191526" aria-hidden="true"><rect x="0" y="6" width="3" height="5" rx="1"/><rect x="4.5" y="4" width="3" height="7" rx="1"/><rect x="9" y="2" width="3" height="9" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+              <svg width="24" height="12" viewBox="0 0 24 12" fill="none" aria-hidden="true"><rect x="1" y="1" width="19" height="10" rx="3" stroke="#191526" stroke-opacity=".45"/><rect x="2.5" y="2.5" width="14" height="7" rx="1.5" fill="#191526"/><rect x="21" y="4" width="2" height="4" rx="1" fill="#191526" fill-opacity=".45"/></svg>
+            </div>
+          </div>
+          {{ iosApp }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Android -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+      <span style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8B85A6;">Android</span>
+      <div style="position:relative;width:340px;height:720px;background:#0E0B18;border-radius:38px;padding:8px;box-shadow:0 40px 80px -30px rgba(38,32,74,.55),0 0 0 2px #2A2540;">
+        <div style="position:relative;width:100%;height:100%;background:#F6F6FB;border-radius:32px;overflow:hidden;display:flex;flex-direction:column;">
+          <!-- status bar -->
+          <div style="flex:none;height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:relative;z-index:5;">
+            <span style="font-family:'Manrope';font-size:13px;font-weight:600;">9:41</span>
+            <div style="position:absolute;left:22px;top:11px;width:11px;height:11px;background:#0E0B18;border-radius:50%;"></div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <svg width="15" height="11" viewBox="0 0 15 11" fill="#191526" aria-hidden="true"><path d="M7.5 9.5 L0.5 3 A10 10 0 0 1 14.5 3 Z" fill-opacity=".85"/></svg>
+              <svg width="16" height="11" viewBox="0 0 17 11" fill="#191526" aria-hidden="true"><rect x="0" y="6" width="3" height="5" rx="1"/><rect x="4.5" y="4" width="3" height="7" rx="1"/><rect x="9" y="2" width="3" height="9" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+              <svg width="22" height="12" viewBox="0 0 24 12" fill="none" aria-hidden="true"><rect x="1" y="1" width="20" height="10" rx="2.5" stroke="#191526" stroke-opacity=".45"/><rect x="2.5" y="2.5" width="15" height="7" rx="1" fill="#191526"/><rect x="22" y="4" width="1.6" height="4" rx="1" fill="#191526" fill-opacity=".45"/></svg>
+            </div>
+          </div>
+          {{ androidApp }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="max-width:640px;margin:36px auto 0;text-align:center;font-size:12.5px;color:#9A95B0;line-height:1.6;">Les deux appareils partagent le même état — change d'onglet ou envoie un message sur l'un, l'autre suit. iOS : barre d'onglets translucide, titres centrés, retour par swipe. Android : barre d'app Material, bottom nav à pilule, FAB de composition.</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;860px&quot;,&quot;height&quot;:&quot;920px&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    const CDN='https://media.api-sports.io/football';
+    const TEAM={'Paris SG':85,'Le Havre':111,'Marseille':81,'Monaco':91,'Lyon':80,'Lille':79,'Man City':50,'Arsenal':42,'Liverpool':40,'Chelsea':49,'Real Madrid':541,'Barcelona':529,'Atlético':530,'Girona':547,'Inter':505,'Juventus':496,'Milan':489,'Napoli':492};
+    const ABBR={PSG:85,LEH:111,OM:81,ASM:91,OL:80,LIL:79,MCI:50,ARS:42,LIV:40,CHE:49,RMA:541,FCB:529,ATM:530,GIR:547,INT:505,JUV:496,MIL:489,NAP:492};
+    const LEAGUE={'Ligue 1':61,'Premier League':39,'LaLiga':140,'Serie A':135};
+    const PLAYER={'Dembélé':2060,'Mbappé':278,'Barcola':22105,'Vitinha':61931};
+    this.tLogo=(n)=>TEAM[n]!=null?`${CDN}/teams/${TEAM[n]}.png`:'';
+    this.aLogo=(a)=>ABBR[a]!=null?`${CDN}/teams/${ABBR[a]}.png`:'';
+    this.lLogo=(n)=>LEAGUE[n]!=null?`${CDN}/leagues/${LEAGUE[n]}.png`:'';
+    this.pPhoto=(n)=>PLAYER[n]!=null?`${CDN}/players/${PLAYER[n]}.png`:'';
+    this.crest=(url,size,round)=>{ if(!url) return null; return React.createElement('img',{src:url,alt:'',onError:(e)=>{e.target.style.visibility='hidden';},style:{width:size+'px',height:size+'px',objectFit:'contain',flex:'none',borderRadius:round?'50%':undefined}}); };
+
+    this.fixtures=[
+      {home:'PSG',away:'LEH',hs:2,as:0,state:'live',clock:"67'",league:'Ligue 1'},
+      {home:'ARS',away:'LIV',hs:2,as:2,state:'live',clock:"81'",league:'Premier League'},
+      {home:'NAP',away:'MIL',hs:2,as:1,state:'live',clock:"73'",league:'Serie A'},
+      {home:'MCI',away:'CHE',hs:1,as:1,state:'live',clock:"54'",league:'Premier League'},
+      {home:'INT',away:'JUV',hs:3,as:1,state:'ft',clock:'Fin',league:'Serie A'},
+      {home:'FCB',away:'ATM',hs:1,as:0,state:'ft',clock:'Fin',league:'LaLiga'},
+      {home:'RMA',away:'GIR',hs:0,as:0,state:'pre',clock:'21:00',league:'LaLiga'},
+      {home:'OM',away:'LIL',hs:0,as:0,state:'pre',clock:'20:45',league:'Ligue 1'},
+    ];
+    this.follows=[
+      {name:'Paris SG',type:'team'},{name:'Real Madrid',type:'team'},
+      {name:'Ligue 1',type:'league'},{name:'Premier League',type:'league'},
+      {name:'Dembélé',type:'player'},{name:'Mbappé',type:'player'},
+    ];
+
+    this.state = {
+      phase:'splash',
+      slide:0,
+      tab:'chat',
+      scoreTab:'live',
+      draft:'',
+      thinking:false,
+      messages:[
+        {role:'oria',text:"Salut, je suis Oria. Pose-moi une question sur le foot — résultats, forme, compos, tendances, cotes."},
+        {role:'user',text:'Prochain match du PSG ?',chips:['Ligue 1','Paris SG']},
+        {role:'oria',text:'Le PSG reçoit Le Havre samedi 17 août à 21:00 au Parc des Princes (Ligue 1). Forme récente : V V N V D.',fresh:'à jour il y a 2 h'},
+      ],
+    };
+  }
+
+  componentDidMount(){ this._t=setTimeout(()=>{ if(this.state.phase==='splash') this.setState({phase:'landing'}); },1900); }
+  componentWillUnmount(){ clearTimeout(this._t); }
+  go(phase){ this.setState({phase}); }
+  setTab(t){ this.setState({tab:t}); }
+  setScoreTab(t){ this.setState({scoreTab:t}); }
+  send(){
+    const t=this.state.draft.trim(); if(!t) return;
+    this.setState(s=>({messages:[...s.messages,{role:'user',text:t,chips:[]}],draft:'',thinking:true}));
+    setTimeout(()=>this.setState(s=>({messages:[...s.messages,{role:'oria',text:'Je consulte les dernières données et je te réponds avec la forme, les compos probables et les cotes.'}],thinking:false})),1400);
+  }
+
+  stateMeta(st){ return st==='live'?{fg:'#C4691F',bg:'#FBEEE2',label:'live'}:st==='ft'?{fg:'#86829A',bg:'#F3F2F9',label:'fin'}:{fg:'#4A3FC0',bg:'#EEEDFA',label:'à venir'}; }
+
+  // ---- shared screen builders (return React elements) ----
+  h(tag,props,...kids){ return React.createElement(tag,props,...kids); }
+
+  chatScreen(plat){
+    const s=this.state, h=this.h;
+    const rows=s.messages.map((m,i)=>{
+      if(m.role==='oria'){
+        return h('div',{key:i,style:{display:'flex',gap:8,alignItems:'flex-start',animation:'oriaMsgIn .3s ease both'}},
+          h('div',{style:{width:26,height:26,borderRadius:7,background:'#EEEDFA',border:'1px solid #E1DEF0',display:'flex',alignItems:'center',justifyContent:'center',flex:'none',marginTop:2}},
+            h('svg',{width:17,height:17,viewBox:'0 0 40 40',fill:'none'},h('circle',{cx:20,cy:20,r:15.5,stroke:'#5B4FD6',strokeWidth:3}),h('path',{d:'M12.5 23.6 L20 15.4 L27.5 23.6',stroke:'#5B4FD6',strokeWidth:3,strokeLinecap:'round',strokeLinejoin:'round'}))),
+          h('div',{style:{display:'flex',flexDirection:'column',gap:5,maxWidth:'82%'}},
+            h('div',{style:{background:'#fff',border:'1px solid #EDEBF6',borderRadius:'4px 14px 14px 14px',padding:'10px 13px',fontSize:14,lineHeight:1.5,color:'#221E33'}},m.text),
+            m.fresh?h('div',{style:{display:'flex',alignItems:'center',gap:6,padding:'0 2px'}},h('span',{style:{width:7,height:7,borderRadius:'50%',background:'#3B9B6E',animation:'oriaPulse 2.4s infinite'}}),h('span',{style:{fontSize:11,color:'#86829A'}},m.fresh)):null));
+      }
+      return h('div',{key:i,style:{display:'flex',justifyContent:'flex-end',animation:'oriaMsgIn .3s ease both'}},
+        h('div',{style:{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:5,maxWidth:'82%'}},
+          (m.chips&&m.chips.length)?h('div',{style:{display:'flex',flexWrap:'wrap',gap:5,justifyContent:'flex-end'}},m.chips.map((c,j)=>h('span',{key:j,style:{display:'inline-flex',alignItems:'center',gap:5,padding:'3px 9px',borderRadius:999,background:'#EEEDFA',border:'1px solid #DED9FA',fontSize:11,fontWeight:600,color:'#4A3FC0'}},this.crest(c==='Ligue 1'?this.lLogo(c):this.tLogo(c),13,false),c))):null,
+          h('div',{style:{background:'#5B4FD6',color:'#fff',borderRadius:'14px 4px 14px 14px',padding:'9px 13px',fontSize:14,lineHeight:1.45}},m.text)));
+    });
+    if(s.thinking) rows.push(h('div',{key:'think',style:{display:'flex',gap:8,alignItems:'center'}},
+      h('div',{style:{width:26,height:26,borderRadius:7,background:'#EEEDFA',border:'1px solid #E1DEF0',flex:'none'}}),
+      h('div',{style:{display:'inline-flex',alignItems:'center',gap:8,background:'#fff',border:'1px solid #EDEBF6',borderRadius:'4px 14px 14px 14px',padding:'9px 12px'}},
+        h('span',{style:{fontSize:12.5,color:'#86829A',fontWeight:500}},'Oria consulte le direct'),
+        h('span',{style:{display:'inline-flex',gap:3}},[0,.2,.4].map((d,k)=>h('span',{key:k,style:{width:5,height:5,borderRadius:'50%',background:'#C6C1DC',animation:`oriaBlink 1.2s infinite ${d}s`}}))))));
+
+    const accent = plat==='ios' ? {radius:20,btn:'#5B4FD6'} : {radius:26,btn:'#5B4FD6'};
+    return h('div',{key:'chat',className:'oria-sc',style:{flex:1,display:'flex',flexDirection:'column',minHeight:0}},
+      h('div',{className:'oria-sc',style:{flex:1,overflowY:'auto',padding:'12px 14px',display:'flex',flexDirection:'column',gap:12}},rows),
+      h('div',{style:{flex:'none',padding:'8px 12px 12px',background:plat==='ios'?'rgba(246,246,251,.9)':'#F6F6FB',backdropFilter:plat==='ios'?'blur(8px)':'none'}},
+        h('div',{style:{display:'flex',alignItems:'center',gap:8,background:'#fff',border:'1px solid #E4E1F0',borderRadius:accent.radius,padding:'6px 6px 6px 8px',boxShadow:'0 6px 18px -10px rgba(38,32,74,.2)'}},
+          h('button',{onClick:()=>{},'aria-label':'Ajouter un contexte',style:{flex:'none',width:32,height:32,borderRadius:'50%',border:'1px solid #E1DEF0',background:'#FBFBFE',color:'#5B4FD6',fontSize:18,cursor:'pointer',lineHeight:1}},'＋'),
+          h('input',{value:s.draft,onChange:(e)=>this.setState({draft:e.target.value}),onKeyDown:(e)=>{if(e.key==='Enter'){e.preventDefault();this.send();}},placeholder:'Pose ta question…','aria-label':'Pose ta question à Oria',style:{flex:1,border:'none',outline:'none',background:'none',fontFamily:'inherit',fontSize:14,color:'#191526',minWidth:0}}),
+          h('button',{onClick:()=>this.send(),'aria-label':'Envoyer',style:{flex:'none',width:34,height:34,borderRadius:'50%',border:'none',background:s.draft.trim()?accent.btn:'#CFCADF',color:'#fff',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}},
+            h('svg',{width:16,height:16,viewBox:'0 0 24 24',fill:'none'},h('path',{d:'M5 12h13M12 5l7 7-7 7',stroke:'currentColor',strokeWidth:2.4,strokeLinecap:'round',strokeLinejoin:'round'}))))));
+  }
+
+  scoresScreen(plat){
+    const s=this.state, h=this.h;
+    const tabs=[['live','En direct'],['ft','Terminés'],['pre','À venir']];
+    const list=this.fixtures.filter(f=>f.state===s.scoreTab);
+    const seg = plat==='ios'
+      ? h('div',{style:{display:'flex',gap:2,background:'#E7E4F2',borderRadius:9,padding:3,margin:'10px 14px 6px'}},tabs.map(([k,l])=>h('button',{key:k,onClick:()=>this.setScoreTab(k),style:{flex:1,padding:'6px 4px',border:'none',borderRadius:7,cursor:'pointer',fontFamily:'inherit',fontSize:12.5,fontWeight:600,background:s.scoreTab===k?'#fff':'transparent',color:s.scoreTab===k?'#191526':'#6B6684',boxShadow:s.scoreTab===k?'0 1px 3px rgba(0,0,0,.12)':'none'}},l)))
+      : h('div',{style:{display:'flex',gap:0,borderBottom:'1px solid #E9E7F2',margin:'2px 0 6px',padding:'0 8px'}},tabs.map(([k,l])=>h('button',{key:k,onClick:()=>this.setScoreTab(k),style:{flex:1,padding:'11px 4px',border:'none',background:'none',cursor:'pointer',fontFamily:'inherit',fontSize:12.5,fontWeight:700,letterSpacing:'.3px',textTransform:'uppercase',color:s.scoreTab===k?'#5B4FD6':'#86829A',borderBottom:s.scoreTab===k?'2px solid #5B4FD6':'2px solid transparent'}},l)));
+    const cards=list.map((f,i)=>{ const m=this.stateMeta(f.state); return h('div',{key:i,style:{display:'flex',alignItems:'center',gap:10,background:'#fff',border:'1px solid #EDEBF6',borderRadius:14,padding:'11px 13px'}},
+      h('div',{style:{display:'flex',alignItems:'center',gap:7,flex:1,minWidth:0}},this.crest(this.aLogo(f.home),20,false),h('span',{style:{fontFamily:'IBM Plex Mono',fontSize:12.5,fontWeight:600,color:'#3F3B54'}},f.home)),
+      h('span',{style:{fontFamily:'IBM Plex Mono',fontSize:15,fontWeight:600,color:f.state==='live'?'#191526':'#605C74'}},f.state==='pre'?'—':`${f.hs}–${f.as}`),
+      h('div',{style:{display:'flex',alignItems:'center',gap:7,flex:1,minWidth:0,justifyContent:'flex-end'}},h('span',{style:{fontFamily:'IBM Plex Mono',fontSize:12.5,fontWeight:600,color:'#3F3B54'}},f.away),this.crest(this.aLogo(f.away),20,false)),
+      h('span',{style:{flex:'none',padding:'2px 8px',borderRadius:999,fontSize:10,fontWeight:700,color:m.fg,background:m.bg,minWidth:38,textAlign:'center'}},f.clock)); });
+    return h('div',{key:'scores',className:'oria-sc',style:{flex:1,overflowY:'auto',display:'flex',flexDirection:'column',minHeight:0}},
+      seg,
+      h('div',{style:{padding:'6px 14px 16px',display:'flex',flexDirection:'column',gap:8}},cards.length?cards:h('p',{style:{textAlign:'center',color:'#B4AFCA',fontSize:13,padding:'30px 0'}},'Aucun match')));
+  }
+
+  followsScreen(){
+    const h=this.h;
+    const groups=[['Équipes','team'],['Ligues','league'],['Joueurs','player']];
+    return h('div',{key:'follows',className:'oria-sc',style:{flex:1,overflowY:'auto',padding:'14px 14px 18px'}},
+      groups.map(([title,type])=>h('div',{key:type,style:{marginBottom:18}},
+        h('p',{style:{fontSize:12,fontWeight:700,letterSpacing:'.4px',textTransform:'uppercase',color:'#86829A',margin:'0 0 10px'}},title),
+        h('div',{style:{display:'flex',flexWrap:'wrap',gap:7}},this.follows.filter(f=>f.type===type).map((f,i)=>h('span',{key:i,style:{display:'inline-flex',alignItems:'center',gap:7,padding:'7px 12px 7px 9px',borderRadius:999,background:'#fff',border:'1px solid #E9E7F2',fontSize:13,fontWeight:600,color:'#3F3B54'}},this.crest(type==='team'?this.tLogo(f.name):type==='league'?this.lLogo(f.name):this.pPhoto(f.name),20,type==='player'),f.name))))));
+  }
+
+  profileScreen(){
+    const h=this.h;
+    const item=(label,val)=>h('div',{key:label,style:{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'13px 14px',borderTop:'1px solid #F0EEF8'}},h('span',{style:{fontSize:14,color:'#221E33',fontWeight:500}},label),h('span',{style:{fontSize:13,color:'#86829A'}},val));
+    return h('div',{key:'profile',className:'oria-sc',style:{flex:1,overflowY:'auto',padding:'16px 14px 18px'}},
+      h('div',{style:{display:'flex',alignItems:'center',gap:13,marginBottom:16}},
+        h('div',{style:{width:54,height:54,borderRadius:16,background:'linear-gradient(135deg,#5B4FD6,#8A6CF0)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontFamily:'Instrument Serif',fontSize:24}},'C'),
+        h('div',null,h('p',{style:{fontWeight:700,fontSize:16,margin:0}},'Camille Roy'),h('p',{style:{fontSize:13,color:'#86829A',margin:'2px 0 0'}},'camille@roy.fr'))),
+      h('div',{style:{background:'linear-gradient(135deg,#5B4FD6,#7A5CE0)',borderRadius:16,padding:'16px 18px',color:'#fff',marginBottom:14}},
+        h('p',{style:{fontSize:11,fontWeight:700,letterSpacing:'.7px',textTransform:'uppercase',opacity:.8,margin:0}},'Palier Free'),
+        h('p',{style:{fontSize:13.5,opacity:.9,margin:'6px 0 12px'}},'20 questions / jour · passe en Premium pour le direct illimité.'),
+        h('button',{style:{border:'none',background:'#fff',color:'#4A3FC0',borderRadius:10,padding:'9px 16px',fontFamily:'inherit',fontSize:13,fontWeight:700,cursor:'pointer'}},'Passer en Premium')),
+      h('div',{style:{background:'#fff',border:'1px solid #E9E7F2',borderRadius:16,overflow:'hidden'}},[item('Notifications','Activées'),item('Langue','Français'),item('Fuseau','Europe/Paris'),item('Mot de passe','••••••')]));
+  }
+
+  logoMark(size,stroke){ const h=this.h; return h('svg',{width:size,height:size,viewBox:'0 0 40 40',fill:'none','aria-hidden':true},h('circle',{cx:20,cy:20,r:15.5,stroke:stroke||'#5B4FD6',strokeWidth:2.8}),h('path',{d:'M12.5 23.6 L20 15.4 L27.5 23.6',stroke:stroke||'#5B4FD6',strokeWidth:2.8,strokeLinecap:'round',strokeLinejoin:'round'})); }
+
+  field(label,type,ph,plat){ const h=this.h; const rad=plat==='ios'?12:10; return h('label',{key:label,style:{display:'block',marginBottom:13}},
+    h('span',{style:{fontSize:12.5,fontWeight:600,color:'#3F3B54'}},label),
+    h('input',{type:type||'text',placeholder:ph,'aria-label':label,style:{width:'100%',marginTop:6,padding:'12px 13px',border:'1px solid #E1DEF0',borderRadius:rad,fontFamily:'inherit',fontSize:14,outline:'none',background:'#FBFBFE',color:'#191526'}})); }
+
+  primaryBtn(label,onClick,plat){ const h=this.h; return h('button',{onClick,style:{width:'100%',border:'none',background:'#5B4FD6',color:'#fff',cursor:'pointer',fontFamily:'inherit',fontSize:15,fontWeight:700,padding:'14px',borderRadius:plat==='ios'?13:24,boxShadow:'0 10px 24px -10px rgba(91,79,214,.6)'}},label); }
+
+  oauthBtn(label,glyph,plat){ const h=this.h; return h('button',{style:{width:'100%',display:'flex',alignItems:'center',justifyContent:'center',gap:9,border:'1px solid #E1DEF0',background:'#fff',cursor:'pointer',fontFamily:'inherit',fontSize:14,fontWeight:600,padding:'12px',borderRadius:plat==='ios'?12:24,marginBottom:10,color:'#221E33'}},h('span',{style:{fontWeight:700,color:'#5B4FD6',fontFamily:'IBM Plex Mono'}},glyph),label); }
+
+  splashScreen(){ const h=this.h; return h('div',{key:'splash',style:{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:20,background:'linear-gradient(160deg,#5B4FD6,#7A5CE0 60%,#8A6CF0)'}},
+    h('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',gap:14,animation:'oriaMsgIn .5s ease both'}},
+      h('div',{style:{width:76,height:76,borderRadius:24,background:'rgba(255,255,255,.16)',display:'flex',alignItems:'center',justifyContent:'center'}},this.logoMark(46,'#fff')),
+      h('span',{style:{fontFamily:'Instrument Serif',fontSize:44,color:'#fff',lineHeight:1}},'Oria'),
+      h('span',{style:{fontSize:14,color:'rgba(255,255,255,.8)',letterSpacing:'.3px'}},"L'oracle du sport")),
+    h('div',{style:{position:'absolute',bottom:52,display:'flex',gap:5}},[0,.2,.4].map((d,k)=>h('span',{key:k,style:{width:7,height:7,borderRadius:'50%',background:'rgba(255,255,255,.7)',animation:`oriaBlink 1.2s infinite ${d}s`}})))); }
+
+  landingScreen(plat){ const h=this.h;
+    return h('div',{key:'landing',className:'oria-sc',style:{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}},
+      h('div',{style:{flex:1,display:'flex',flexDirection:'column',justifyContent:'center',padding:'20px 26px',gap:18}},
+        h('div',{style:{width:60,height:60,borderRadius:18,background:'#EEEDFA',display:'flex',alignItems:'center',justifyContent:'center'}},this.logoMark(38)),
+        h('h1',{style:{fontFamily:'Instrument Serif',fontWeight:400,fontSize:34,lineHeight:1.05,margin:0}},"Le sport, en langage naturel."),
+        h('p',{style:{fontSize:15,lineHeight:1.55,color:'#605C74',margin:0}},"Résultats, forme, compos, cotes et tendances — Oria répond à partir de données à jour. Cadre ta question par ligue, match, équipe ou joueur."),
+        h('div',{style:{display:'flex',flexDirection:'column',gap:9,marginTop:6}},[
+          ['Données fraîches, fraîcheur affichée','#3B9B6E'],['Scores en direct sur tes équipes','#E0782A'],['Contexte cascadant, jamais imposé','#5B4FD6']
+        ].map(([t,c],i)=>h('div',{key:i,style:{display:'flex',alignItems:'center',gap:10,fontSize:13.5,color:'#3F3B54',fontWeight:500}},h('span',{style:{width:8,height:8,borderRadius:'50%',background:c,flex:'none'}}),t)))),
+      h('div',{style:{flex:'none',padding:'12px 22px 26px',display:'flex',flexDirection:'column',gap:10}},
+        this.primaryBtn('Créer un compte',()=>this.go('signup'),plat),
+        h('button',{onClick:()=>this.go('login'),style:{width:'100%',border:'1px solid #E1DEF0',background:'#fff',color:'#221E33',cursor:'pointer',fontFamily:'inherit',fontSize:15,fontWeight:600,padding:'13px',borderRadius:plat==='ios'?13:24}},'J\u2019ai déjà un compte'),
+        h('button',{onClick:()=>this.enterApp(),style:{border:'none',background:'none',color:'#86829A',cursor:'pointer',fontFamily:'inherit',fontSize:13,fontWeight:600,padding:'4px'}},'Explorer sans compte'))); }
+
+  authScreen(mode,plat){ const h=this.h;
+    const titles={login:'Bon retour',signup:'Créer ton compte',forgot:'Mot de passe oublié'};
+    const subs={login:'Reprends là où tu t\u2019es arrêté.',signup:'Gratuit, sans carte bancaire.',forgot:'On t\u2019envoie un lien de réinitialisation.'};
+    const cta={login:'Se connecter',signup:'Créer mon compte',forgot:'Envoyer le lien'};
+    const body=[];
+    body.push(h('button',{key:'back',onClick:()=>this.go(mode==='forgot'?'login':'landing'),'aria-label':'Retour',style:{border:'none',background:'none',cursor:'pointer',color:'#5B4FD6',fontFamily:'inherit',fontSize:14,fontWeight:600,padding:0,marginBottom:16,display:'inline-flex',alignItems:'center',gap:4}},'‹ Retour'));
+    body.push(h('h1',{key:'t',style:{fontFamily:'Instrument Serif',fontWeight:400,fontSize:30,margin:'0 0 4px'}},titles[mode]));
+    body.push(h('p',{key:'s',style:{fontSize:14,color:'#86829A',margin:'0 0 22px'}},subs[mode]));
+    if(mode!=='forgot'){
+      body.push(h('div',{key:'oauth'},this.oauthBtn('Continuer avec Google','G',plat),this.oauthBtn('Continuer avec Apple','\uf8ff',plat)));
+      body.push(h('div',{key:'div',style:{display:'flex',alignItems:'center',gap:12,margin:'6px 0 18px'}},h('span',{style:{flex:1,height:1,background:'#E9E7F2'}}),h('span',{style:{fontSize:12,color:'#A5A0BC'}},'ou'),h('span',{style:{flex:1,height:1,background:'#E9E7F2'}})));
+    }
+    if(mode==='signup') body.push(this.field('Nom','text','Camille Roy',plat));
+    body.push(this.field('Email','email','toi@exemple.com',plat));
+    if(mode!=='forgot') body.push(this.field('Mot de passe','password','••••••••',plat));
+    body.push(this.primaryBtn(cta[mode],()=>{ if(mode==='signup') this.go('onboarding'); else if(mode==='login') this.enterApp(); else this.go('login'); },plat));
+    if(mode==='login') body.push(h('button',{key:'fp',onClick:()=>this.go('forgot'),style:{border:'none',background:'none',color:'#5B4FD6',cursor:'pointer',fontFamily:'inherit',fontSize:13,fontWeight:600,padding:'14px 0 0',width:'100%',textAlign:'center'}},'Mot de passe oublié ?'));
+    const foot = mode==='login'
+      ? h('div',{style:{textAlign:'center',fontSize:13,color:'#86829A'}},'Pas de compte ? ',h('button',{onClick:()=>this.go('signup'),style:{border:'none',background:'none',color:'#5B4FD6',fontWeight:700,cursor:'pointer',fontFamily:'inherit',fontSize:13}},'Créer un compte'))
+      : mode==='signup'
+      ? h('div',{style:{textAlign:'center',fontSize:13,color:'#86829A'}},'Déjà inscrit ? ',h('button',{onClick:()=>this.go('login'),style:{border:'none',background:'none',color:'#5B4FD6',fontWeight:700,cursor:'pointer',fontFamily:'inherit',fontSize:13}},'Se connecter'))
+      : null;
+    return h('div',{key:'auth',className:'oria-sc',style:{flex:1,display:'flex',flexDirection:'column',overflowY:'auto'}},
+      h('div',{style:{flex:1,padding:'16px 24px 8px'}},body),
+      foot?h('div',{style:{flex:'none',padding:'12px 24px 26px'}},foot):null); }
+
+  onboardingScreen(plat){ const h=this.h;
+    const chips=[['Ligue 1','league'],['Premier League','league'],['Paris SG','team'],['Real Madrid','team'],['Arsenal','team'],['Mbappé','player'],['Dembélé','player']];
+    const sel=this.state.onbSel||{};
+    return h('div',{key:'onb',className:'oria-sc',style:{flex:1,display:'flex',flexDirection:'column',overflowY:'auto'}},
+      h('div',{style:{flex:1,padding:'18px 24px 8px'}},
+        h('p',{style:{fontSize:12,fontWeight:700,letterSpacing:'.6px',textTransform:'uppercase',color:'#5B4FD6',margin:0}},'Dernière étape'),
+        h('h1',{style:{fontFamily:'Instrument Serif',fontWeight:400,fontSize:30,margin:'8px 0 4px'}},'Choisis ce que tu suis'),
+        h('p',{style:{fontSize:14,color:'#605C74',margin:'0 0 20px'}},'On personnalise tes réponses et tes alertes.'),
+        h('div',{style:{display:'flex',flexWrap:'wrap',gap:8}},chips.map(([name,type],i)=>{ const on=sel[name]; return h('button',{key:i,onClick:()=>this.setState(st=>({onbSel:{...(st.onbSel||{}),[name]:!(st.onbSel||{})[name]}})),style:{display:'inline-flex',alignItems:'center',gap:8,padding:'9px 14px 9px 9px',borderRadius:999,border:`1px solid ${on?'#C9C3EC':'#E9E7F2'}`,background:on?'#EEEDFA':'#fff',color:on?'#4A3FC0':'#605C74',fontFamily:'inherit',fontSize:13.5,fontWeight:600,cursor:'pointer'}},this.crest(type==='team'?this.tLogo(name):type==='league'?this.lLogo(name):this.pPhoto(name),20,type==='player'),name,h('span',{style:{fontWeight:700}},on?'✓':'＋')); }))),
+      h('div',{style:{flex:'none',padding:'12px 24px 26px',display:'flex',flexDirection:'column',gap:8}},
+        this.primaryBtn('Terminer',()=>this.enterApp(),plat),
+        h('button',{onClick:()=>this.enterApp(),style:{border:'none',background:'none',color:'#86829A',cursor:'pointer',fontFamily:'inherit',fontSize:13,fontWeight:600,padding:'4px'}},'Passer'))); }
+
+  enterApp(){ this.setState({phase:'app',tab:'chat'}); }
+
+  screenFor(tab,plat){
+    if(tab==='chat') return this.chatScreen(plat);
+    if(tab==='scores') return this.scoresScreen(plat);
+    if(tab==='follows') return this.followsScreen();
+    return this.profileScreen();
+  }
+
+  tabIcon(key,active){
+    const h=this.h, c=active?'#5B4FD6':'#9A95B0', sw=active?2.4:2;
+    const ic={
+      chat:h('path',{d:'M4 5h16v11H9l-4 4z',stroke:c,strokeWidth:sw,strokeLinejoin:'round',fill:active?'#EEEDFA':'none'}),
+      scores:h('g',null,h('rect',{x:3,y:5,width:18,height:14,rx:2,stroke:c,strokeWidth:sw,fill:active?'#EEEDFA':'none'}),h('path',{d:'M8 5v14M16 5v14',stroke:c,strokeWidth:sw})),
+      follows:h('path',{d:'M12 4l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 9.7l5.4-.8z',stroke:c,strokeWidth:sw,strokeLinejoin:'round',fill:active?'#EEEDFA':'none'}),
+      profile:h('g',null,h('circle',{cx:12,cy:8,r:4,stroke:c,strokeWidth:sw,fill:active?'#EEEDFA':'none'}),h('path',{d:'M4.5 20a7.5 7.5 0 0 1 15 0',stroke:c,strokeWidth:sw,strokeLinecap:'round',fill:'none'})),
+    };
+    return h('svg',{width:24,height:24,viewBox:'0 0 24 24',fill:'none','aria-hidden':true},ic[key]);
+  }
+
+  iosNav(){
+    const h=this.h, s=this.state;
+    const tabs=[['chat','Oria'],['scores','Scores'],['follows','Suivis'],['profile','Profil']];
+    return h('div',{style:{flex:'none',display:'flex',background:'rgba(246,246,251,.86)',backdropFilter:'blur(14px)',borderTop:'1px solid #E4E1F0',padding:'8px 6px 22px'}},
+      tabs.map(([k,l])=>{ const active=s.tab===k; return h('button',{key:k,onClick:()=>this.setTab(k),'aria-current':active,style:{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:3,border:'none',background:'none',cursor:'pointer',fontFamily:'inherit'}},this.tabIcon(k,active),h('span',{style:{fontSize:10,fontWeight:active?700:600,color:active?'#5B4FD6':'#9A95B0'}},l)); }));
+  }
+
+  androidNav(){
+    const h=this.h, s=this.state;
+    const tabs=[['chat','Oria'],['scores','Scores'],['follows','Suivis'],['profile','Profil']];
+    return h('div',{style:{flex:'none',display:'flex',background:'#fff',borderTop:'1px solid #E9E7F2',padding:'8px 8px 16px'}},
+      tabs.map(([k,l])=>{ const active=s.tab===k; return h('button',{key:k,onClick:()=>this.setTab(k),'aria-current':active,style:{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:4,border:'none',background:'none',cursor:'pointer',fontFamily:'inherit'}},
+        h('span',{style:{display:'flex',alignItems:'center',justifyContent:'center',width:56,height:30,borderRadius:16,background:active?'#EAE6FA':'transparent',transition:'background .15s',animation:active?'oriaTabPop .2s ease':'none'}},this.tabIcon(k,active)),
+        h('span',{style:{fontSize:11,fontWeight:active?700:500,color:active?'#4A3FC0':'#6B6684'}},l)); }));
+  }
+
+  topBar(plat){
+    const h=this.h, s=this.state;
+    const titles={chat:'Oria',scores:'Scores en direct',follows:'Mes suivis',profile:'Profil'};
+    if(plat==='ios'){
+      return h('div',{style:{flex:'none',display:'flex',alignItems:'center',justifyContent:'center',position:'relative',padding:'2px 16px 10px',borderBottom:'1px solid rgba(233,231,242,.7)'}},
+        s.tab==='chat'?h('div',{style:{display:'flex',alignItems:'center',gap:7}},h('svg',{width:20,height:20,viewBox:'0 0 40 40',fill:'none'},h('circle',{cx:20,cy:20,r:15.5,stroke:'#5B4FD6',strokeWidth:2.8}),h('path',{d:'M12.5 23.6 L20 15.4 L27.5 23.6',stroke:'#5B4FD6',strokeWidth:2.8,strokeLinecap:'round',strokeLinejoin:'round'})),h('span',{style:{fontFamily:'Instrument Serif',fontSize:22,lineHeight:1}},'Oria')):h('span',{style:{fontFamily:'Manrope',fontSize:16,fontWeight:700}},titles[s.tab]),
+        h('span',{style:{position:'absolute',right:16,top:0,display:'inline-flex',alignItems:'center',gap:5,fontSize:11,fontWeight:700,color:'#C4691F'}},h('span',{style:{width:6,height:6,borderRadius:'50%',background:'#E0782A',animation:'oriaPulse 1.5s infinite'}}),'12'));
+    }
+    // android: left-aligned title, elevated app bar
+    return h('div',{style:{flex:'none',display:'flex',alignItems:'center',gap:10,padding:'6px 16px 12px'}},
+      s.tab==='chat'?h('svg',{width:22,height:22,viewBox:'0 0 40 40',fill:'none'},h('circle',{cx:20,cy:20,r:15.5,stroke:'#5B4FD6',strokeWidth:2.8}),h('path',{d:'M12.5 23.6 L20 15.4 L27.5 23.6',stroke:'#5B4FD6',strokeWidth:2.8,strokeLinecap:'round',strokeLinejoin:'round'})):null,
+      h('span',{style:{fontFamily:s.tab==='chat'?'Instrument Serif':'Manrope',fontSize:s.tab==='chat'?24:20,fontWeight:s.tab==='chat'?400:800,flex:1}},s.tab==='chat'?'Oria':titles[s.tab]),
+      h('span',{style:{display:'inline-flex',alignItems:'center',gap:5,fontSize:11,fontWeight:700,color:'#C4691F',padding:'4px 9px',borderRadius:999,background:'#FBEEE2'}},h('span',{style:{width:6,height:6,borderRadius:'50%',background:'#E0782A',animation:'oriaPulse 1.5s infinite'}}),'12 live'));
+  }
+
+  authFlow(plat){
+    const p=this.state.phase;
+    if(p==='splash') return this.splashScreen();
+    if(p==='landing') return this.landingScreen(plat);
+    if(p==='login') return this.authScreen('login',plat);
+    if(p==='signup') return this.authScreen('signup',plat);
+    if(p==='forgot') return this.authScreen('forgot',plat);
+    if(p==='onboarding') return this.onboardingScreen(plat);
+    return null;
+  }
+
+  appFor(plat){
+    const h=this.h, s=this.state;
+    if(s.phase!=='app') return this.authFlow(plat);
+    const nav = plat==='ios' ? this.iosNav() : this.androidNav();
+    return h('div',{style:{flex:1,display:'flex',flexDirection:'column',minHeight:0}},this.topBar(plat),this.screenFor(s.tab,plat),nav);
+  }
+
+  renderVals(){
+    return { iosApp: this.appFor('ios'), androidApp: this.appFor('android') };
+  }
+}
+</script>
+</body>
+</html>
