@@ -293,7 +293,10 @@ function MatchModal({ fixture, onClose }: { fixture: Fixture; onClose: () => voi
             state={{
               fixture_id: fixture.id,
               league_id: fixture.league_id,
-              team_id: fixture.home_id,
+              _fixture_home: fixture.home_team,
+              _fixture_away: fixture.away_team,
+              _fixture_home_logo: fixture.home_logo,
+              _fixture_away_logo: fixture.away_logo,
             }}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,

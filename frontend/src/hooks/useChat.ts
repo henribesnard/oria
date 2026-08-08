@@ -14,13 +14,43 @@ export interface Message {
   streaming?: boolean;
 }
 
+export interface FixtureInfo {
+  home: string;
+  away: string;
+  homeLogo?: string;
+  awayLogo?: string;
+}
+
+const CONTEXT_KEYS: (keyof ChatContext)[] = [
+  'country', 'zone', 'league_id', 'season', 'fixture_id', 'team_id', 'player_id',
+];
+
+function extractContext(raw: Record<string, unknown>): ChatContext {
+  const ctx: Record<string, unknown> = {};
+  for (const k of CONTEXT_KEYS) {
+    if (raw[k] !== undefined) ctx[k] = raw[k];
+  }
+  return ctx as ChatContext;
+}
+
+function extractFixtureInfo(raw: Record<string, unknown>): FixtureInfo | null {
+  if (!raw._fixture_home) return null;
+  return {
+    home: raw._fixture_home as string,
+    away: raw._fixture_away as string,
+    homeLogo: raw._fixture_home_logo as string | undefined,
+    awayLogo: raw._fixture_away_logo as string | undefined,
+  };
+}
+
 export function useChat() {
   const { token } = useAuth();
   const location = useLocation();
-  const initCtx = (location.state as ChatContext | null) ?? {};
+  const rawState = (location.state ?? {}) as Record<string, unknown>;
   const [messages, setMessages] = useState<Message[]>([]);
   const [sending, setSending] = useState(false);
-  const [context, setContext] = useState<ChatContext>(initCtx);
+  const [context, setContext] = useState<ChatContext>(() => extractContext(rawState));
+  const [fixtureInfo, setFixtureInfo] = useState<FixtureInfo | null>(() => extractFixtureInfo(rawState));
   const abortRef = useRef<AbortController | null>(null);
 
   const send = useCallback((text: string) => {
@@ -92,6 +122,15 @@ export function useChat() {
     setMessages([]);
     setSending(false);
     setContext({});
+    setFixtureInfo(null);
+  }, []);
+
+  const clearFixture = useCallback(() => {
+    setFixtureInfo(null);
+    setContext(prev => {
+      const { fixture_id: _, ...rest } = prev;
+      return rest;
+    });
   }, []);
 
   const handleSuggestedAction = useCallback((action: SuggestedAction) => {
@@ -100,5 +139,5 @@ export function useChat() {
     }
   }, [send]);
 
-  return { messages, sending, context, setContext, send, clear, handleSuggestedAction };
+  return { messages, sending, context, setContext, send, clear, clearFixture, fixtureInfo, handleSuggestedAction };
 }

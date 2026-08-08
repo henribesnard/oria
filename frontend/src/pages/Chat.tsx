@@ -6,7 +6,7 @@ import { ContextSelector } from '../components/chat/ContextSelector';
 import OriaLogo from '../components/OriaLogo';
 
 export function Chat() {
-  const { messages, sending, context, setContext, send, handleSuggestedAction } = useChat();
+  const { messages, sending, context, setContext, send, handleSuggestedAction, fixtureInfo, clearFixture } = useChat();
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom on new messages
@@ -36,7 +36,7 @@ export function Chat() {
       {/* Context selector */}
       <div className="border-b border-border bg-surface-alt/60 px-5 py-2.5">
         <div className="max-w-[760px] mx-auto">
-          <ContextSelector context={context} onChange={setContext} />
+          <ContextSelector context={context} onChange={setContext} fixtureInfo={fixtureInfo} onClearFixture={clearFixture} />
         </div>
       </div>
 

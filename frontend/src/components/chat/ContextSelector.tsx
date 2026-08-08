@@ -2,10 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import type { ChatContext } from '../../api/chat';
 import { listLeagues, listTeams } from '../../api/catalog';
 import type { League, Team } from '../../api/catalog';
+import type { FixtureInfo } from '../../hooks/useChat';
 
 interface Props {
   context: ChatContext;
   onChange: (ctx: ChatContext) => void;
+  fixtureInfo?: FixtureInfo | null;
+  onClearFixture?: () => void;
 }
 
 /* ------------------------------------------------------------------ */
@@ -131,7 +134,7 @@ function Dropdown({
 /*  ContextSelector                                                    */
 /* ------------------------------------------------------------------ */
 
-export function ContextSelector({ context, onChange }: Props) {
+export function ContextSelector({ context, onChange, fixtureInfo, onClearFixture }: Props) {
   const [leagues, setLeagues] = useState<League[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
   const [loadingLeagues, setLoadingLeagues] = useState(true);
@@ -192,7 +195,28 @@ export function ContextSelector({ context, onChange }: Props) {
         loading={loadingLeagues}
       />
 
-      {context.league_id && (
+      {fixtureInfo ? (
+        <span
+          className="inline-flex items-center gap-2 px-3 py-[7px] rounded-xl border text-[12.5px] font-semibold"
+          style={{ borderColor: '#C9C3EC', background: '#EEEDFA', color: '#4A3FC0' }}
+        >
+          {fixtureInfo.homeLogo && (
+            <img src={fixtureInfo.homeLogo} alt="" style={{ width: 16, height: 16, objectFit: 'contain' }} />
+          )}
+          <span>{fixtureInfo.home} – {fixtureInfo.away}</span>
+          {fixtureInfo.awayLogo && (
+            <img src={fixtureInfo.awayLogo} alt="" style={{ width: 16, height: 16, objectFit: 'contain' }} />
+          )}
+          {onClearFixture && (
+            <span
+              onClick={onClearFixture}
+              className="text-primary-muted hover:text-primary cursor-pointer ml-0.5"
+            >
+              ×
+            </span>
+          )}
+        </span>
+      ) : context.league_id ? (
         <Dropdown
           label="Équipe"
           placeholder="Rechercher une équipe..."
@@ -202,7 +226,7 @@ export function ContextSelector({ context, onChange }: Props) {
           onClear={() => onChange({ ...context, team_id: undefined })}
           loading={loadingTeams}
         />
-      )}
+      ) : null}
     </div>
   );
 }

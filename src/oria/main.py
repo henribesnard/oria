@@ -26,6 +26,8 @@ from oria.domain.injuries import InjuriesRepository
 from oria.domain.leagues import LeaguesRepository
 from oria.domain.lineups import LineupsRepository
 from oria.domain.live import LiveRepository
+from oria.domain.match_events import EventsRepository
+from oria.domain.match_statistics import StatisticsRepository
 from oria.domain.odds import OddsRepository
 from oria.domain.players import PlayersRepository
 from oria.domain.standings import StandingsRepository
@@ -128,6 +130,8 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     lineups = LineupsRepository(cache=cache, client=apifootball)
     odds = OddsRepository(cache=cache, client=apifootball)
     live = LiveRepository(cache=cache, client=apifootball)
+    match_events = EventsRepository(cache=cache, client=apifootball)
+    match_statistics = StatisticsRepository(cache=cache, client=apifootball)
 
     container.add(leagues)
     container.add(fixtures)
@@ -138,6 +142,8 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     container.add(lineups)
     container.add(odds)
     container.add(live)
+    container.add(match_events)
+    container.add(match_statistics)
 
     # --- Tools ---
     tool_registry = ToolRegistry()
@@ -151,6 +157,8 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
         lineups=lineups,
         odds=odds,
         live=live,
+        events=match_events,
+        statistics=match_statistics,
     )
     container.add(tool_registry)
 

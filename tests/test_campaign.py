@@ -32,6 +32,8 @@ from oria.domain.fixtures import FixturesRepository
 from oria.domain.injuries import InjuriesRepository
 from oria.domain.lineups import LineupsRepository
 from oria.domain.live import LiveRepository
+from oria.domain.match_events import EventsRepository
+from oria.domain.match_statistics import StatisticsRepository
 from oria.domain.odds import OddsRepository
 from oria.domain.players import PlayersRepository
 from oria.domain.standings import StandingsRepository
@@ -356,6 +358,8 @@ async def campaign_env() -> tuple[Pipeline, ApiFootballClient, CampaignReport]:
     lineups = LineupsRepository(cache=cache, client=client)
     odds = OddsRepository(cache=cache, client=client)
     live = LiveRepository(cache=cache, client=client)
+    match_events = EventsRepository(cache=cache, client=client)
+    match_statistics = StatisticsRepository(cache=cache, client=client)
 
     # Tools
     registry = ToolRegistry()
@@ -369,6 +373,8 @@ async def campaign_env() -> tuple[Pipeline, ApiFootballClient, CampaignReport]:
         lineups=lineups,
         odds=odds,
         live=live,
+        events=match_events,
+        statistics=match_statistics,
     )
 
     # Pipeline

@@ -10,6 +10,8 @@ if TYPE_CHECKING:
     from oria.domain.injuries import InjuriesRepository
     from oria.domain.lineups import LineupsRepository
     from oria.domain.live import LiveRepository
+    from oria.domain.match_events import EventsRepository
+    from oria.domain.match_statistics import StatisticsRepository
     from oria.domain.odds import OddsRepository
     from oria.domain.players import PlayersRepository
     from oria.domain.standings import StandingsRepository
@@ -30,6 +32,8 @@ def register_football_tools(  # noqa: PLR0913
     lineups: LineupsRepository,
     odds: OddsRepository,
     live: LiveRepository,
+    events: EventsRepository,
+    statistics: StatisticsRepository,
 ) -> None:
     """Enregistre les outils football dans le registre."""
 
@@ -320,4 +324,46 @@ def register_football_tools(  # noqa: PLR0913
             },
         },
         get_live_scores,
+    )
+
+    # ---- get_match_events ----
+    async def get_match_events(fixture_id: int = 0) -> Any:  # noqa: ANN401
+        return await events.get(f"fixture={fixture_id}")
+
+    registry.register(
+        "get_match_events",
+        "Récupère les événements d'un match (buts, cartons, remplacements). "
+        "Fonctionne pour les matchs en cours et terminés.",
+        {
+            "type": "object",
+            "properties": {
+                "fixture_id": {
+                    "type": "integer",
+                    "description": "ID du match",
+                },
+            },
+            "required": ["fixture_id"],
+        },
+        get_match_events,
+    )
+
+    # ---- get_match_statistics ----
+    async def get_match_statistics(fixture_id: int = 0) -> Any:  # noqa: ANN401
+        return await statistics.get(f"fixture={fixture_id}")
+
+    registry.register(
+        "get_match_statistics",
+        "Récupère les statistiques d'un match (possession, tirs, passes, etc.). "
+        "Fonctionne pour les matchs en cours et terminés.",
+        {
+            "type": "object",
+            "properties": {
+                "fixture_id": {
+                    "type": "integer",
+                    "description": "ID du match",
+                },
+            },
+            "required": ["fixture_id"],
+        },
+        get_match_statistics,
     )
