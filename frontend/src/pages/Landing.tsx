@@ -515,7 +515,7 @@ eures si showAllLeagues est false
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 fontSize: 12, fontWeight: 600, color: showAllLeagues ? '#5B4FD6' : '#86829A',
-                padding: '8px 12px', border: '1px solid' + (showAllLeagues ? ' #C9C3EC' : ' #E1DEF0'),
+                padding: '8px 12px', border: showAllLeagues ? '1px solid #C9C3EC' : '1px solid #E1DEF0',
                 borderRadius: 10, background: showAllLeagues ? '#EEEDFA' : '#fff',
                 cursor: 'pointer', fontFamily: 'inherit',
               }}
