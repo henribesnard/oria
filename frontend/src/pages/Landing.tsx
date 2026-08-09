@@ -325,7 +325,6 @@ export function Landing() {
   const [activeTab, setActiveTab] = useState<TabKey>('pre');
   const [leagueFilter, setLeagueFilter] = useState('');
   const [zoneFilter, setZoneFilter] = useState('');
-  const [dateFilter, setDateFilter] = useState('today'); // 'yesterday' | 'today' | 'tomorrow'
   const [showAllLeagues, setShowAllLeagues] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState<Fixture | null>(null);
   const [fixtures, setFixtures] = useState<Fixture[]>([]);
