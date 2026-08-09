@@ -16,9 +16,9 @@ def _current_season() -> int:
     return now.year if now.month >= 7 else now.year - 1
 
 
-# ── Ligues couvertes (whitelist) ──────────────────────────────────────
-# Championnats européens majeurs + coupes UEFA + coupes nationales top 5
-COVERED_LEAGUE_IDS: set[int] = {
+# ── Ligues majeures (pour suggestion frontend) ──────────────────────────
+# Note: Le backend retourne toutes les ligues, le frontend filtre selon l'utilisateur
+MAJOR_LEAGUE_IDS: set[int] = {
     # UEFA
     2,    # Champions League
     3,    # Europa League
@@ -34,13 +34,6 @@ COVERED_LEAGUE_IDS: set[int] = {
     94,   # Primeira Liga (Portugal)
     88,   # Eredivisie (Pays-Bas)
     144,  # Jupiler Pro League (Belgique)
-    # Coupes nationales top 5
-    66,   # Coupe de France
-    45,   # FA Cup
-    48,   # EFL Cup (Carabao Cup)
-    143,  # Copa del Rey
-    81,   # DFB Pokal
-    137,  # Coppa Italia
 }
 
 _leagues_repo: Any = None
@@ -87,7 +80,8 @@ async def list_leagues(
     if data is None:
         return []
     items = data if isinstance(data, list) else [data]
-    return [l for l in items if l.get("id") in COVERED_LEAGUE_IDS]
+    # Retourne toutes les ligues (le frontend gère le filtrage)
+    return items
 
 
 @router.get("/teams")
@@ -146,7 +140,8 @@ async def list_live_fixtures() -> list[dict[str, Any]]:
         return []
     items = data if isinstance(data, list) else [data]
     flat = [_flatten_fixture(f) for f in items]
-    return [f for f in flat if f.get("league_id") in COVERED_LEAGUE_IDS]
+    # Retourne tous les matchs live (le frontend gère le filtrage)
+    return flat
 
 
 @router.get("/fixtures")
@@ -182,7 +177,8 @@ async def list_fixtures(
         return []
     items = data if isinstance(data, list) else [data]
     flat = [_flatten_fixture(f) for f in items]
-    return [f for f in flat if f.get("league_id") in COVERED_LEAGUE_IDS]
+    # Retourne tous les matchs (le frontend gère le filtrage)
+    return flat
 
 
 def _flatten_fixture(fx: dict[str, Any]) -> dict[str, Any]:

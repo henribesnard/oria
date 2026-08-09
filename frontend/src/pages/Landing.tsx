@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import OriaLogo from '../components/OriaLogo';
 import { listFixtures, listLiveFixtures, listLeagues } from '../api/catalog';
 import type { Fixture, League } from '../api/catalog';
+import { ZONES, MAJOR_LEAGUE_IDS, getZoneForCountry } from '../utils/leagueFilters';
 
 /* ------------------------------------------------------------------ */
 /*  Status mapping                                                     */
@@ -323,6 +324,9 @@ function MatchModal({ fixture, onClose }: { fixture: Fixture; onClose: () => voi
 export function Landing() {
   const [activeTab, setActiveTab] = useState<TabKey>('pre');
   const [leagueFilter, setLeagueFilter] = useState('');
+  const [zoneFilter, setZoneFilter] = useState('');
+  const [dateFilter, setDateFilter] = useState('today'); // 'yesterday' | 'today' | 'tomorrow'
+  const [showAllLeagues, setShowAllLeagues] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState<Fixture | null>(null);
   const [fixtures, setFixtures] = useState<Fixture[]>([]);
   const [leagues, setLeagues] = useState<League[]>([]);
@@ -372,14 +376,50 @@ export function Landing() {
   /* Derived */
   const filteredFixtures = fixtures.filter((f) => {
     if (fixtureTab(f.status) !== activeTab) return false;
+    // Filtre par ligue maj
+eures si showAllLeagues est false
+    if (!showAllLeagues && f.league_id && !MAJOR_LEAGUE_IDS.has(f.league_id)) return false;
+    // Filtre par zone si sélectionnée
+    if (zoneFilter && f.league_country) {
+      const zone = getZoneForCountry(f.league_country);
+      if (zone?.id !== zoneFilter) return false;
+    }
+    // Filtre par ligue si sélectionnée
     if (leagueFilter && f.league_name !== leagueFilter) return false;
     return true;
   });
 
   const counts: Record<TabKey, number> = {
-    live: fixtures.filter((f) => fixtureTab(f.status) === 'live' && (!leagueFilter || f.league_name === leagueFilter)).length,
-    ft: fixtures.filter((f) => fixtureTab(f.status) === 'ft' && (!leagueFilter || f.league_name === leagueFilter)).length,
-    pre: fixtures.filter((f) => fixtureTab(f.status) === 'pre' && (!leagueFilter || f.league_name === leagueFilter)).length,
+    live: fixtures.filter((f) => {
+      if (fixtureTab(f.status) !== 'live') return false;
+      if (!showAllLeagues && f.league_id && !MAJOR_LEAGUE_IDS.has(f.league_id)) return false;
+      if (zoneFilter && f.league_country) {
+        const zone = getZoneForCountry(f.league_country);
+        if (zone?.id !== zoneFilter) return false;
+      }
+      if (leagueFilter && f.league_name !== leagueFilter) return false;
+      return true;
+    }).length,
+    ft: fixtures.filter((f) => {
+      if (fixtureTab(f.status) !== 'ft') return false;
+      if (!showAllLeagues && f.league_id && !MAJOR_LEAGUE_IDS.has(f.league_id)) return false;
+      if (zoneFilter && f.league_country) {
+        const zone = getZoneForCountry(f.league_country);
+        if (zone?.id !== zoneFilter) return false;
+      }
+      if (leagueFilter && f.league_name !== leagueFilter) return false;
+      return true;
+    }).length,
+    pre: fixtures.filter((f) => {
+      if (fixtureTab(f.status) !== 'pre') return false;
+      if (!showAllLeagues && f.league_id && !MAJOR_LEAGUE_IDS.has(f.league_id)) return false;
+      if (zoneFilter && f.league_country) {
+        const zone = getZoneForCountry(f.league_country);
+        if (zone?.id !== zoneFilter) return false;
+      }
+      if (leagueFilter && f.league_name !== leagueFilter) return false;
+      return true;
+    }).length,
   };
 
   const liveCount = fixtures.filter((f) => fixtureTab(f.status) === 'live').length;
@@ -391,7 +431,20 @@ export function Landing() {
       .map(f => [f.league_name!, { id: f.league_id ?? 0, name: f.league_name!, logo: f.league_logo, country: f.league_country ?? '' } as League])
   ).values()];
 
-  const displayLeagues = leagues.length > 0 ? leagues : fixtureLeagues;
+  let displayLeagues = leagues.length > 0 ? leagues : fixtureLeagues;
+
+  // Filtrer les ligues par zone si sélectionnée
+  if (zoneFilter) {
+    displayLeagues = displayLeagues.filter(l => {
+      const zone = getZoneForCountry(l.country);
+      return zone?.id === zoneFilter;
+    });
+  }
+
+  // Filtrer par ligues majeures si showAllLeagues est false
+  if (!showAllLeagues) {
+    displayLeagues = displayLeagues.filter(l => MAJOR_LEAGUE_IDS.has(l.id));
+  }
 
   return (
     <div className="min-h-screen bg-surface">
@@ -432,9 +485,44 @@ export function Landing() {
               })}
             </div>
 
-            <div style={{ marginLeft: 'auto' }}>
+            {/* Zone filter */}
+            <div className="hide-sm" style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 12, color: '#86829A', fontWeight: 600 }}>Zone</span>
+              <select
+                value={zoneFilter}
+                onChange={(e) => { setZoneFilter(e.target.value); setLeagueFilter(''); }}
+                style={{
+                  fontSize: 13, fontWeight: 600, color: '#3F3B54',
+                  padding: '8px 12px', border: '1px solid #E1DEF0', borderRadius: 10,
+                  background: '#fff', cursor: 'pointer', fontFamily: 'inherit',
+                }}
+              >
+                <option value="">Toutes les zones</option>
+                {ZONES.map((z) => (
+                  <option key={z.id} value={z.id}>{z.name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* League filter */}
+            <div>
               <LeagueFilter value={leagueFilter} onChange={setLeagueFilter} leagues={displayLeagues} />
             </div>
+
+            {/* Show all toggle */}
+            <button
+              onClick={() => setShowAllLeagues(!showAllLeagues)}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                fontSize: 12, fontWeight: 600, color: showAllLeagues ? '#5B4FD6' : '#86829A',
+                padding: '8px 12px', border: '1px solid' + (showAllLeagues ? ' #C9C3EC' : ' #E1DEF0'),
+                borderRadius: 10, background: showAllLeagues ? '#EEEDFA' : '#fff',
+                cursor: 'pointer', fontFamily: 'inherit',
+              }}
+              title={showAllLeagues ? 'Afficher uniquement les ligues majeures' : 'Afficher toutes les ligues'}
+            >
+              {showAllLeagues ? '🌍 Toutes' : '⭐ Majeures'}
+            </button>
           </div>
 
           {/* Horizontal scrolling match cards */}
