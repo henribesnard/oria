@@ -376,8 +376,7 @@ export function Landing() {
   /* Derived */
   const filteredFixtures = fixtures.filter((f) => {
     if (fixtureTab(f.status) !== activeTab) return false;
-    // Filtre par ligue maj
-eures si showAllLeagues est false
+    // Filtre par ligues majeures si showAllLeagues est false
     if (!showAllLeagues && f.league_id && !MAJOR_LEAGUE_IDS.has(f.league_id)) return false;
     // Filtre par zone si sélectionnée
     if (zoneFilter && f.league_country) {
