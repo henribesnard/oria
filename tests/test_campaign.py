@@ -29,6 +29,7 @@ from oria.core.pipeline import Pipeline
 from oria.core.prerouter import PreRouter
 from oria.core.synthesis import Synthesis
 from oria.domain.fixtures import FixturesRepository
+from oria.domain.head2head import HeadToHeadRepository
 from oria.domain.injuries import InjuriesRepository
 from oria.domain.lineups import LineupsRepository
 from oria.domain.live import LiveRepository
@@ -37,7 +38,9 @@ from oria.domain.match_statistics import StatisticsRepository
 from oria.domain.odds import OddsRepository
 from oria.domain.players import PlayersRepository
 from oria.domain.standings import StandingsRepository
+from oria.domain.team_statistics import TeamStatisticsRepository
 from oria.domain.teams import TeamsRepository
+from oria.domain.top_players import TopAssistsRepository, TopScorersRepository
 from oria.kernel.models import Context, IncomingRequest, Response
 from oria.providers.apifootball.client import ApiFootballClient
 from oria.storage.cache import Cache
@@ -360,6 +363,10 @@ async def campaign_env() -> tuple[Pipeline, ApiFootballClient, CampaignReport]:
     live = LiveRepository(cache=cache, client=client)
     match_events = EventsRepository(cache=cache, client=client)
     match_statistics = StatisticsRepository(cache=cache, client=client)
+    head2head = HeadToHeadRepository(cache=cache, client=client)
+    team_statistics = TeamStatisticsRepository(cache=cache, client=client)
+    top_scorers = TopScorersRepository(cache=cache, client=client)
+    top_assists = TopAssistsRepository(cache=cache, client=client)
 
     # Tools
     registry = ToolRegistry()
@@ -375,6 +382,10 @@ async def campaign_env() -> tuple[Pipeline, ApiFootballClient, CampaignReport]:
         live=live,
         events=match_events,
         statistics=match_statistics,
+        head2head=head2head,
+        team_statistics=team_statistics,
+        top_scorers=top_scorers,
+        top_assists=top_assists,
     )
 
     # Pipeline

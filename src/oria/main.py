@@ -22,6 +22,7 @@ from oria.core.prerouter import PreRouter
 from oria.core.streaming import stream_message
 from oria.core.synthesis import Synthesis
 from oria.domain.fixtures import FixturesRepository
+from oria.domain.head2head import HeadToHeadRepository
 from oria.domain.injuries import InjuriesRepository
 from oria.domain.leagues import LeaguesRepository
 from oria.domain.lineups import LineupsRepository
@@ -31,7 +32,9 @@ from oria.domain.match_statistics import StatisticsRepository
 from oria.domain.odds import OddsRepository
 from oria.domain.players import PlayersRepository
 from oria.domain.standings import StandingsRepository
+from oria.domain.team_statistics import TeamStatisticsRepository
 from oria.domain.teams import TeamsRepository
+from oria.domain.top_players import TopAssistsRepository, TopScorersRepository
 from oria.ingestion.scheduler import IngestionScheduler
 from oria.kernel.logging import setup_logging
 from oria.liveengine.engine import LiveEngine
@@ -45,6 +48,7 @@ from oria.providers.weather import WeatherProvider
 from oria.storage.cache import Cache
 from oria.storage.db import Database
 from oria.storage.userstore import UserStore
+from oria.tools.app_services import register_app_service_tools
 from oria.tools.football import register_football_tools
 from oria.tools.registry import ToolRegistry
 
@@ -132,6 +136,10 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     live = LiveRepository(cache=cache, client=apifootball)
     match_events = EventsRepository(cache=cache, client=apifootball)
     match_statistics = StatisticsRepository(cache=cache, client=apifootball)
+    head2head = HeadToHeadRepository(cache=cache, client=apifootball)
+    team_statistics = TeamStatisticsRepository(cache=cache, client=apifootball)
+    top_scorers = TopScorersRepository(cache=cache, client=apifootball)
+    top_assists = TopAssistsRepository(cache=cache, client=apifootball)
 
     container.add(leagues)
     container.add(fixtures)
@@ -144,6 +152,10 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     container.add(live)
     container.add(match_events)
     container.add(match_statistics)
+    container.add(head2head)
+    container.add(team_statistics)
+    container.add(top_scorers)
+    container.add(top_assists)
 
     # --- Tools ---
     tool_registry = ToolRegistry()
@@ -159,11 +171,21 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
         live=live,
         events=match_events,
         statistics=match_statistics,
+        head2head=head2head,
+        team_statistics=team_statistics,
+        top_scorers=top_scorers,
+        top_assists=top_assists,
+    )
+    register_app_service_tools(
+        tool_registry,
+        follow_service=follow_service,
+        notif_settings_service=notif_settings_service,
+        entitlements=entitlements,
     )
     container.add(tool_registry)
 
     # --- Core (M12) ---
-    prerouter = PreRouter(tools=tool_registry)
+    prerouter = PreRouter(tools=tool_registry, entitlements=entitlements)
     orchestrator = Orchestrator(llm=llm, tools=tool_registry)
     pipeline = Pipeline(
         synthesis=synthesis,

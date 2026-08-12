@@ -1,4 +1,4 @@
-"""Pré-routeur d'intention — répond au trivial sans LLM (famille A)."""
+"""Pre-routeur d'intention -- repond au trivial sans LLM (famille A)."""
 
 from __future__ import annotations
 
@@ -10,20 +10,54 @@ from oria.kernel.health import Availability, ModuleStatus
 from oria.kernel.models import Attachment, IncomingRequest, Response, SuggestedAction
 
 if TYPE_CHECKING:
+    from oria.app.entitlements.service import Entitlements
     from oria.tools.registry import ToolRegistry
 
 logger = logging.getLogger(__name__)
 
+# -- Regex compiles (niveau module) --
+
+_GREETING_RE = re.compile(
+    r"\b(bonjour|bonsoir|salut|hello|hey|coucou)\b", re.IGNORECASE,
+)
+_ACK_RE = re.compile(
+    r"\b(merci|bonne\s+nuit|[cç]a\s+va|ok|super|cool|parfait|"
+    r"g[eé]nial|d[''']accord)\b",
+    re.IGNORECASE,
+)
+_HELP_RE = re.compile(r"\b(aide|help)\b", re.IGNORECASE)
+
+_META_INTENT_RE = re.compile(
+    r"\b(comment\s+(?:lire|comprendre|fonctionne|marche|calculer)|"
+    r"pourquoi|qu[''']est[- ]ce\s+qu|c[''']est\s+quoi|"
+    r"r[eè]gle|expliqu|signifie|veut\s+dire|"
+    r"pas\s+bon|pas\s+correct|erreur|bug|faux|incorrect|"
+    r"ne\s+marche\s+pas|ne\s+fonctionne\s+pas)\b",
+    re.IGNORECASE,
+)
+
+_NOTIF_ANALYSIS_RE = re.compile(
+    r"\b(pr[eé]viens|rappel|notifi|alerte|value|paris?|"
+    r"raconte|analyse|r[eé]sum[eé]|bilan)\b",
+    re.IGNORECASE,
+)
+
 
 class PreRouter:
-    """Module optionnel : filtre les requêtes triviales sans LLM."""
+    """Module optionnel : filtre les requetes triviales sans LLM."""
 
     name: str = "prerouter"
     required: bool = False
     provides: tuple[str, ...] = ("prerouting",)
 
-    def __init__(self, *, tools: ToolRegistry | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        tools: ToolRegistry | None = None,
+        entitlements: Entitlements | None = None,
+    ) -> None:
         self._tools = tools
+        self._entitlements = entitlements
 
     async def start(self) -> None:
         logger.info("prerouter ready")
@@ -35,13 +69,13 @@ class PreRouter:
         return ModuleStatus(name=self.name, availability=Availability.UP)
 
     async def _resolve_team_id(self, req: IncomingRequest) -> int | None:
-        """Tente d'extraire un nom d'équipe du texte et de le résoudre en ID."""
+        """Tente d'extraire un nom d'equipe du texte et de le resoudre en ID."""
         if req.context.team_id or self._tools is None:
             return req.context.team_id
         text = req.text.strip()
         m = re.search(
             r"(?:du|de\s+l['']\s*|de\s+la\s+|de|d['']\s*)\s*"
-            r"([A-ZÀ-Üa-zà-ü][A-ZÀ-Üa-zà-ü\s''\-]{1,25})",
+            r"([A-ZA-Ua-za-u][A-ZA-Ua-za-u\s''\-]{1,25})",
             text,
             re.IGNORECASE,
         )
@@ -50,7 +84,7 @@ class PreRouter:
         candidate = m.group(1).strip().rstrip("?!.,;: ")
         skip = {
             "la", "le", "les", "un", "une", "des", "ce", "cette", "mon",
-            "football", "foot", "ligue", "saison", "match", "équipe", "joueur",
+            "football", "foot", "ligue", "saison", "match", "equipe", "joueur",
         }
         if candidate.lower() in skip or len(candidate) < 2:
             return None
@@ -60,15 +94,15 @@ class PreRouter:
                 team = data[0]
                 tid = team.get("id") or team.get("team", {}).get("id")
                 if tid:
-                    logger.info("prerouter resolved '%s' → team_id=%s", candidate, tid)
+                    logger.info("prerouter resolved '%s' -> team_id=%s", candidate, tid)
                     return tid
         except Exception:
             logger.debug("team resolution failed for '%s'", candidate, exc_info=True)
         return None
 
     async def try_route(self, req: IncomingRequest) -> Response | None:
-        """Renvoie une Response si la requête matche un pattern, sinon None."""
-        # Auto-résolution du nom d'équipe dans le texte
+        """Renvoie une Response si la requete matche un pattern, sinon None."""
+        # Auto-resolution du nom d'equipe dans le texte
         if not req.context.team_id:
             resolved = await self._resolve_team_id(req)
             if resolved:
@@ -78,7 +112,7 @@ class PreRouter:
         text = req.text.strip().lower()
 
         # Salutations
-        if re.search(r"\b(bonjour|salut|hello|hey|coucou)\b", text, re.IGNORECASE):
+        if _GREETING_RE.search(text):
             return Response(
                 text="Salut ! Je suis Oria, ton assistant football. "
                 "Comment puis-je t'aider ?",
@@ -88,23 +122,38 @@ class PreRouter:
                 ],
             )
 
+        # Accusés de réception (merci, ok, ça va...)  [F0]
+        if _ACK_RE.search(text):
+            return Response(
+                text="Avec plaisir ! N'hésite pas si tu as d'autres questions.",
+            )
+
         # Aide
-        if re.search(r"\b(aide|help)\b", text, re.IGNORECASE):
+        if _HELP_RE.search(text):
             return Response(
                 text="Je peux t'aider avec les classements, résultats, matchs à venir, "
                 "compositions, blessures et plus encore. Pose-moi ta question !",
             )
 
+        # Garde méta-intent : questions pédagogiques et signalements  [S4, S5]
+        # -> laisser passer à l'orchestrateur
+        if _META_INTENT_RE.search(text):
+            return None
+
         # Famille A : classement
         if re.search(r"\b(classement|standings?)\b", text, re.IGNORECASE):
             return await self._handle_standings(req)
 
-        # Famille A : prochain match
-        if re.search(r"\b(prochain\s+match|next\s+match)\b", text, re.IGNORECASE):
+        # Famille A : prochain match  [A2 élargi]
+        if re.search(
+            r"\b(prochain\s+match|next\s+match|quand\s+joue|"
+            r"c[''']est\s+quand\s+le\s+prochain)\b",
+            text, re.IGNORECASE,
+        ):
             return await self._handle_next_match(req)
 
-        # Famille A : dernier résultat
-        if re.search(r"\b(dernier\s+r[eé]sultat|last\s+result|score)\b", text, re.IGNORECASE):
+        # Famille A : dernier résultat  [S1 : score retiré]
+        if re.search(r"\b(dernier\s+r[eé]sultat|last\s+result)\b", text, re.IGNORECASE):
             return await self._handle_last_result(req)
 
         # Famille A : forme récente
@@ -115,8 +164,11 @@ class PreRouter:
         if re.search(r"\b(calendrier|programme|schedule)\b", text, re.IGNORECASE):
             return await self._handle_schedule(req)
 
-        # Famille A : matchs (génériques)
-        if re.search(r"\b(matchs?|fixtures?|rencontres?)\b", text, re.IGNORECASE):
+        # Famille A : matchs (génériques)  [S2 : exclusion notif/analyse]
+        if (
+            re.search(r"\b(matchs?|fixtures?|rencontres?)\b", text, re.IGNORECASE)
+            and not _NOTIF_ANALYSIS_RE.search(text)
+        ):
             return await self._handle_matches(req)
 
         # Famille B : blessures
@@ -131,8 +183,8 @@ class PreRouter:
         if re.search(r"\b(infos?|informations?|qui\s+est)\b", text, re.IGNORECASE):
             return await self._handle_team_info(req)
 
-        # Famille B : scores en direct
-        if re.search(r"\b(en\s+direct|live|en\s+cours)\b", text, re.IGNORECASE):
+        # Famille C : scores en direct
+        if re.search(r"\b(en\s+direct|live|en\s+cours|score.+en\s+ce\s+moment)\b", text, re.IGNORECASE):
             return await self._handle_live(req)
 
         # Famille B : cotes
@@ -152,6 +204,20 @@ class PreRouter:
                 params["league_id"] = req.context.league_id
             if req.context.season:
                 params["season"] = req.context.season
+
+            # Disambiguation F4 : league_id requis pour get_standings
+            if "league_id" not in params:
+                return Response(
+                    text="De quel championnat veux-tu le classement ?",
+                    suggested_actions=[
+                        SuggestedAction(label="Ligue 1", payload={"text": "classement ligue 1"}),
+                        SuggestedAction(label="Premier League", payload={"text": "classement Premier League"}),
+                        SuggestedAction(label="La Liga", payload={"text": "classement La Liga"}),
+                        SuggestedAction(label="Serie A", payload={"text": "classement Serie A"}),
+                        SuggestedAction(label="Bundesliga", payload={"text": "classement Bundesliga"}),
+                    ],
+                )
+
             data = await self._tools.call("get_standings", params)
             if data:
                 return Response(
@@ -325,6 +391,21 @@ class PreRouter:
     async def _handle_live(self, req: IncomingRequest) -> Response | None:
         if self._tools is None:
             return None
+        # Gating C1-C5 : vérifier l'entitlement live_realtime
+        if self._entitlements is not None:
+            try:
+                from oria.app.entitlements.models import DecisionKind
+                decision = await self._entitlements.check(req.user_id, "live_realtime")
+                if decision.kind != DecisionKind.ALLOW:
+                    return Response(
+                        text=decision.reason,
+                        degraded=True,
+                        suggested_actions=[
+                            SuggestedAction(label="Passer Premium", payload={"action": "upgrade"}),
+                        ],
+                    )
+            except Exception:
+                logger.debug("live entitlement check failed", exc_info=True)
         try:
             params: dict[str, Any] = {}
             if req.context.league_id:
@@ -335,6 +416,13 @@ class PreRouter:
                     text="Voici les scores en direct.",
                     attachments=[Attachment(kind="table", data={"live": data})],
                 )
+            # S3 : message explicite quand aucun match en direct
+            return Response(
+                text="Aucun match en direct pour le moment.",
+                suggested_actions=[
+                    SuggestedAction(label="Prochains matchs", payload={"text": "prochains matchs"}),
+                ],
+            )
         except Exception:
             logger.debug("prerouter live failed", exc_info=True)
         return None

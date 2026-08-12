@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from oria.domain.fixtures import FixturesRepository
+    from oria.domain.head2head import HeadToHeadRepository
     from oria.domain.injuries import InjuriesRepository
     from oria.domain.lineups import LineupsRepository
     from oria.domain.live import LiveRepository
@@ -15,7 +16,9 @@ if TYPE_CHECKING:
     from oria.domain.odds import OddsRepository
     from oria.domain.players import PlayersRepository
     from oria.domain.standings import StandingsRepository
+    from oria.domain.team_statistics import TeamStatisticsRepository
     from oria.domain.teams import TeamsRepository
+    from oria.domain.top_players import TopAssistsRepository, TopScorersRepository
     from oria.tools.registry import ToolRegistry
 
 logger = logging.getLogger(__name__)
@@ -34,6 +37,10 @@ def register_football_tools(  # noqa: PLR0913
     live: LiveRepository,
     events: EventsRepository,
     statistics: StatisticsRepository,
+    head2head: HeadToHeadRepository,
+    team_statistics: TeamStatisticsRepository,
+    top_scorers: TopScorersRepository,
+    top_assists: TopAssistsRepository,
 ) -> None:
     """Enregistre les outils football dans le registre."""
 
@@ -366,4 +373,131 @@ def register_football_tools(  # noqa: PLR0913
             "required": ["fixture_id"],
         },
         get_match_statistics,
+    )
+
+    # ---- get_h2h ----
+    async def get_h2h(
+        team_id_1: int = 0,
+        team_id_2: int = 0,
+        last: int = 10,
+    ) -> Any:  # noqa: ANN401
+        return await head2head.get(
+            f"h2h={team_id_1}-{team_id_2}&last={last}",
+        )
+
+    registry.register(
+        "get_h2h",
+        "Récupère les confrontations directes entre deux équipes.",
+        {
+            "type": "object",
+            "properties": {
+                "team_id_1": {
+                    "type": "integer",
+                    "description": "ID de la première équipe",
+                },
+                "team_id_2": {
+                    "type": "integer",
+                    "description": "ID de la deuxième équipe",
+                },
+                "last": {
+                    "type": "integer",
+                    "description": "Nombre de dernières confrontations (défaut 10)",
+                },
+            },
+            "required": ["team_id_1", "team_id_2"],
+        },
+        get_h2h,
+    )
+
+    # ---- get_team_stats ----
+    async def get_team_stats(
+        team_id: int = 0,
+        league_id: int = 0,
+        season: int = 0,
+    ) -> Any:  # noqa: ANN401
+        return await team_statistics.get(
+            f"team={team_id}&league={league_id}&season={season}",
+        )
+
+    registry.register(
+        "get_team_stats",
+        "Récupère les statistiques saisonnières d'une équipe "
+        "(buts marqués/encaissés, série, forme, etc.).",
+        {
+            "type": "object",
+            "properties": {
+                "team_id": {
+                    "type": "integer",
+                    "description": "ID de l'équipe",
+                },
+                "league_id": {
+                    "type": "integer",
+                    "description": "ID de la ligue",
+                },
+                "season": {
+                    "type": "integer",
+                    "description": "Année de la saison",
+                },
+            },
+            "required": ["team_id", "league_id", "season"],
+        },
+        get_team_stats,
+    )
+
+    # ---- get_top_scorers ----
+    async def get_top_scorers(
+        league_id: int = 0,
+        season: int = 0,
+    ) -> Any:  # noqa: ANN401
+        return await top_scorers.get(
+            f"league={league_id}&season={season}",
+        )
+
+    registry.register(
+        "get_top_scorers",
+        "Récupère les meilleurs buteurs d'une ligue pour une saison.",
+        {
+            "type": "object",
+            "properties": {
+                "league_id": {
+                    "type": "integer",
+                    "description": "ID de la ligue",
+                },
+                "season": {
+                    "type": "integer",
+                    "description": "Année de la saison",
+                },
+            },
+            "required": ["league_id", "season"],
+        },
+        get_top_scorers,
+    )
+
+    # ---- get_top_assists ----
+    async def get_top_assists(
+        league_id: int = 0,
+        season: int = 0,
+    ) -> Any:  # noqa: ANN401
+        return await top_assists.get(
+            f"league={league_id}&season={season}",
+        )
+
+    registry.register(
+        "get_top_assists",
+        "Récupère les meilleurs passeurs d'une ligue pour une saison.",
+        {
+            "type": "object",
+            "properties": {
+                "league_id": {
+                    "type": "integer",
+                    "description": "ID de la ligue",
+                },
+                "season": {
+                    "type": "integer",
+                    "description": "Année de la saison",
+                },
+            },
+            "required": ["league_id", "season"],
+        },
+        get_top_assists,
     )

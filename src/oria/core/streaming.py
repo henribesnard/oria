@@ -7,6 +7,12 @@ import logging
 from typing import TYPE_CHECKING, Any, AsyncIterator
 
 from oria.app.entitlements.models import DecisionKind
+from oria.core.safety import (
+    GAMBLING_HELP_RESPONSE,
+    INJECTION_RESPONSE,
+    detect_gambling_distress,
+    detect_injection,
+)
 from oria.kernel.models import IncomingRequest
 from oria.kernel.resilience import guard
 
@@ -67,6 +73,14 @@ async def _stream_process(
         if decision.kind != DecisionKind.ALLOW:
             yield _sse_event({"type": "quota", "message": decision.reason})
             return
+
+    # Safety filters
+    if detect_injection(req.text):
+        yield _sse_event({"type": "done", "text": INJECTION_RESPONSE})
+        return
+    if detect_gambling_distress(req.text):
+        yield _sse_event({"type": "done", "text": GAMBLING_HELP_RESPONSE})
+        return
 
     # Conversation history
     conversation_history: list[dict[str, str]] | None = None

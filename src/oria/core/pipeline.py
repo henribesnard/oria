@@ -6,6 +6,12 @@ import logging
 from typing import TYPE_CHECKING
 
 from oria.app.entitlements.models import DecisionKind
+from oria.core.safety import (
+    GAMBLING_HELP_RESPONSE,
+    INJECTION_RESPONSE,
+    detect_gambling_distress,
+    detect_injection,
+)
 from oria.kernel.health import Availability, ModuleStatus
 from oria.kernel.models import IncomingRequest, Response
 from oria.kernel.resilience import guard
@@ -74,6 +80,12 @@ class Pipeline:
                 decision = await self._entitlements.check(req.user_id, "chat_message")
                 if decision.kind != DecisionKind.ALLOW:
                     return await self._synthesis.quota_exceeded(decision.reason)
+
+        # Stage 0b : filtres de sécurité
+        if detect_injection(req.text):
+            return Response(text=INJECTION_RESPONSE)
+        if detect_gambling_distress(req.text):
+            return Response(text=GAMBLING_HELP_RESPONSE)
 
         # Enrichir la requête avec le contexte persistant
         if self._conversations is not None:
