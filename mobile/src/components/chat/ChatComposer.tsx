@@ -46,7 +46,7 @@ export function ChatComposer({ value, onChangeText, onSend, sending, onOpenConte
           value={value}
           onChangeText={onChangeText}
           onSubmitEditing={canSend ? onSend : undefined}
-          placeholder="Pose ta question\u2026"
+          placeholder="Pose ta question…"
           placeholderTextColor={colors.textDisabled}
           returnKeyType="send"
           style={styles.input}

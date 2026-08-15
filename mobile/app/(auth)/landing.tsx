@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { OriaLogo } from '@/src/components/OriaLogo';
 import { Button } from '@/src/components/ui/Button';
+import { useAuth } from '@/src/hooks/useAuth';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 
@@ -32,6 +33,7 @@ const LEAGUES = [
 export default function Landing() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { enterGuest } = useAuth();
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -100,7 +102,7 @@ export default function Landing() {
         <View style={[styles.ctas, { paddingBottom: insets.bottom + 16 }]}>
           <Button label="Créer un compte" onPress={() => router.push('/(auth)/register')} />
           <Button label="J'ai déjà un compte" variant="secondary" onPress={() => router.push('/(auth)/login')} />
-          <Button label="Explorer sans compte" variant="ghost" onPress={() => router.replace('/(tabs)')} />
+          <Button label="Explorer sans compte" variant="ghost" onPress={() => { enterGuest(); router.replace('/(tabs)'); }} />
         </View>
       </ScrollView>
     </View>

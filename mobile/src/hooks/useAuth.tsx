@@ -27,9 +27,11 @@ export interface AuthState {
   user: User | null;
   token: string | null;
   loading: boolean;
+  guest: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, displayName?: string) => Promise<void>;
   logout: () => Promise<void>;
+  enterGuest: () => void;
 }
 
 // ---- Context --------------------------------------------------------------
@@ -38,9 +40,11 @@ const AuthContext = createContext<AuthState>({
   user: null,
   token: null,
   loading: true,
+  guest: false,
   login: async () => {},
   register: async () => {},
   logout: async () => {},
+  enterGuest: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -51,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [guest, setGuest] = useState(false);
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const router = useRouter();
   const segments = useSegments();
@@ -139,12 +144,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (loading) return;
     const inAuth = segments[0] === '(auth)';
-    if (!user && !inAuth) {
+    if (!user && !guest && !inAuth) {
       router.replace('/(auth)/landing');
     } else if (user && inAuth) {
       router.replace('/(tabs)');
     }
-  }, [user, loading, segments, router]);
+  }, [user, guest, loading, segments, router]);
 
   // --- login ---
   const login = useCallback(async (email: string, password: string) => {
@@ -178,11 +183,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await clearAll();
     setUser(null);
     setToken(null);
+    setGuest(false);
     if (refreshTimerRef.current) clearTimeout(refreshTimerRef.current);
   }, [clearAll]);
 
+  // --- guest mode ---
+  const enterGuest = useCallback(() => {
+    setGuest(true);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, guest, login, register, logout, enterGuest }}>
       {children}
     </AuthContext.Provider>
   );
