@@ -50,7 +50,7 @@ class DeepSeekProvider:
         return ModuleStatus(name=self.name, availability=avail)
 
     @resilient(
-        breaker="llm", timeout=15, retries=1,
+        breaker="llm", timeout=30, retries=1,
         fallback=lambda *a, **kw: {"choices": []},
     )
     async def complete(

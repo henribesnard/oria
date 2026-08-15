@@ -12,6 +12,7 @@ from oria.core.safety import (
     detect_gambling_distress,
     detect_injection,
 )
+from oria.core.prerouter import _GREETING_RE, _ACK_RE, _HELP_RE
 from oria.kernel.health import Availability, ModuleStatus
 from oria.kernel.models import IncomingRequest, Response
 from oria.kernel.resilience import guard
@@ -74,18 +75,18 @@ class Pipeline:
 
     async def _process(self, req: IncomingRequest) -> Response:
         """Enchaîne les stages sous guard."""
-        # Stage 0 : entitlements (quotas)
-        if self._entitlements is not None:
-            async with guard("entitlements", on_error=lambda: None):
-                decision = await self._entitlements.check(req.user_id, "chat_message")
-                if decision.kind != DecisionKind.ALLOW:
-                    return await self._synthesis.quota_exceeded(decision.reason)
-
-        # Stage 0b : filtres de sécurité
+        # Stage 0 : filtres de sécurité (AVANT quota — ne doivent jamais être bloqués)
         if detect_injection(req.text):
             return Response(text=INJECTION_RESPONSE)
         if detect_gambling_distress(req.text):
             return Response(text=GAMBLING_HELP_RESPONSE)
+
+        # Stage 0b : entitlements (quotas) — bypass pour routes triviales
+        if self._entitlements is not None and not self._is_quota_exempt(req.text):
+            async with guard("entitlements", on_error=lambda: None):
+                decision = await self._entitlements.check(req.user_id, "chat_message")
+                if decision.kind != DecisionKind.ALLOW:
+                    return await self._synthesis.quota_exceeded(decision.reason)
 
         # Enrichir la requête avec le contexte persistant
         if self._conversations is not None:
@@ -125,6 +126,12 @@ class Pipeline:
             degraded=True,
         )
 
+    @staticmethod
+    def _is_quota_exempt(text: str) -> bool:
+        """Les salutations, remerciements et aide ne consomment pas de quota."""
+        t = text.strip()
+        return bool(_GREETING_RE.search(t) or _ACK_RE.search(t) or _HELP_RE.search(t))
+
     async def _merge_context(self, req: IncomingRequest) -> IncomingRequest:
         """Fusionne le contexte persistant avec celui de la requête."""
         if self._conversations is None:
@@ -155,6 +162,6 @@ class Pipeline:
                 await self._conversations.append(req.user_id, "user", req.text)
                 await self._conversations.append(req.user_id, "assistant", resp.text)
 
-        if self._entitlements is not None:
+        if self._entitlements is not None and not self._is_quota_exempt(req.text):
             async with guard("consume_quota", on_error=lambda: None):
                 await self._entitlements.consume(req.user_id, "chat_message")

@@ -73,6 +73,24 @@ export default function TabLayout() {
           tabBarIcon: ({ focused, color }) => <TabIcon name="profile" focused={focused} color={color as string} />,
         }}
       />
+      <Tabs.Screen
+        name="notifications"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="edit-profile"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="pricing"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

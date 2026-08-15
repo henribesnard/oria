@@ -39,7 +39,10 @@ packages = ["src/oria"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
-markers = ["integration: tests nécessitant un accès réseau à l'API Football (coûtent du budget)"]
+markers = [
+    "integration: tests nécessitant un accès réseau à l'API Football (coûtent du budget)",
+    "live: tests nécessitant des matchs en direct (P7, lancer un soir de matchs)",
+]
 
 [tool.mypy]
 strict = true

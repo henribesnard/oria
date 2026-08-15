@@ -8,6 +8,7 @@ Routes monitoring (Bearer token) :
   /admin/trace/{id}    — détail d'une trace
   /admin/bottlenecks   — goulots détectés
   /admin/live          — état du live engine
+  /admin/entitlements  — limites de quotas par palier (GET / PATCH)
 
 Routes gestion (JWT admin) :
   /admin/users         — liste des utilisateurs
@@ -27,6 +28,7 @@ from oria.adapters.web.dependencies import get_current_user
 
 if TYPE_CHECKING:
     from oria.app.admin.service import AdminService
+    from oria.app.entitlements.service import Entitlements
     from oria.kernel.health import HealthRegistry
     from oria.monitoring.collector import Collector
     from oria.providers.apifootball.client import ApiFootballClient
@@ -40,6 +42,7 @@ _health_registry: HealthRegistry | None = None
 _collector: Collector | None = None
 _apifootball: ApiFootballClient | None = None
 _admin_service: AdminService | None = None
+_entitlements_service: Entitlements | None = None
 
 
 def init_admin_routes(
@@ -50,15 +53,17 @@ def init_admin_routes(
     collector: Collector | None = None,
     apifootball: ApiFootballClient | None = None,
     admin_service: AdminService | None = None,
+    entitlements_service: Entitlements | None = None,
 ) -> None:
     """Câble les dépendances admin depuis le conteneur."""
-    global _admin_token, _jwt_secret, _health_registry, _collector, _apifootball, _admin_service  # noqa: PLW0603
+    global _admin_token, _jwt_secret, _health_registry, _collector, _apifootball, _admin_service, _entitlements_service  # noqa: PLW0603
     _admin_token = admin_token
     _jwt_secret = jwt_secret
     _health_registry = health_registry
     _collector = collector
     _apifootball = apifootball
     _admin_service = admin_service
+    _entitlements_service = entitlements_service
 
 
 def _check_token(authorization: str | None) -> None:
@@ -190,6 +195,49 @@ async def admin_live(
     """État du live engine."""
     _check_token(authorization)
     return {"status": "ok"}
+
+
+# ---------------------------------------------------------------------------
+# Entitlements / quotas management (Bearer admin token)
+# ---------------------------------------------------------------------------
+
+
+@router.get("/entitlements")
+async def admin_get_entitlements(
+    authorization: str | None = Header(default=None),
+) -> dict[str, Any]:
+    """Limites actuelles par palier (free / premium)."""
+    _check_token(authorization)
+    if _entitlements_service is None:
+        return {"error": "entitlements service not available"}
+    return _entitlements_service.get_limits()
+
+
+class EntitlementsUpdateRequest(BaseModel):
+    chat_message: int | None = None
+    live_realtime: bool | None = None
+    alert: int | None = None
+    deep_analysis: bool | None = None
+    history_days: int | None = None
+
+
+@router.patch("/entitlements/{tier}")
+async def admin_update_entitlements(
+    tier: str,
+    req: EntitlementsUpdateRequest,
+    authorization: str | None = Header(default=None),
+) -> dict[str, Any]:
+    """Met à jour les limites d'un palier (free ou premium) à chaud."""
+    _check_token(authorization)
+    if tier not in ("free", "premium"):
+        raise HTTPException(status_code=400, detail="tier must be 'free' or 'premium'")
+    if _entitlements_service is None:
+        raise HTTPException(status_code=503, detail="entitlements service not available")
+    fields = req.model_dump(exclude_none=True)
+    if not fields:
+        raise HTTPException(status_code=400, detail="no fields to update")
+    updated = _entitlements_service.update_limits(tier, **fields)
+    return {"tier": tier, "limits": updated}
 
 
 # ---------------------------------------------------------------------------

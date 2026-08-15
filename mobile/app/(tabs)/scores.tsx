@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, RefreshControl, Platform, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { SegmentedControl } from '@/src/components/ui/SegmentedControl';
 import { MatchCard } from '@/src/components/scores/MatchCard';
+import { MatchDetailModal } from '@/src/components/scores/MatchDetailModal';
 import { listLiveFixtures, type Fixture } from '@/src/api/catalog';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
@@ -22,10 +24,12 @@ function classifyStatus(status?: string): 'live' | 'ft' | 'pre' {
 
 export default function ScoresScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const [tab, setTab] = useState('live');
   const [fixtures, setFixtures] = useState<Fixture[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [selectedFixture, setSelectedFixture] = useState<Fixture | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -44,6 +48,11 @@ export default function ScoresScreen() {
     setRefreshing(false);
   };
 
+  const handleAddToChat = useCallback((fixture: Fixture) => {
+    // Navigate to chat tab — the context will be passed via params
+    router.push({ pathname: '/(tabs)', params: { fixture_id: String(fixture.id), fixture_label: `${fixture.home_team} — ${fixture.away_team}`, league_id: fixture.league_id ? String(fixture.league_id) : undefined, league_label: fixture.league_name } });
+  }, [router]);
+
   const filtered = fixtures.filter(f => classifyStatus(f.status) === tab);
 
   return (
@@ -58,7 +67,7 @@ export default function ScoresScreen() {
       <FlatList
         data={filtered}
         keyExtractor={f => String(f.id)}
-        renderItem={({ item }) => <MatchCard fixture={item} />}
+        renderItem={({ item }) => <MatchCard fixture={item} onPress={setSelectedFixture} />}
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
@@ -67,6 +76,13 @@ export default function ScoresScreen() {
             <Text style={styles.empty}>Aucun match</Text>
           ) : null
         }
+      />
+
+      <MatchDetailModal
+        fixture={selectedFixture}
+        visible={selectedFixture !== null}
+        onClose={() => setSelectedFixture(null)}
+        onAddToChat={handleAddToChat}
       />
     </View>
   );

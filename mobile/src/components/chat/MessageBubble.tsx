@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 import { OriaLogo } from '../OriaLogo';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
@@ -15,18 +17,32 @@ interface Props {
 }
 
 export function MessageBubble({ role, text, streaming, degraded, suggested_actions, onSuggestedAction }: Props) {
+  // oriaMsgIn animation: fade + slide-up
+  const translateY = useSharedValue(12);
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    translateY.value = withTiming(0, { duration: 280, easing: Easing.out(Easing.cubic) });
+    opacity.value = withTiming(1, { duration: 280 });
+  }, [translateY, opacity]);
+
+  const animStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+    opacity: opacity.value,
+  }));
+
   if (role === 'user') {
     return (
-      <View style={styles.userRow}>
+      <Animated.View style={[styles.userRow, animStyle]}>
         <View style={styles.userBubble}>
           <Text style={styles.userText}>{text}</Text>
         </View>
-      </View>
+      </Animated.View>
     );
   }
 
   return (
-    <View style={styles.assistantRow}>
+    <Animated.View style={[styles.assistantRow, animStyle]}>
       <View style={styles.avatar}>
         <OriaLogo size={17} />
       </View>
@@ -45,7 +61,7 @@ export function MessageBubble({ role, text, streaming, degraded, suggested_actio
           </View>
         )}
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

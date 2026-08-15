@@ -1,22 +1,41 @@
-import { View, TextInput, Pressable, StyleSheet, Platform } from 'react-native';
+import { View, Text, TextInput, Pressable, Image, ScrollView, StyleSheet, Platform } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
+import type { ContextLabel } from './ContextPicker';
 
 interface Props {
   value: string;
   onChangeText: (text: string) => void;
   onSend: () => void;
   sending: boolean;
+  onOpenContext: () => void;
+  contextLabels: ContextLabel[];
+  onRemoveContext: (key: string) => void;
 }
 
-export function ChatComposer({ value, onChangeText, onSend, sending }: Props) {
+export function ChatComposer({ value, onChangeText, onSend, sending, onOpenContext, contextLabels, onRemoveContext }: Props) {
   const canSend = value.trim().length > 0 && !sending;
+  const hasContext = contextLabels.length > 0;
 
   return (
     <View style={styles.container}>
+      {hasContext && (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipScroll} contentContainerStyle={styles.chipRow}>
+          {contextLabels.map(c => (
+            <View key={c.key} style={styles.chip}>
+              {c.logo ? <Image source={{ uri: c.logo }} style={styles.chipLogo} resizeMode="contain" /> : null}
+              <Text style={styles.chipText} numberOfLines={1}>{c.label}</Text>
+              <Pressable onPress={() => onRemoveContext(c.key)} hitSlop={6}>
+                <Text style={styles.chipRemove}>{'\u2715'}</Text>
+              </Pressable>
+            </View>
+          ))}
+        </ScrollView>
+      )}
+
       <View style={styles.inputRow}>
-        <Pressable style={styles.addBtn}>
+        <Pressable style={styles.addBtn} onPress={onOpenContext}>
           <View style={styles.addIcon}>
             <Svg width={14} height={14} viewBox="0 0 14 14" fill="none">
               <Path d="M7 1v12M1 7h12" stroke={colors.primary} strokeWidth={2} strokeLinecap="round" />
@@ -27,7 +46,7 @@ export function ChatComposer({ value, onChangeText, onSend, sending }: Props) {
           value={value}
           onChangeText={onChangeText}
           onSubmitEditing={canSend ? onSend : undefined}
-          placeholder="Pose ta question…"
+          placeholder="Pose ta question\u2026"
           placeholderTextColor={colors.textDisabled}
           returnKeyType="send"
           style={styles.input}
@@ -43,6 +62,10 @@ export function ChatComposer({ value, onChangeText, onSend, sending }: Props) {
           </Svg>
         </Pressable>
       </View>
+
+      {hasContext && (
+        <Text style={styles.contextHint}>Le contexte reste actif pour toute la conversation</Text>
+      )}
     </View>
   );
 }
@@ -53,6 +76,43 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: Platform.OS === 'ios' ? 12 : 12,
     backgroundColor: Platform.OS === 'ios' ? 'rgba(246,246,251,0.9)' : colors.surface,
+  },
+  chipScroll: {
+    marginBottom: 6,
+    maxHeight: 34,
+  },
+  chipRow: {
+    flexDirection: 'row',
+    gap: 6,
+    paddingHorizontal: 2,
+  },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: colors.primarySurface,
+    borderWidth: 1,
+    borderColor: colors.borderFocus,
+    borderRadius: 999,
+    paddingVertical: 4,
+    paddingLeft: 8,
+    paddingRight: 6,
+  },
+  chipLogo: {
+    width: 16,
+    height: 16,
+    borderRadius: 3,
+  },
+  chipText: {
+    fontFamily: fonts.sansSemiBold,
+    fontSize: 12,
+    color: colors.primaryHover,
+    maxWidth: 120,
+  },
+  chipRemove: {
+    fontSize: 10,
+    color: colors.textMuted,
+    paddingHorizontal: 3,
   },
   inputRow: {
     flexDirection: 'row',
@@ -99,5 +159,12 @@ const styles = StyleSheet.create({
     borderRadius: 17,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  contextHint: {
+    fontFamily: fonts.sans,
+    fontSize: 10.5,
+    color: colors.textFaint,
+    textAlign: 'center',
+    marginTop: 5,
   },
 });

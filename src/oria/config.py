@@ -60,8 +60,16 @@ class Settings(BaseSettings):
     admin_bootstrap_token: str = ""
 
     # --- Quotas freemium ---
-    free_daily_messages: int = 20
-    premium_daily_messages: int = 1000
+    free_daily_messages: int = 999_999
+    premium_daily_messages: int = 999_999
+    free_alerts: int = 1
+    premium_alerts: int = 9999
+    free_live_realtime: bool = False
+    premium_live_realtime: bool = True
+    free_deep_analysis: bool = False
+    premium_deep_analysis: bool = True
+    free_history_days: int = 7
+    premium_history_days: int = 365
 
     # --- CORS ---
     cors_origins: str = "http://localhost:5173,http://localhost:3000"

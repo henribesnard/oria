@@ -135,7 +135,7 @@ async def list_live_fixtures() -> list[dict[str, Any]]:
     """Liste les matchs en direct (live=all)."""
     if _live_repo is None:
         raise HTTPException(status_code=503, detail="catalog not available")
-    data = await _live_repo.get("")
+    data = await _live_repo.get("", allow_stale=False)
     if data is None:
         return []
     items = data if isinstance(data, list) else [data]

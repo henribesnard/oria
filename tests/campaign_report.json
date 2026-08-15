@@ -3,10 +3,10 @@
     "total_questions": 42,
     "successes": 42,
     "failures": 0,
-    "total_api_calls": 29,
+    "total_api_calls": 32,
     "budget_before": 7500,
-    "budget_after": 7409,
-    "duration_ms": 7434.889200143516
+    "budget_after": 7468,
+    "duration_ms": 7756.275699939579
   },
   "questions": [
     {
@@ -18,7 +18,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": false,
-      "latency_ms": 0.3521000035107136,
+      "latency_ms": 1.7174002714455128,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -32,7 +32,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": false,
-      "latency_ms": 0.16949977725744247,
+      "latency_ms": 0.0991998240351677,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -46,7 +46,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": false,
-      "latency_ms": 0.13660010881721973,
+      "latency_ms": 0.11219969019293785,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -60,7 +60,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": false,
-      "latency_ms": 0.14690007083117962,
+      "latency_ms": 0.07990002632141113,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -74,7 +74,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": false,
-      "latency_ms": 0.1829999964684248,
+      "latency_ms": 0.08659996092319489,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -88,7 +88,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": false,
-      "latency_ms": 1.271700020879507,
+      "latency_ms": 0.09030010551214218,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -102,7 +102,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": false,
-      "latency_ms": 0.28629996813833714,
+      "latency_ms": 0.08350005373358727,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -121,7 +121,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 125.11359993368387,
+      "latency_ms": 106.70030023902655,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -140,7 +140,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 34.09339999780059,
+      "latency_ms": 35.23400006815791,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -159,7 +159,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 34.643599996343255,
+      "latency_ms": 29.74800020456314,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -178,7 +178,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 33.959100022912025,
+      "latency_ms": 31.68940031901002,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -197,10 +197,10 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 34.51989986933768,
+      "latency_ms": 85.49269987270236,
       "success": true,
       "error": "",
-      "api_calls": 1
+      "api_calls": 2
     },
     {
       "category": "prochain_match",
@@ -217,7 +217,7 @@
         "fixture_card"
       ],
       "degraded": false,
-      "latency_ms": 37.042199866846204,
+      "latency_ms": 36.815499886870384,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -237,7 +237,7 @@
         "fixture_card"
       ],
       "degraded": false,
-      "latency_ms": 34.40869995392859,
+      "latency_ms": 36.638999823480844,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -257,7 +257,7 @@
         "fixture_card"
       ],
       "degraded": false,
-      "latency_ms": 36.77499992772937,
+      "latency_ms": 33.82019978016615,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -277,7 +277,7 @@
         "fixture_card"
       ],
       "degraded": false,
-      "latency_ms": 34.86139979213476,
+      "latency_ms": 116.44779983907938,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -290,14 +290,12 @@
         "season": 2024,
         "team_id": 85
       },
-      "route": "prerouter:fixture",
-      "response_text": "Voici le dernier résultat.",
-      "has_attachments": true,
-      "attachment_kinds": [
-        "fixture_card"
-      ],
-      "degraded": false,
-      "latency_ms": 1.4669999945908785,
+      "route": "fallback",
+      "response_text": "Je n'ai pas pu traiter ta demande « score PSG » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+      "has_attachments": false,
+      "attachment_kinds": [],
+      "degraded": true,
+      "latency_ms": 1.231399830430746,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -317,7 +315,7 @@
         "fixture_card"
       ],
       "degraded": false,
-      "latency_ms": 35.667600110173225,
+      "latency_ms": 143.4047999791801,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -337,7 +335,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 35.356099950149655,
+      "latency_ms": 35.076800268143415,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -357,7 +355,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 35.93900008127093,
+      "latency_ms": 31.89300000667572,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -377,7 +375,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 31.83110011741519,
+      "latency_ms": 38.09729963541031,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -397,7 +395,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 38.41620008461177,
+      "latency_ms": 34.4076999463141,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -417,7 +415,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 35.59349989518523,
+      "latency_ms": 36.1068001948297,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -436,7 +434,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 58.777199825271964,
+      "latency_ms": 42.67439991235733,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -455,10 +453,10 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 55.291400058194995,
+      "latency_ms": 109.95709989219904,
       "success": true,
       "error": "",
-      "api_calls": 1
+      "api_calls": 2
     },
     {
       "category": "info_equipe",
@@ -473,7 +471,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 37.14850009419024,
+      "latency_ms": 28.211900033056736,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -491,7 +489,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 33.59559993259609,
+      "latency_ms": 29.628700111061335,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -510,7 +508,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 114.06240006908774,
+      "latency_ms": 83.24570022523403,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -530,7 +528,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 37.28839987888932,
+      "latency_ms": 65.0769998319447,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -549,7 +547,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 47.35939996317029,
+      "latency_ms": 54.235999938100576,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -568,7 +566,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 38.7510999571532,
+      "latency_ms": 53.740100003778934,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -584,7 +582,7 @@
         "table"
       ],
       "degraded": false,
-      "latency_ms": 32.42459986358881,
+      "latency_ms": 36.30860010161996,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -600,7 +598,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": true,
-      "latency_ms": 1624.0635998547077,
+      "latency_ms": 1693.6738998629153,
       "success": true,
       "error": "",
       "api_calls": 3
@@ -617,7 +615,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": true,
-      "latency_ms": 33.62370003014803,
+      "latency_ms": 34.165400080382824,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -634,7 +632,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": true,
-      "latency_ms": 0.2722002100199461,
+      "latency_ms": 0.14619994908571243,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -651,7 +649,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": true,
-      "latency_ms": 0.17850007861852646,
+      "latency_ms": 0.1405002549290657,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -665,10 +663,10 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": true,
-      "latency_ms": 0.5896000657230616,
+      "latency_ms": 58.84100031107664,
       "success": true,
       "error": "",
-      "api_calls": 0
+      "api_calls": 1
     },
     {
       "category": "hors_scope",
@@ -679,7 +677,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": true,
-      "latency_ms": 0.18449989147484303,
+      "latency_ms": 0.15270011499524117,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -693,7 +691,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": true,
-      "latency_ms": 0.16319984570145607,
+      "latency_ms": 0.10940013453364372,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -707,7 +705,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": true,
-      "latency_ms": 0.1666999887675047,
+      "latency_ms": 0.12829992920160294,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -721,7 +719,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": true,
-      "latency_ms": 0.4110999871045351,
+      "latency_ms": 0.30139973387122154,
       "success": true,
       "error": "",
       "api_calls": 0
@@ -738,7 +736,7 @@
       "has_attachments": false,
       "attachment_kinds": [],
       "degraded": true,
-      "latency_ms": 50.173299852758646,
+      "latency_ms": 30.643200036138296,
       "success": true,
       "error": "",
       "api_calls": 1
@@ -749,9 +747,9 @@
       "category": "cache_classement",
       "question_v1": "classement ligue 1",
       "question_v2": "classement Ligue 1 saison en cours",
-      "latency_v1_ms": 1.017899950966239,
-      "latency_v2_ms": 1.3633999042212963,
-      "speedup_ratio": 0.7465894253143658,
+      "latency_v1_ms": 0.6805001758038998,
+      "latency_v2_ms": 0.7902998477220535,
+      "speedup_ratio": 0.861065806561094,
       "api_calls_v1": 0,
       "api_calls_v2": 0,
       "cache_hit": true
@@ -760,9 +758,9 @@
       "category": "cache_prochain_match",
       "question_v1": "prochain match du PSG",
       "question_v2": "next match PSG",
-      "latency_v1_ms": 1.2306999415159225,
-      "latency_v2_ms": 1.0104000102728605,
-      "speedup_ratio": 1.2180323921251441,
+      "latency_v1_ms": 0.5967002362012863,
+      "latency_v2_ms": 0.6007002666592598,
+      "speedup_ratio": 0.9933410542994774,
       "api_calls_v1": 0,
       "api_calls_v2": 0,
       "cache_hit": true
@@ -771,9 +769,9 @@
       "category": "cache_dernier_resultat",
       "question_v1": "dernier resultat du PSG",
       "question_v2": "score du PSG",
-      "latency_v1_ms": 1.128499861806631,
-      "latency_v2_ms": 1.0317000560462475,
-      "speedup_ratio": 1.0938255311639185,
+      "latency_v1_ms": 0.6955997087061405,
+      "latency_v2_ms": 0.13719964772462845,
+      "speedup_ratio": 5.069981740057155,
       "api_calls_v1": 0,
       "api_calls_v2": 0,
       "cache_hit": true
@@ -782,9 +780,9 @@
       "category": "cache_forme",
       "question_v1": "forme du PSG",
       "question_v2": "form PSG",
-      "latency_v1_ms": 1.0681001003831625,
-      "latency_v2_ms": 1.1922998819500208,
-      "speedup_ratio": 0.8958317588996755,
+      "latency_v1_ms": 0.6292997859418392,
+      "latency_v2_ms": 0.7084999233484268,
+      "speedup_ratio": 0.8882143317217573,
       "api_calls_v1": 0,
       "api_calls_v2": 0,
       "cache_hit": true
@@ -793,9 +791,9 @@
       "category": "cache_calendrier",
       "question_v1": "calendrier PSG",
       "question_v2": "schedule du PSG",
-      "latency_v1_ms": 1.313100103288889,
-      "latency_v2_ms": 1.316600013524294,
-      "speedup_ratio": 0.9973417057576687,
+      "latency_v1_ms": 0.687700230628252,
+      "latency_v2_ms": 0.712299719452858,
+      "speedup_ratio": 0.9654646939303841,
       "api_calls_v1": 0,
       "api_calls_v2": 0,
       "cache_hit": true
@@ -804,9 +802,9 @@
       "category": "cache_classement_pl",
       "question_v1": "standings Premier League",
       "question_v2": "classement PL",
-      "latency_v1_ms": 1.5279999934136868,
-      "latency_v2_ms": 1.6707999166101217,
-      "speedup_ratio": 0.9145320024397888,
+      "latency_v1_ms": 0.8196001872420311,
+      "latency_v2_ms": 0.8781002834439278,
+      "speedup_ratio": 0.9333787981795677,
       "api_calls_v1": 0,
       "api_calls_v2": 0,
       "cache_hit": true

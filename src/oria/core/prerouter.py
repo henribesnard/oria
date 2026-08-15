@@ -179,6 +179,13 @@ class PreRouter:
         if re.search(r"\b(joueurs?|players?|effectif|stats?\b)", text, re.IGNORECASE):
             return await self._handle_players(req)
 
+        # Famille B : comparaison → orchestrateur (ne pas capturer en team_info)
+        if re.search(
+            r"\b(plus\s+fort|comparer|comparaison|qui\s+(?:est|serait)\s+(?:le\s+)?(?:meilleur|plus\s+fort))\b",
+            text, re.IGNORECASE,
+        ) or re.search(r"\bou\b.+\bqui\b", text, re.IGNORECASE):
+            return None
+
         # Famille B : infos équipe
         if re.search(r"\b(infos?|informations?|qui\s+est)\b", text, re.IGNORECASE):
             return await self._handle_team_info(req)

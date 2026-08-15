@@ -1,5 +1,6 @@
 import { View, Text, Pressable, ScrollView, StyleSheet, Platform, Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '@/src/hooks/useAuth';
 import { colors } from '@/src/theme/colors';
@@ -19,6 +20,7 @@ function SettingsRow({ label, value, onPress }: { label: string; value?: string;
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { user, logout } = useAuth();
 
   const initial = (user?.display_name ?? user?.email ?? '?')[0].toUpperCase();
@@ -49,28 +51,41 @@ export default function ProfileScreen() {
         </View>
 
         {/* Premium card */}
-        <LinearGradient
-          colors={['#5B4FD6', '#7A5CE0']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.premiumCard}
-        >
-          <Text style={styles.premiumTier}>Palier Free</Text>
-          <Text style={styles.premiumDesc}>
-            20 questions / jour · passe en Premium pour le direct illimité.
-          </Text>
-          <Pressable style={styles.premiumBtn}>
-            <Text style={styles.premiumBtnText}>Passer en Premium</Text>
-          </Pressable>
-        </LinearGradient>
+        <Pressable onPress={() => router.push('/(tabs)/pricing')}>
+          <LinearGradient
+            colors={['#5B4FD6', '#7A5CE0']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.premiumCard}
+          >
+            <Text style={styles.premiumTier}>Palier Free</Text>
+            <Text style={styles.premiumDesc}>
+              Passe en Premium pour le direct illimité et les questions sans limite.
+            </Text>
+            <View style={styles.premiumBtn}>
+              <Text style={styles.premiumBtnText}>Passer en Premium</Text>
+            </View>
+          </LinearGradient>
+        </Pressable>
 
         {/* Settings */}
         <View style={styles.settingsCard}>
-          <SettingsRow label="Notifications" value="Activées" />
-          <SettingsRow label="Langue" value="Français" />
-          <SettingsRow label="Fuseau" value="Europe/Paris" />
-          <SettingsRow label="Mot de passe" value="••••••" />
+          <SettingsRow label="Notifications" value="Activées" onPress={() => router.push('/(tabs)/notifications')} />
+          <SettingsRow label="Modifier le profil" onPress={() => router.push('/(tabs)/edit-profile')} />
+          <SettingsRow label="Langue" value={user?.locale === 'en' ? 'English' : 'Français'} />
+          <SettingsRow label="Fuseau" value={user?.timezone ?? 'Europe/Paris'} />
         </View>
+
+        {/* Delete account */}
+        <Pressable
+          onPress={() => Alert.alert('Supprimer le compte', 'Cette action est irréversible. Toutes tes données seront supprimées.', [
+            { text: 'Annuler', style: 'cancel' },
+            { text: 'Supprimer', style: 'destructive', onPress: () => { /* deleteAccount then logout */ } },
+          ])}
+          style={styles.deleteBtn}
+        >
+          <Text style={styles.deleteText}>Supprimer mon compte</Text>
+        </Pressable>
 
         {/* Logout */}
         <Pressable onPress={handleLogout} style={styles.logoutBtn}>
@@ -209,6 +224,20 @@ const styles = StyleSheet.create({
   logoutText: {
     fontFamily: fonts.sansSemiBold,
     fontSize: 14,
+    color: colors.danger,
+  },
+  deleteBtn: {
+    marginTop: 12,
+    alignItems: 'center',
+    paddingVertical: 14,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#F5D0CE',
+    borderRadius: 16,
+  },
+  deleteText: {
+    fontFamily: fonts.sansSemiBold,
+    fontSize: 13,
     color: colors.danger,
   },
 });

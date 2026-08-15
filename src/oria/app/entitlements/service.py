@@ -32,17 +32,17 @@ class Entitlements:
         self._billing = billing
         self._free_limits = FeatureLimits(
             chat_message=settings.free_daily_messages,
-            live_realtime=False,
-            alert=1,
-            deep_analysis=False,
-            history_days=7,
+            live_realtime=settings.free_live_realtime,
+            alert=settings.free_alerts,
+            deep_analysis=settings.free_deep_analysis,
+            history_days=settings.free_history_days,
         )
         self._premium_limits = FeatureLimits(
             chat_message=settings.premium_daily_messages,
-            live_realtime=True,
-            alert=9999,
-            deep_analysis=True,
-            history_days=365,
+            live_realtime=settings.premium_live_realtime,
+            alert=settings.premium_alerts,
+            deep_analysis=settings.premium_deep_analysis,
+            history_days=settings.premium_history_days,
         )
 
     async def start(self) -> None:
@@ -53,6 +53,31 @@ class Entitlements:
 
     async def health(self) -> ModuleStatus:
         return ModuleStatus(name=self.name, availability=Availability.UP)
+
+    # -- Lecture / mise à jour des limites (pour le panel admin) --
+
+    def get_limits(self) -> dict[str, dict]:
+        """Renvoie les limites actuelles free et premium."""
+        return {
+            "free": self._free_limits.model_dump(),
+            "premium": self._premium_limits.model_dump(),
+        }
+
+    def update_limits(self, tier: str, **fields: object) -> dict:
+        """Met à jour les limites d'un palier (free ou premium) à chaud."""
+        if tier == "free":
+            for k, v in fields.items():
+                if hasattr(self._free_limits, k):
+                    setattr(self._free_limits, k, v)
+            return self._free_limits.model_dump()
+        if tier == "premium":
+            for k, v in fields.items():
+                if hasattr(self._premium_limits, k):
+                    setattr(self._premium_limits, k, v)
+            return self._premium_limits.model_dump()
+        return {}
+
+    # -- Logique métier --
 
     async def check(self, user_id: str, feature: str) -> Decision:
         tier = await self._billing.get_tier(user_id)
@@ -98,7 +123,7 @@ class Entitlements:
             if used >= limits.alert and tier == Tier.FREE:
                 return Decision(
                     kind=DecisionKind.UPGRADE_REQUIRED,
-                    reason="Limite d’alertes atteinte en Free.",
+                    reason="Limite d'alertes atteinte en Free.",
                     feature=feature,
                 )
             return Decision(kind=DecisionKind.ALLOW, feature=feature)

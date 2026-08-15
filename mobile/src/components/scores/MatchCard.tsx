@@ -1,10 +1,11 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 import type { Fixture } from '@/src/api/catalog';
 
 interface Props {
   fixture: Fixture;
+  onPress?: (fixture: Fixture) => void;
 }
 
 function statusMeta(status?: string) {
@@ -29,13 +30,13 @@ function clockText(fixture: Fixture) {
   } catch { return '—'; }
 }
 
-export function MatchCard({ fixture }: Props) {
+export function MatchCard({ fixture, onPress }: Props) {
   const meta = statusMeta(fixture.status);
   const clock = clockText(fixture);
   const hasScore = fixture.score_home != null && fixture.score_away != null;
 
   return (
-    <View style={styles.card}>
+    <Pressable style={styles.card} onPress={() => onPress?.(fixture)}>
       {/* Home */}
       <View style={styles.teamSide}>
         {fixture.home_logo ? (
@@ -61,7 +62,7 @@ export function MatchCard({ fixture }: Props) {
       <View style={[styles.badge, { backgroundColor: meta.bg }]}>
         <Text style={[styles.badgeText, { color: meta.fg }]}>{clock}</Text>
       </View>
-    </View>
+    </Pressable>
   );
 }
 

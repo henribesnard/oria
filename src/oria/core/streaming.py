@@ -13,6 +13,7 @@ from oria.core.safety import (
     detect_gambling_distress,
     detect_injection,
 )
+from oria.core.prerouter import _GREETING_RE, _ACK_RE, _HELP_RE
 from oria.kernel.models import IncomingRequest
 from oria.kernel.resilience import guard
 
@@ -67,20 +68,23 @@ async def _stream_process(
     conversations: ConversationService | None = None,
 ) -> AsyncIterator[str]:
     """Logique de streaming interne."""
-    # Entitlements check
-    if entitlements is not None:
-        decision = await entitlements.check(req.user_id, "chat_message")
-        if decision.kind != DecisionKind.ALLOW:
-            yield _sse_event({"type": "quota", "message": decision.reason})
-            return
-
-    # Safety filters
+    # Safety filters (AVANT quota — ne doivent jamais être bloqués)
     if detect_injection(req.text):
         yield _sse_event({"type": "done", "text": INJECTION_RESPONSE})
         return
     if detect_gambling_distress(req.text):
         yield _sse_event({"type": "done", "text": GAMBLING_HELP_RESPONSE})
         return
+
+    # Entitlements check — bypass pour routes triviales
+    _exempt = bool(
+        _GREETING_RE.search(req.text) or _ACK_RE.search(req.text) or _HELP_RE.search(req.text)
+    )
+    if entitlements is not None and not _exempt:
+        decision = await entitlements.check(req.user_id, "chat_message")
+        if decision.kind != DecisionKind.ALLOW:
+            yield _sse_event({"type": "quota", "message": decision.reason})
+            return
 
     # Conversation history
     conversation_history: list[dict[str, str]] | None = None
@@ -153,7 +157,10 @@ async def _persist_stream_turn(
             await conversations.append(req.user_id, "user", req.text)
             await conversations.append(req.user_id, "assistant", text)
 
-    if entitlements is not None:
+    _exempt = bool(
+        _GREETING_RE.search(req.text) or _ACK_RE.search(req.text) or _HELP_RE.search(req.text)
+    )
+    if entitlements is not None and not _exempt:
         async with guard("stream_consume", on_error=lambda: None):
             await entitlements.consume(req.user_id, "chat_message")
 

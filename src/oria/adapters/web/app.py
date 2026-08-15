@@ -132,4 +132,5 @@ def init_web(
         collector=collector,
         apifootball=apifootball,
         admin_service=admin_service,
+        entitlements_service=entitlements_service,
     )

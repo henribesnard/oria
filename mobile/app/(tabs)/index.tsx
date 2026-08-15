@@ -1,18 +1,24 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { OriaLogo } from '@/src/components/OriaLogo';
 import { MessageBubble } from '@/src/components/chat/MessageBubble';
 import { ChatComposer } from '@/src/components/chat/ChatComposer';
 import { TypingIndicator } from '@/src/components/chat/TypingIndicator';
+import { ContextPicker, type ContextLabel } from '@/src/components/chat/ContextPicker';
+import { LiveTicker } from '@/src/components/chat/LiveTicker';
+import { PulseDot } from '@/src/components/ui/PulseDot';
 import { useChat, type Message } from '@/src/hooks/useChat';
+import type { ChatContext } from '@/src/api/chat';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 
 export default function ChatScreen() {
   const insets = useSafeAreaInsets();
-  const { messages, sending, send, handleSuggestedAction } = useChat();
+  const { messages, sending, setContext, send, handleSuggestedAction } = useChat();
   const [draft, setDraft] = useState('');
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [contextLabels, setContextLabels] = useState<ContextLabel[]>([]);
   const listRef = useRef<FlatList<Message>>(null);
 
   const handleSend = () => {
@@ -20,6 +26,23 @@ export default function ChatScreen() {
     send(draft);
     setDraft('');
   };
+
+  const handleContextSelect = useCallback((ctx: ChatContext, labels: ContextLabel[]) => {
+    setContext(ctx);
+    setContextLabels(labels);
+  }, [setContext]);
+
+  const handleRemoveContext = useCallback((key: string) => {
+    setContextLabels(prev => prev.filter(l => l.key !== key));
+    setContext(prev => {
+      const next = { ...prev };
+      if (key === 'league') delete next.league_id;
+      if (key === 'team') delete next.team_id;
+      if (key === 'fixture') delete next.fixture_id;
+      if (key === 'player') delete next.player_id;
+      return next;
+    });
+  }, [setContext]);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -61,13 +84,14 @@ export default function ChatScreen() {
             </View>
           )}
           <View style={styles.liveBadge}>
-            <View style={styles.liveDot} />
-            <Text style={styles.liveText}>
-              {Platform.OS === 'ios' ? '12' : '12 live'}
-            </Text>
+            <PulseDot size={6} color={colors.warning} />
+            <Text style={styles.liveText}>En direct</Text>
           </View>
         </View>
       </View>
+
+      {/* Live Ticker */}
+      <LiveTicker />
 
       {/* Messages */}
       {messages.length === 0 ? (
@@ -94,8 +118,23 @@ export default function ChatScreen() {
 
       {/* Composer */}
       <View style={{ paddingBottom: Platform.OS === 'ios' ? insets.bottom + 48 : insets.bottom + 8 }}>
-        <ChatComposer value={draft} onChangeText={setDraft} onSend={handleSend} sending={sending} />
+        <ChatComposer
+          value={draft}
+          onChangeText={setDraft}
+          onSend={handleSend}
+          sending={sending}
+          onOpenContext={() => setPickerVisible(true)}
+          contextLabels={contextLabels}
+          onRemoveContext={handleRemoveContext}
+        />
       </View>
+
+      {/* Context Picker */}
+      <ContextPicker
+        visible={pickerVisible}
+        onClose={() => setPickerVisible(false)}
+        onSelect={handleContextSelect}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -145,12 +184,6 @@ const styles = StyleSheet.create({
       borderRadius: 999,
       backgroundColor: colors.warningLight,
     }),
-  },
-  liveDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: colors.warning,
   },
   liveText: {
     fontFamily: fonts.sansBold,
