@@ -1,18 +1,71 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useChat } from '../hooks/useChat';
 import { MessageBubble } from '../components/chat/MessageBubble';
 import { ChatComposer } from '../components/chat/ChatComposer';
 import { ContextSelector } from '../components/chat/ContextSelector';
 import OriaLogo from '../components/OriaLogo';
+import { listLiveFixtures } from '../api/catalog';
+import type { Fixture } from '../api/catalog';
+
+/* ------------------------------------------------------------------ */
+/*  Live ticker helpers                                                */
+/* ------------------------------------------------------------------ */
+
+function fixtureIsLive(status?: string): boolean {
+  if (!status) return false;
+  return ['1H', '2H', 'HT', 'ET', 'BT', 'P', 'LIVE', 'INT'].includes(status.toUpperCase());
+}
+
+function TickerCard({ fixture }: { fixture: Fixture }) {
+  const isLive = fixtureIsLive(fixture.status);
+  return (
+    <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-white border border-border-inner shrink-0 text-[12px]">
+      {isLive && (
+        <span className="w-[6px] h-[6px] rounded-full bg-warning animate-[oria-pulse_1.5s_infinite] shrink-0" />
+      )}
+      <span className="font-semibold text-text-dark whitespace-nowrap">
+        {fixture.home_team?.slice(0, 3).toUpperCase()}
+      </span>
+      <span className="font-mono font-bold text-text-strong">
+        {fixture.score_home ?? 0} - {fixture.score_away ?? 0}
+      </span>
+      <span className="font-semibold text-text-dark whitespace-nowrap">
+        {fixture.away_team?.slice(0, 3).toUpperCase()}
+      </span>
+      {fixture.elapsed && (
+        <span className="text-[11px] text-warning-text font-semibold">{fixture.elapsed}'</span>
+      )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Chat page                                                          */
+/* ------------------------------------------------------------------ */
 
 export function Chat() {
   const { messages, sending, context, setContext, send, handleSuggestedAction, fixtureInfo, clearFixture } = useChat();
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [contextOpen, setContextOpen] = useState(false);
+  const [liveFixtures, setLiveFixtures] = useState<Fixture[]>([]);
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Load live fixtures for ticker
+  useEffect(() => {
+    let cancelled = false;
+    const load = () => {
+      listLiveFixtures()
+        .then((data) => { if (!cancelled) setLiveFixtures(data); })
+        .catch(() => {});
+    };
+    load();
+    const interval = setInterval(load, 60_000);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, []);
 
   return (
     <div className="flex flex-col h-dvh">
@@ -33,6 +86,21 @@ export function Chat() {
         </div>
       </header>
 
+      {/* Live ticker bar */}
+      {liveFixtures.length > 0 && (
+        <div className="border-b border-border-inner bg-surface-alt/80 px-5 py-2 overflow-hidden shrink-0">
+          <div className="max-w-[760px] mx-auto flex items-center gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+            <span className="flex items-center gap-1.5 shrink-0 mr-1">
+              <span className="w-[6px] h-[6px] rounded-full bg-warning animate-[oria-pulse_1.5s_infinite]" />
+              <span className="text-[11px] font-bold text-warning-text uppercase tracking-wider">Live</span>
+            </span>
+            {liveFixtures.map((f) => (
+              <TickerCard key={f.id} fixture={f} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Context selector */}
       <div className="border-b border-border bg-surface-alt/60 px-5 py-2.5">
         <div className="max-w-[760px] mx-auto">
@@ -49,10 +117,10 @@ export function Chat() {
                 <OriaLogo size={30} />
               </div>
               <h2 className="text-lg font-bold text-text-strong mb-2">
-                Bonjour, comment puis-je vous aider ?
+                Salut, comment puis-je t'aider ?
               </h2>
               <p className="text-sm text-text-muted max-w-[360px]">
-                Posez-moi une question sur un joueur, un match ou une équipe.
+                Pose-moi une question sur un joueur, un match ou une équipe.
               </p>
             </div>
           ) : (
@@ -71,7 +139,12 @@ export function Chat() {
       </div>
 
       {/* Composer */}
-      <ChatComposer onSend={send} disabled={sending} />
+      <ChatComposer
+        onSend={send}
+        disabled={sending}
+        onToggleContext={() => setContextOpen(!contextOpen)}
+        contextOpen={contextOpen}
+      />
     </div>
   );
 }

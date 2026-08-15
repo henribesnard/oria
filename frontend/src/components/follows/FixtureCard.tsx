@@ -44,7 +44,7 @@ export function FixtureCard({ fixture }: Props) {
         )}
         {isFinished && (
           <span className="px-2 py-0.5 rounded-md bg-surface-muted text-text-muted text-[11px] font-bold">
-            Termin&eacute;
+            Terminé
           </span>
         )}
       </div>

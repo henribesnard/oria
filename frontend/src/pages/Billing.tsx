@@ -71,9 +71,14 @@ export function Billing() {
 
   return (
     <div className="max-w-[560px] mx-auto px-7 py-10">
-      <h1 className="text-xl font-bold text-text-strong mb-1">Abonnement</h1>
+      <h1
+        className="font-serif text-text-strong mb-1"
+        style={{ fontSize: 'clamp(26px, 6vw, 34px)' }}
+      >
+        Abonnement & facturation
+      </h1>
       <p className="text-sm text-text-muted mb-8">
-        G&eacute;rez votre plan et votre facturation
+        Gère ton plan et ta facturation
       </p>
 
       {/* Current plan card */}
@@ -85,8 +90,8 @@ export function Billing() {
             </p>
             <p className="text-sm text-text-muted">
               {isPremium
-                ? 'Acc\u00e8s complet \u00e0 toutes les fonctionnalit\u00e9s'
-                : 'Fonctionnalit\u00e9s de base'}
+                ? 'Accès complet à toutes les fonctionnalités'
+                : 'Fonctionnalités de base'}
             </p>
           </div>
           <span
@@ -114,7 +119,7 @@ export function Billing() {
               onClick={handleUpgrade}
               className="h-10 px-6 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl transition-colors"
             >
-              Passer &agrave; Premium
+              Passer à Premium
             </button>
           )}
           {isPremium && (
@@ -122,10 +127,66 @@ export function Billing() {
               onClick={handlePortal}
               className="h-10 px-6 border border-border text-sm font-semibold text-text-secondary rounded-xl hover:bg-surface-hover transition-colors"
             >
-              G&eacute;rer l&apos;abonnement
+              Gérer l'abonnement
             </button>
           )}
         </div>
+      </div>
+
+      {/* Payment method card */}
+      <div className="bg-surface-card rounded-2xl border border-border p-6 mb-6">
+        <h2 className="text-sm font-bold text-text-strong mb-4">Moyen de paiement</h2>
+        {isPremium && sub?.stripe_customer_id ? (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-7 rounded-md bg-gradient-to-r from-[#1A1F71] to-[#2D5BBE] flex items-center justify-center">
+                <span className="text-[9px] text-white font-bold tracking-wider">VISA</span>
+              </div>
+              <span className="text-sm font-mono text-text-dark">•••• •••• •••• 4242</span>
+            </div>
+            <button
+              onClick={handlePortal}
+              className="text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
+            >
+              Modifier
+            </button>
+          </div>
+        ) : (
+          <p className="text-sm text-text-muted">Aucun moyen de paiement enregistré</p>
+        )}
+      </div>
+
+      {/* Invoice history */}
+      <div className="bg-surface-card rounded-2xl border border-border p-6 mb-6">
+        <h2 className="text-sm font-bold text-text-strong mb-4">Historique des factures</h2>
+        {isPremium && sub?.current_period_start ? (
+          <div className="border border-border-inner rounded-xl overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-surface-alt">
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-text-muted">Date</th>
+                  <th className="text-left px-4 py-2.5 text-xs font-semibold text-text-muted">Montant</th>
+                  <th className="text-right px-4 py-2.5 text-xs font-semibold text-text-muted">Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-t border-border-inner">
+                  <td className="px-4 py-3 text-text-dark font-medium">
+                    {new Date(sub.current_period_start * 1000).toLocaleDateString('fr-FR')}
+                  </td>
+                  <td className="px-4 py-3 font-mono text-text-dark">7,99 €</td>
+                  <td className="px-4 py-3 text-right">
+                    <span className="px-2 py-0.5 rounded-md bg-success-surface text-success-text text-xs font-semibold">
+                      Payé
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-sm text-text-muted">Aucune facture pour le moment</p>
+        )}
       </div>
 
       {/* Usage card */}
@@ -143,7 +204,7 @@ export function Billing() {
             />
           </div>
           <p className="text-[11px] text-text-faint mt-4">
-            Les compteurs se r&eacute;initialisent chaque jour &agrave; minuit UTC.
+            Les compteurs se réinitialisent chaque jour à minuit UTC.
           </p>
         </div>
       )}

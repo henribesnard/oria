@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listLeagues, listTeams } from '../api/catalog';
-import type { League, Team } from '../api/catalog';
+import { listLeagues, listTeams, listPlayers } from '../api/catalog';
+import type { League, Team, Player } from '../api/catalog';
 import { follow } from '../api/follows';
 import OriaLogo from '../components/OriaLogo';
 
@@ -9,15 +9,32 @@ interface SelectableLeague extends League {
   selected: boolean;
 }
 
+const TIMEZONES = [
+  'Europe/Paris',
+  'Europe/London',
+  'Europe/Berlin',
+  'Europe/Madrid',
+  'Europe/Rome',
+  'America/New_York',
+  'America/Los_Angeles',
+  'Asia/Tokyo',
+];
+
 export function Onboarding() {
   const navigate = useNavigate();
-  const [search, setSearch] = useState('');
-  const [apiResults, setApiResults] = useState<Team[]>([]);
-  const [apiSelected, setApiSelected] = useState<Team[]>([]);
-  const [searching, setSearching] = useState(false);
+  const [teamSearch, setTeamSearch] = useState('');
+  const [teamResults, setTeamResults] = useState<Team[]>([]);
+  const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
+  const [searchingTeams, setSearchingTeams] = useState(false);
+
+  const [playerSearch, setPlayerSearch] = useState('');
+  const [playerResults, setPlayerResults] = useState<Player[]>([]);
+  const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
+  const [searchingPlayers, setSearchingPlayers] = useState(false);
 
   const [leagues, setLeagues] = useState<SelectableLeague[]>([]);
   const [loadingLeagues, setLoadingLeagues] = useState(true);
+  const [timezone, setTimezone] = useState(() => Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Paris');
 
   /* Load leagues from API on mount */
   useEffect(() => {
@@ -26,7 +43,6 @@ export function Onboarding() {
       try {
         const data = await listLeagues();
         if (cancelled) return;
-        // Filter to major leagues (type=League, not Cup) and take first 10
         const majorLeagues = data
           .filter(l => l.type === 'League' || !l.type)
           .slice(0, 10)
@@ -42,27 +58,51 @@ export function Onboarding() {
     return () => { cancelled = true; };
   }, []);
 
-  const doSearch = useCallback(async () => {
-    if (!search.trim()) return;
-    setSearching(true);
+  const doTeamSearch = useCallback(async () => {
+    if (!teamSearch.trim()) return;
+    setSearchingTeams(true);
     try {
       const teams = await listTeams();
       const filtered = teams.filter(t =>
-        t.name.toLowerCase().includes(search.toLowerCase())
+        t.name.toLowerCase().includes(teamSearch.toLowerCase())
       );
-      setApiResults(filtered);
+      setTeamResults(filtered);
     } catch {
-      setApiResults([]);
+      setTeamResults([]);
     } finally {
-      setSearching(false);
+      setSearchingTeams(false);
     }
-  }, [search]);
+  }, [teamSearch]);
 
-  const toggleApiTeam = (team: Team) => {
-    setApiSelected(prev =>
+  const doPlayerSearch = useCallback(async () => {
+    if (!playerSearch.trim()) return;
+    setSearchingPlayers(true);
+    try {
+      const players = await listPlayers();
+      const filtered = players.filter(p =>
+        p.name.toLowerCase().includes(playerSearch.toLowerCase())
+      );
+      setPlayerResults(filtered);
+    } catch {
+      setPlayerResults([]);
+    } finally {
+      setSearchingPlayers(false);
+    }
+  }, [playerSearch]);
+
+  const toggleTeam = (team: Team) => {
+    setSelectedTeams(prev =>
       prev.some(t => t.id === team.id)
         ? prev.filter(t => t.id !== team.id)
         : [...prev, team]
+    );
+  };
+
+  const togglePlayer = (player: Player) => {
+    setSelectedPlayers(prev =>
+      prev.some(p => p.id === player.id)
+        ? prev.filter(p => p.id !== player.id)
+        : [...prev, player]
     );
   };
 
@@ -80,9 +120,17 @@ export function Onboarding() {
       }
     }
     // Follow selected teams
-    for (const team of apiSelected) {
+    for (const team of selectedTeams) {
       try {
         await follow('team', team.id, team.name, team.logo);
+      } catch {
+        // ignore duplicates
+      }
+    }
+    // Follow selected players
+    for (const player of selectedPlayers) {
+      try {
+        await follow('player', player.id, player.name, player.photo);
       } catch {
         // ignore duplicates
       }
@@ -99,7 +147,7 @@ export function Onboarding() {
             <OriaLogo size={30} />
           </div>
           <h1 className="font-serif font-normal text-[clamp(26px,5vw,34px)] text-center">
-            Bienvenue sur Oria
+            Choisis ce que tu suis
           </h1>
           <p className="text-[15px] text-text-secondary text-center mt-1 max-w-[400px]">
             Sélectionne ce que tu veux suivre. Tu pourras modifier ça plus tard.
@@ -107,11 +155,11 @@ export function Onboarding() {
         </div>
 
         {/* Leagues */}
-        <div className="flex flex-col gap-4 mb-8">
+        <div className="flex flex-col gap-4 mb-6">
           <div className="bg-white border border-border rounded-2xl p-[22px]">
             <h2 className="text-[16px] font-semibold mb-3.5">Ligues</h2>
             {loadingLeagues ? (
-              <p className="text-sm text-text-muted">Chargement des ligues...</p>
+              <p className="text-sm text-text-muted">Chargement des ligues…</p>
             ) : leagues.length === 0 ? (
               <p className="text-sm text-text-muted">Aucune ligue disponible</p>
             ) : (
@@ -147,35 +195,35 @@ export function Onboarding() {
           </div>
         </div>
 
-        {/* API search */}
-        <div className="bg-white border border-border rounded-2xl p-[22px] mb-6">
+        {/* Team search */}
+        <div className="bg-white border border-border rounded-2xl p-[22px] mb-4">
           <h2 className="text-[16px] font-semibold mb-3">Rechercher une équipe</h2>
           <div className="flex gap-2 mb-3">
             <input
               type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && doSearch()}
-              placeholder="Rechercher une équipe..."
+              value={teamSearch}
+              onChange={(e) => setTeamSearch(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && doTeamSearch()}
+              placeholder="Rechercher une équipe…"
               className="flex-1 px-[13px] py-[11px] rounded-[11px] border border-border-light bg-surface-alt text-sm placeholder:text-text-faint focus:outline-none focus:border-primary-soft transition-colors"
             />
             <button
-              onClick={doSearch}
-              disabled={searching}
+              onClick={doTeamSearch}
+              disabled={searchingTeams}
               className="px-4 py-[11px] bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-[11px] transition-colors disabled:opacity-50"
             >
-              {searching ? '...' : 'Chercher'}
+              {searchingTeams ? '…' : 'Chercher'}
             </button>
           </div>
 
-          {apiResults.length > 0 && (
+          {teamResults.length > 0 && (
             <div className="border border-border rounded-[11px] divide-y divide-border-inner max-h-[200px] overflow-y-auto mb-3">
-              {apiResults.map(team => {
-                const isSelected = apiSelected.some(t => t.id === team.id);
+              {teamResults.map(team => {
+                const isSelected = selectedTeams.some(t => t.id === team.id);
                 return (
                   <button
                     key={team.id}
-                    onClick={() => toggleApiTeam(team)}
+                    onClick={() => toggleTeam(team)}
                     className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-left hover:bg-surface-hover transition-colors ${
                       isSelected ? 'bg-purple-surface' : ''
                     }`}
@@ -191,9 +239,9 @@ export function Onboarding() {
             </div>
           )}
 
-          {apiSelected.length > 0 && (
+          {selectedTeams.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {apiSelected.map(team => (
+              {selectedTeams.map(team => (
                 <span
                   key={team.id}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-surface border border-purple-border text-[13px] font-semibold text-primary-hover"
@@ -203,7 +251,7 @@ export function Onboarding() {
                   )}
                   {team.name}
                   <button
-                    onClick={() => toggleApiTeam(team)}
+                    onClick={() => toggleTeam(team)}
                     className="text-primary-soft hover:text-primary w-[18px] h-[18px] rounded-full text-xs hover:bg-purple-border transition-colors"
                   >
                     ✕
@@ -212,6 +260,87 @@ export function Onboarding() {
               ))}
             </div>
           )}
+        </div>
+
+        {/* Player search */}
+        <div className="bg-white border border-border rounded-2xl p-[22px] mb-4">
+          <h2 className="text-[16px] font-semibold mb-3">Rechercher un joueur</h2>
+          <div className="flex gap-2 mb-3">
+            <input
+              type="text"
+              value={playerSearch}
+              onChange={(e) => setPlayerSearch(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && doPlayerSearch()}
+              placeholder="Rechercher un joueur…"
+              className="flex-1 px-[13px] py-[11px] rounded-[11px] border border-border-light bg-surface-alt text-sm placeholder:text-text-faint focus:outline-none focus:border-primary-soft transition-colors"
+            />
+            <button
+              onClick={doPlayerSearch}
+              disabled={searchingPlayers}
+              className="px-4 py-[11px] bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-[11px] transition-colors disabled:opacity-50"
+            >
+              {searchingPlayers ? '…' : 'Chercher'}
+            </button>
+          </div>
+
+          {playerResults.length > 0 && (
+            <div className="border border-border rounded-[11px] divide-y divide-border-inner max-h-[200px] overflow-y-auto mb-3">
+              {playerResults.map(player => {
+                const isSelected = selectedPlayers.some(p => p.id === player.id);
+                return (
+                  <button
+                    key={player.id}
+                    onClick={() => togglePlayer(player)}
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-left hover:bg-surface-hover transition-colors ${
+                      isSelected ? 'bg-purple-surface' : ''
+                    }`}
+                  >
+                    {player.photo && (
+                      <img src={player.photo} alt="" style={{ width: 22, height: 22, objectFit: 'contain', borderRadius: '50%', flexShrink: 0 }} />
+                    )}
+                    <span className="text-sm font-semibold text-text-strong flex-1">{player.name}</span>
+                    <span className="text-primary text-sm font-bold">{isSelected ? '✓' : '＋'}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {selectedPlayers.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {selectedPlayers.map(player => (
+                <span
+                  key={player.id}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-surface border border-purple-border text-[13px] font-semibold text-primary-hover"
+                >
+                  {player.photo && (
+                    <img src={player.photo} alt="" style={{ width: 16, height: 16, objectFit: 'contain', borderRadius: '50%' }} />
+                  )}
+                  {player.name}
+                  <button
+                    onClick={() => togglePlayer(player)}
+                    className="text-primary-soft hover:text-primary w-[18px] h-[18px] rounded-full text-xs hover:bg-purple-border transition-colors"
+                  >
+                    ✕
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Timezone */}
+        <div className="bg-white border border-border rounded-2xl p-[22px] mb-6">
+          <h2 className="text-[16px] font-semibold mb-3">Fuseau horaire</h2>
+          <select
+            value={timezone}
+            onChange={(e) => setTimezone(e.target.value)}
+            className="w-full px-[13px] py-[11px] rounded-[11px] border border-border-light bg-surface-alt text-sm text-text focus:outline-none focus:border-primary-soft transition-colors cursor-pointer"
+          >
+            {TIMEZONES.map((tz) => (
+              <option key={tz} value={tz}>{tz.replace('_', ' ')}</option>
+            ))}
+          </select>
         </div>
 
         {/* Actions */}
@@ -226,7 +355,7 @@ export function Onboarding() {
             onClick={finishOnboarding}
             className="px-7 py-3 bg-primary hover:bg-primary-hover text-white text-[15px] font-bold rounded-[11px] transition-colors"
           >
-            C'est parti →
+            Terminer et ouvrir Oria
           </button>
         </div>
       </div>

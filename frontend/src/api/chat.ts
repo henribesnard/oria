@@ -36,6 +36,7 @@ export interface SSEEvent {
   attachments?: Attachment[];
   suggested_actions?: SuggestedAction[];
   degraded?: boolean;
+  freshness?: string | null;
 }
 
 /** Blocking chat — single request/response */

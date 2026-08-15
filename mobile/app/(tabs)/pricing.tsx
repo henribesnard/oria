@@ -10,27 +10,27 @@ import { fonts } from '@/src/theme/typography';
 
 const FREE_FEATURES = [
   'Questions journalières (quota Free)',
-  'R\u00e9sultats, classements, calendrier',
-  'S\u00e9lecteur de contexte',
-  'Fra\u00eecheur des donn\u00e9es affich\u00e9e',
+  'Résultats, classements, calendrier',
+  'Sélecteur de contexte',
+  'Fraîcheur des données affichée',
 ];
 
 const PREMIUM_FEATURES = [
-  'Questions illimit\u00e9es',
+  'Questions illimitées',
   'Scores en direct',
   'Compositions probables',
-  'Cotes, tendances, analyse avanc\u00e9e',
-  'Alertes personnalis\u00e9es',
+  'Cotes, tendances, analyse avancée',
+  'Alertes personnalisées',
 ];
 
 const FAQ = [
   {
-    q: 'Puis-je annuler \u00e0 tout moment ?',
-    a: 'Oui, tu peux annuler ton abonnement Premium \u00e0 tout moment depuis ton profil. Tu conserveras l\u2019acc\u00e8s jusqu\u2019\u00e0 la fin de la p\u00e9riode de facturation.',
+    q: 'Puis-je annuler à tout moment ?',
+    a: 'Oui, tu peux annuler ton abonnement Premium à tout moment depuis ton profil. Tu conserveras l\'accès jusqu\'à la fin de la période de facturation.',
   },
   {
-    q: 'Les donn\u00e9es sont-elles \u00e0 jour ?',
-    a: 'Oria utilise des sources actualis\u00e9es en continu. La fra\u00eecheur est affich\u00e9e sur chaque r\u00e9ponse.',
+    q: 'Les données sont-elles à jour ?',
+    a: 'Oria utilise des sources actualisées en continu. La fraîcheur est affichée sur chaque réponse.',
   },
   {
     q: 'Quelles ligues sont couvertes ?',
@@ -38,7 +38,7 @@ const FAQ = [
   },
   {
     q: 'Comment fonctionne le palier Free ?',
-    a: 'Le palier Free te donne acc\u00e8s \u00e0 un quota journalier de questions avec les r\u00e9sultats, classements et le calendrier.',
+    a: 'Le palier Free te donne accès à un quota journalier de questions avec les résultats, classements et le calendrier.',
   },
 ];
 
@@ -71,7 +71,7 @@ export default function PricingScreen() {
   useEffect(() => { loadBilling(); }, [loadBilling]);
 
   const handleCancel = () => {
-    Alert.alert('Annuler l\u2019abonnement', 'Tu conserveras l\u2019acc\u00e8s jusqu\u2019\u00e0 la fin de la p\u00e9riode.', [
+    Alert.alert('Annuler l\'abonnement', 'Tu conserveras l\'accès jusqu\'à la fin de la période.', [
       { text: 'Non', style: 'cancel' },
       { text: 'Annuler', style: 'destructive', onPress: async () => {
         try { await cancelSubscription(); loadBilling(); } catch { /* ignore */ }
@@ -96,7 +96,7 @@ export default function PricingScreen() {
         <View style={styles.tierCard}>
           <Text style={styles.tierName}>Free</Text>
           <View style={styles.priceRow}>
-            <Text style={styles.price}>0\u20AC</Text>
+            <Text style={styles.price}>{"0€"}</Text>
             <Text style={styles.priceUnit}> / mois</Text>
           </View>
           <View style={styles.featureList}>
@@ -115,7 +115,7 @@ export default function PricingScreen() {
         {/* Premium tier */}
         <View style={styles.premiumWrapper}>
           <View style={styles.recommendedBadge}>
-            <Text style={styles.recommendedText}>Recommand\u00e9</Text>
+            <Text style={styles.recommendedText}>Recommandé</Text>
           </View>
           <LinearGradient
             colors={['#5B4FD6', '#7A5CE0']}
@@ -125,7 +125,7 @@ export default function PricingScreen() {
           >
             <Text style={styles.premiumName}>Premium</Text>
             <View style={styles.priceRow}>
-              <Text style={styles.premiumPrice}>7,99\u20AC</Text>
+              <Text style={styles.premiumPrice}>{"7,99€"}</Text>
               <Text style={styles.premiumPriceUnit}> / mois</Text>
             </View>
             <View style={styles.featureList}>
@@ -150,7 +150,7 @@ export default function PricingScreen() {
             <Text style={styles.billingSectionTitle}>Moyen de paiement</Text>
             <View style={styles.paymentCard}>
               <Text style={styles.paymentBrand}>{subscription.payment_method.brand.toUpperCase()}</Text>
-              <Text style={styles.paymentLast4}>{'\u2022\u2022\u2022\u2022 '}{subscription.payment_method.last4}</Text>
+              <Text style={styles.paymentLast4}>{'•••• '}{subscription.payment_method.last4}</Text>
             </View>
             {subscription.tier === 'premium' && (
               <Pressable onPress={handleCancel} style={styles.cancelBtn}>
@@ -167,10 +167,10 @@ export default function PricingScreen() {
               {invoices.map((inv, i) => (
                 <View key={inv.id} style={[styles.invoiceRow, i > 0 && styles.invoiceRowBorder]}>
                   <Text style={styles.invoiceDate}>{new Date(inv.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}</Text>
-                  <Text style={styles.invoiceAmount}>{inv.amount} {inv.currency === 'eur' ? '\u20AC' : inv.currency}</Text>
+                  <Text style={styles.invoiceAmount}>{inv.amount} {inv.currency === 'eur' ? '€' : inv.currency}</Text>
                   <View style={[styles.invoiceStatusBadge, { backgroundColor: inv.status === 'paid' ? colors.successLight : colors.warningLight }]}>
                     <Text style={[styles.invoiceStatusText, { color: inv.status === 'paid' ? colors.success : colors.warning }]}>
-                      {inv.status === 'paid' ? 'Pay\u00e9' : inv.status}
+                      {inv.status === 'paid' ? 'Payé' : inv.status}
                     </Text>
                   </View>
                 </View>
@@ -180,7 +180,7 @@ export default function PricingScreen() {
         )}
 
         {/* FAQ */}
-        <Text style={styles.faqTitle}>Questions fr\u00e9quentes</Text>
+        <Text style={styles.faqTitle}>Questions fréquentes</Text>
         {FAQ.map((item, i) => (
           <View key={i} style={styles.faqCard}>
             <Text style={styles.faqQuestion}>{item.q}</Text>

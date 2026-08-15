@@ -28,7 +28,7 @@ export function ForgotPassword() {
     <div className="flex items-center justify-center min-h-[calc(100dvh-56px)] px-6">
       <div className="w-full max-w-[400px] bg-surface-card rounded-2xl border border-border p-8">
         <h2 className="font-serif font-normal text-xl text-text-strong mb-1">
-          Mot de passe oubli&eacute;
+          Mot de passe oublié
         </h2>
         <p className="text-sm text-text-muted mb-6">
           Saisis ton email pour recevoir un lien.
@@ -37,7 +37,7 @@ export function ForgotPassword() {
         {submitted ? (
           <div className="mb-4 p-4 rounded-xl bg-purple-surface border border-purple-border text-sm text-text-secondary">
             Si un compte existe pour <strong className="text-text-strong">{email}</strong>,
-            tu recevras un lien de r&eacute;initialisation par email.
+            tu recevras un lien de réinitialisation par email.
           </div>
         ) : (
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -48,7 +48,7 @@ export function ForgotPassword() {
               <input
                 id="email"
                 type="email"
-                placeholder="vous@exemple.com"
+                placeholder="toi@exemple.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -70,7 +70,7 @@ export function ForgotPassword() {
 
         <p className="text-sm text-text-muted text-center mt-6">
           <Link to="/login" className="text-primary font-semibold hover:underline">
-            Retour &agrave; la connexion
+            Retour à la connexion
           </Link>
         </p>
       </div>

@@ -7,21 +7,21 @@ import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 
 const features: [string, string][] = [
-  ['Donn\u00e9es fra\u00eeches, fra\u00eecheur affich\u00e9e', '#3B9B6E'],
-  ['Scores en direct sur tes \u00e9quipes', '#E0782A'],
-  ['Contexte cascadant, jamais impos\u00e9', '#5B4FD6'],
+  ['Données fraîches, fraîcheur affichée', '#3B9B6E'],
+  ['Scores en direct sur tes équipes', '#E0782A'],
+  ['Contexte cascadant, jamais imposé', '#5B4FD6'],
 ];
 
 const STATS = [
   { value: '8', label: 'ligues' },
   { value: '2400+', label: 'matchs suivis' },
-  { value: '2h', label: 'fra\u00eecheur moy.' },
+  { value: '2h', label: 'fraîcheur moy.' },
 ];
 
 const SHOWCASE = [
-  { title: 'S\u00e9lecteur de contexte', desc: 'Choisis ligue, \u00e9quipe ou joueur pour cadrer ta question.', color: colors.primary },
-  { title: 'Fra\u00eecheur des donn\u00e9es', desc: 'Chaque r\u00e9ponse affiche quand les donn\u00e9es ont \u00e9t\u00e9 mises \u00e0 jour.', color: colors.success },
-  { title: 'Cotes & tendances', desc: 'Analyse avanc\u00e9e avec les cotes et les tendances de forme.', color: colors.warning },
+  { title: 'Sélecteur de contexte', desc: 'Choisis ligue, équipe ou joueur pour cadrer ta question.', color: colors.primary },
+  { title: 'Fraîcheur des données', desc: 'Chaque réponse affiche quand les données ont été mises à jour.', color: colors.success },
+  { title: 'Cotes & tendances', desc: 'Analyse avancée avec les cotes et les tendances de forme.', color: colors.warning },
 ];
 
 const LEAGUES = [
@@ -43,8 +43,8 @@ export default function Landing() {
           </View>
           <Text style={styles.headline}>L'oracle du sport, en langage naturel.</Text>
           <Text style={styles.subtitle}>
-            R\u00e9sultats, forme, compos, cotes et tendances \u2014 Oria r\u00e9pond \u00e0 partir de donn\u00e9es \u00e0 jour.
-            Cadre ta question par ligue, match, \u00e9quipe ou joueur.
+            Résultats, forme, compos, cotes et tendances — Oria répond à partir de données à jour.
+            Cadre ta question par ligue, match, équipe ou joueur.
           </Text>
           <View style={styles.features}>
             {features.map(([text, color], i) => (
@@ -93,13 +93,13 @@ export default function Landing() {
 
         {/* CTA */}
         <View style={styles.ctaSection}>
-          <Text style={styles.ctaHeadline}>Pr\u00eat \u00e0 interroger l'oracle ?</Text>
+          <Text style={styles.ctaHeadline}>{"Prêt à interroger l'oracle ?"}</Text>
         </View>
 
         {/* CTAs */}
         <View style={[styles.ctas, { paddingBottom: insets.bottom + 16 }]}>
-          <Button label="Cr\u00e9er un compte" onPress={() => router.push('/(auth)/register')} />
-          <Button label="J'ai d\u00e9j\u00e0 un compte" variant="secondary" onPress={() => router.push('/(auth)/login')} />
+          <Button label="Créer un compte" onPress={() => router.push('/(auth)/register')} />
+          <Button label="J'ai déjà un compte" variant="secondary" onPress={() => router.push('/(auth)/login')} />
           <Button label="Explorer sans compte" variant="ghost" onPress={() => router.replace('/(tabs)')} />
         </View>
       </ScrollView>

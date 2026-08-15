@@ -10,9 +10,9 @@ import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 
 const LOCALES = [
-  { label: 'Fran\u00e7ais', value: 'fr' },
+  { label: 'Français', value: 'fr' },
   { label: 'English', value: 'en' },
-  { label: 'Espa\u00f1ol', value: 'es' },
+  { label: 'Español', value: 'es' },
 ];
 
 const TIMEZONES = ['Europe/Paris', 'Europe/London', 'America/New_York'];
@@ -39,10 +39,10 @@ export default function EditProfileScreen() {
     setSaving(true);
     try {
       await updateProfile({ display_name: name, locale, timezone });
-      Alert.alert('Profil mis \u00e0 jour', 'Tes modifications ont \u00e9t\u00e9 enregistr\u00e9es.');
+      Alert.alert('Profil mis à jour', 'Tes modifications ont été enregistrées.');
       router.back();
     } catch {
-      Alert.alert('Erreur', 'Impossible de mettre \u00e0 jour le profil.');
+      Alert.alert('Erreur', 'Impossible de mettre à jour le profil.');
     }
     setSaving(false);
   };
@@ -53,12 +53,12 @@ export default function EditProfileScreen() {
       return;
     }
     if (newPw.length < 8) {
-      Alert.alert('Erreur', 'Le mot de passe doit contenir au moins 8 caract\u00e8res.');
+      Alert.alert('Erreur', 'Le mot de passe doit contenir au moins 8 caractères.');
       return;
     }
     try {
       await changePassword({ current_password: currentPw, new_password: newPw });
-      Alert.alert('Mot de passe modifi\u00e9', 'Ton mot de passe a \u00e9t\u00e9 chang\u00e9.');
+      Alert.alert('Mot de passe modifié', 'Ton mot de passe a été changé.');
       setShowPassword(false);
       setCurrentPw('');
       setNewPw('');
@@ -117,7 +117,7 @@ export default function EditProfileScreen() {
 
         {/* Save */}
         <Pressable onPress={handleSave} disabled={saving} style={[styles.saveBtn, saving && { opacity: 0.5 }]}>
-          <Text style={styles.saveBtnText}>{saving ? 'Enregistrement\u2026' : 'Enregistrer'}</Text>
+          <Text style={styles.saveBtnText}>{saving ? 'Enregistrement…' : 'Enregistrer'}</Text>
         </Pressable>
 
         {/* Password section */}
@@ -272,10 +272,6 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 24,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.35,
-    shadowRadius: 20,
     elevation: 6,
   },
   saveBtnText: {

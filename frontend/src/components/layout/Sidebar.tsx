@@ -7,7 +7,7 @@ const navItems = [
   { to: '/app/follows', label: 'Mes suivis' },
   { to: '/app/notifications', label: 'Notifications' },
   { to: '/app/profile', label: 'Profil' },
-  { to: '/app/billing', label: 'Abonnement' },
+  { to: '/app/billing', label: 'Abonnement & facturation' },
 ];
 
 export function Sidebar() {

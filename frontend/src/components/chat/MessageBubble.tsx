@@ -10,10 +10,8 @@ import OriaLogo from '../OriaLogo';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function normalizeFixture(raw: Record<string, any>): Fixture {
-  // Already in flat format (from catalog endpoint)
   if (typeof raw.home_team === 'string') return raw as unknown as Fixture;
 
-  // Nested API Football format
   const home = raw.home ?? raw.teams?.home ?? {};
   const away = raw.away ?? raw.teams?.away ?? {};
   const league = raw.league ?? {};
@@ -50,22 +48,60 @@ function normalizeFixture(raw: Record<string, any>): Fixture {
 function extractFixtures(att: Attachment): Fixture[] {
   const data = att.data as Record<string, unknown>;
 
-  // { fixtures: [...] }
   if (Array.isArray(data.fixtures)) {
     return (data.fixtures as Record<string, unknown>[]).map(normalizeFixture);
   }
 
-  // { fixture: {...} }  (single)
   if (data.fixture && typeof data.fixture === 'object' && !Array.isArray(data.fixture)) {
     return [normalizeFixture(data.fixture as Record<string, unknown>)];
   }
 
-  // Direct fixture object (has id, date, etc.)
   if (data.id || data.home_team || data.home) {
     return [normalizeFixture(data)];
   }
 
   return [];
+}
+
+/* ------------------------------------------------------------------ */
+/*  Context chips for user messages                                    */
+/* ------------------------------------------------------------------ */
+
+function ContextChips({ context }: { context: NonNullable<Message['contextSnapshot']> }) {
+  const chips: string[] = [];
+  if (context.league_id) chips.push(`Ligue #${context.league_id}`);
+  if (context.team_id) chips.push(`\u00c9quipe #${context.team_id}`);
+  if (context.player_id) chips.push(`Joueur #${context.player_id}`);
+  if (context.fixture_id) chips.push(`Match #${context.fixture_id}`);
+  if (context.country) chips.push(context.country);
+
+  if (chips.length === 0) return null;
+
+  return (
+    <div className="flex flex-wrap gap-1.5 justify-end mb-1.5">
+      {chips.map((chip) => (
+        <span
+          key={chip}
+          className="px-2.5 py-1 rounded-full bg-purple-surface border border-purple-border text-[11px] font-semibold text-primary-hover"
+        >
+          {chip}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Freshness indicator                                                */
+/* ------------------------------------------------------------------ */
+
+function FreshnessIndicator({ freshness }: { freshness: string }) {
+  return (
+    <div className="flex items-center gap-1.5 mt-1.5">
+      <span className="w-[6px] h-[6px] rounded-full bg-success shrink-0" />
+      <span className="text-[11px] font-medium text-success-text">{freshness}</span>
+    </div>
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -86,7 +122,6 @@ function AttachmentBlock({ att }: { att: Attachment }) {
     }
   }
 
-  // Fallback for other kinds or unparseable data
   return (
     <div className="bg-surface-card border border-border rounded-xl p-3 text-xs text-text-secondary">
       <span className="inline-block px-2 py-0.5 rounded-md bg-purple-surface text-primary text-[11px] font-semibold mb-1">
@@ -121,6 +156,11 @@ export function MessageBubble({ message, onAction }: Props) {
           </div>
         )}
         <div>
+          {/* Context chips above user messages */}
+          {isUser && message.contextSnapshot && (
+            <ContextChips context={message.contextSnapshot} />
+          )}
+
           <div
             className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
               isUser
@@ -129,13 +169,21 @@ export function MessageBubble({ message, onAction }: Props) {
             } ${message.degraded ? 'opacity-70' : ''}`}
           >
             {message.text || (message.streaming && (
-              <span className="inline-flex gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary-muted animate-[oria-blink_1.4s_infinite_0ms]" />
-                <span className="w-1.5 h-1.5 rounded-full bg-primary-muted animate-[oria-blink_1.4s_infinite_200ms]" />
-                <span className="w-1.5 h-1.5 rounded-full bg-primary-muted animate-[oria-blink_1.4s_infinite_400ms]" />
-              </span>
+              <div className="flex items-center gap-3">
+                <span className="inline-flex gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-warning animate-[oria-blink_1.4s_infinite_0ms]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-warning animate-[oria-blink_1.4s_infinite_200ms]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-warning animate-[oria-blink_1.4s_infinite_400ms]" />
+                </span>
+                <span className="text-xs text-text-muted">Oria consulte les données…</span>
+              </div>
             ))}
           </div>
+
+          {/* Freshness indicator */}
+          {!isUser && message.freshness && !message.streaming && (
+            <FreshnessIndicator freshness={message.freshness} />
+          )}
 
           {/* Attachments */}
           {message.attachments && message.attachments.length > 0 && (

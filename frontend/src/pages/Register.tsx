@@ -28,7 +28,7 @@ export function Register() {
   return (
     <div className="flex items-center justify-center min-h-[calc(100dvh-56px)] px-6">
       <div className="w-full max-w-[440px] bg-surface-card rounded-2xl border border-border-light p-8">
-        <h1 className="text-xl font-bold font-serif text-text-strong mb-1">Cr&eacute;er ton compte</h1>
+        <h1 className="text-xl font-bold font-serif text-text-strong mb-1">Créer ton compte</h1>
         <p className="text-sm text-text-secondary mb-6">
           Gratuit, sans carte bancaire.
         </p>
@@ -80,7 +80,7 @@ export function Register() {
             <input
               id="display_name"
               type="text"
-              placeholder="Votre nom"
+              placeholder="Ton nom"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               required
@@ -94,7 +94,7 @@ export function Register() {
             <input
               id="email"
               type="email"
-              placeholder="vous@exemple.com"
+              placeholder="toi@exemple.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -108,7 +108,7 @@ export function Register() {
             <input
               id="password"
               type="password"
-              placeholder="Choisissez un mot de passe"
+              placeholder="Choisis un mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -120,12 +120,16 @@ export function Register() {
             disabled={submitting}
             className="h-[44px] mt-2 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-[11px] transition-colors disabled:opacity-50"
           >
-            {submitting ? 'Cr\u00e9ation...' : 'Cr\u00e9er mon compte'}
+            {submitting ? 'Création…' : 'Créer mon compte'}
           </button>
         </form>
 
-        <p className="text-sm text-text-secondary text-center mt-6">
-          D&eacute;j&agrave; un compte ?{' '}
+        <p className="text-xs text-text-muted text-center mt-3">
+          Un email de validation te sera envoyé.
+        </p>
+
+        <p className="text-sm text-text-secondary text-center mt-4">
+          Déjà un compte ?{' '}
           <Link to="/login" className="text-primary font-semibold hover:underline">
             Se connecter
           </Link>

@@ -28,11 +28,11 @@ export function Notifications() {
         <div>
           <h1 className="text-xl font-bold text-text-strong mb-1">Notifications</h1>
           <p className="text-sm text-text-muted">
-            Vos alertes et mises &agrave; jour
+            Vos alertes et mises à jour
             {connected && (
               <span className="inline-flex items-center gap-1 ml-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-                <span className="text-xs text-success-text">connect&eacute;</span>
+                <span className="text-xs text-success-text">connecté</span>
               </span>
             )}
           </p>
@@ -64,7 +64,7 @@ export function Notifications() {
           </div>
           <p className="text-sm font-semibold text-text-dark mb-1">Aucune notification</p>
           <p className="text-sm text-text-muted max-w-[280px]">
-            Les alertes de vos joueurs et &eacute;quipes suivis appara&icirc;tront ici.
+            Les alertes de vos joueurs et équipes suivis apparaîtront ici.
           </p>
         </div>
       ) : (

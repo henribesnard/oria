@@ -12,6 +12,9 @@ export interface Message {
   suggested_actions?: SuggestedAction[];
   degraded?: boolean;
   streaming?: boolean;
+  freshness?: string | null;
+  /** Snapshot of context at the time this user message was sent */
+  contextSnapshot?: ChatContext;
 }
 
 export interface FixtureInfo {
@@ -60,6 +63,7 @@ export function useChat() {
       id: crypto.randomUUID(),
       role: 'user',
       text: text.trim(),
+      contextSnapshot: Object.keys(context).length > 0 ? { ...context } : undefined,
     };
 
     const assistantId = crypto.randomUUID();
@@ -96,6 +100,7 @@ export function useChat() {
                   attachments: event.attachments,
                   suggested_actions: event.suggested_actions,
                   degraded: event.degraded,
+                  freshness: event.freshness,
                   streaming: false,
                 }
               : m,

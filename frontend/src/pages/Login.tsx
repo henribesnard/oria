@@ -29,7 +29,7 @@ export function Login() {
       <div className="w-full max-w-[440px] bg-surface-card rounded-2xl border border-border-light p-8">
         <h1 className="text-xl font-bold font-serif text-text-strong mb-1">Bon retour</h1>
         <p className="text-sm text-text-secondary mb-6">
-          Reprends l&agrave; o&ugrave; tu t&rsquo;es arr&ecirc;t&eacute;.
+          Reprends là où tu t'es arrêté.
         </p>
 
         {error && (
@@ -79,7 +79,7 @@ export function Login() {
             <input
               id="email"
               type="email"
-              placeholder="vous@exemple.com"
+              placeholder="toi@exemple.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -93,7 +93,7 @@ export function Login() {
             <input
               id="password"
               type="password"
-              placeholder="Votre mot de passe"
+              placeholder="Ton mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -103,7 +103,7 @@ export function Login() {
               to="/forgot-password"
               className="text-xs text-primary font-semibold hover:underline self-end mt-0.5"
             >
-              Mot de passe oubli&eacute; ?
+              Mot de passe oublié ?
             </Link>
           </div>
           <button
@@ -118,7 +118,7 @@ export function Login() {
         <p className="text-sm text-text-secondary text-center mt-6">
           Pas de compte ?{' '}
           <Link to="/register" className="text-primary font-semibold hover:underline">
-            Cr&eacute;er un compte
+            Créer un compte
           </Link>
         </p>
       </div>

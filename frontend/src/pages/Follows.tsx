@@ -30,7 +30,7 @@ export function Follows() {
 
   const sections = [
     { key: 'league', title: 'Ligues', items: leagues },
-    { key: 'team', title: '\u00c9quipes', items: teams },
+    { key: 'team', title: 'Équipes', items: teams },
     { key: 'player', title: 'Joueurs', items: players },
   ];
 
@@ -43,7 +43,7 @@ export function Follows() {
         Mes suivis
       </h1>
       <p className="text-sm text-text-muted mb-8">
-        Personnalise tes r&eacute;ponses et tes alertes.
+        Personnalise tes réponses et tes alertes.
       </p>
 
       {loading ? (
@@ -57,7 +57,7 @@ export function Follows() {
           </div>
           <p className="text-sm font-semibold text-text-dark mb-1">Aucun suivi</p>
           <p className="text-sm text-text-muted max-w-[280px]">
-            Demandez &agrave; Oria de suivre un joueur ou une &eacute;quipe pour recevoir des mises &agrave; jour.
+            Demande à Oria de suivre un joueur ou une équipe pour recevoir des mises à jour.
           </p>
         </div>
       ) : (
@@ -79,14 +79,21 @@ export function Follows() {
 
               {/* Follow chips */}
               {section.items.length === 0 ? (
-                <p className="text-sm text-text-muted">Aucun suivi dans cette cat&eacute;gorie.</p>
+                <p className="text-sm text-text-muted">Aucun suivi dans cette catégorie.</p>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {section.items.map(f => (
                     <span
                       key={`${f.entity_type}-${f.entity_id}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-surface border border-purple-border text-primary-hover text-sm font-medium rounded-full"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-surface border border-purple-border text-primary-hover text-sm font-semibold rounded-full"
                     >
+                      {f.logo_url && (
+                        <img
+                          src={f.logo_url}
+                          alt=""
+                          className="w-4 h-4 object-contain shrink-0"
+                        />
+                      )}
                       {f.entity_name}
                       <button
                         onClick={() => handleUnfollow(f.entity_type, f.entity_id)}
