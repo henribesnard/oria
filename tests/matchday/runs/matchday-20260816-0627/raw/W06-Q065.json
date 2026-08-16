@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W06-Q065",
+  "ts_utc": "2026-08-16T06:37:01.463+00:00",
+  "wave": "W06",
+  "persona": "guest_live",
+  "persona_tier": "guest",
+  "category": "A16",
+  "question": "infos Everton",
+  "context": {
+    "fixture_id": 1557369,
+    "league_id": 39,
+    "team_id": 45
+  },
+  "fixture_ref": 1557369,
+  "response_text": "Voici les informations sur **Everton** 🔵 (Premier League 2024-2025)\n\n**Fiche du club :**\n- 📛 **Nom** : Everton (code : EVE)\n- 🌍 **Pays** : Angleterre\n- 🏟️ **Stade** : Hill Dickinson Stadium, Liverpool (Merseyside) — 52 888 places\n- 🗓️ **Fondé** : 1878\n\n**Bilan saison (38 matchs) :**\n- 📊 **11V / 15N / 12D**\n- ⚽ **42 buts marqués** (1,1/match) — 44 encaissés (1,2/match)\n- 🧤 **12 clean sheets** — mais **15 matchs sans marquer**\n- 📈 **Meilleure série** : 3 victoires consécutives\n- 🏠 **Domicile** : 5V / 9N / 5D | ✈️ **Extérieur** : 6V / 6N / 7D\n\n**Forme récente** : irrégulière — beaucoup de nuls récemment (DDDL, DWDW, etc.)\n\n**Style de jeu :**\n- Formation principale : **4-2-3-1** (34 fois sur 38), sinon 4-3-3\n- ⚽ **Efficacité offensive limitée** : seulement 4 matchs sur 38 avec plus de 2,5 buts marqués côté Everton\n- 📊 Buts marqués surtout entre la **31e et la 60e minute** (~41%)\n\n**Détail intéressant :**\n- 2 penalties obtenus, **2 marqués** (100% de réussite)\n- Défense qui craque plutôt en fin de match : 21% des buts encaissés entre la 76e et 90e\n\nDonnées de la saison 2024-2025 (Premier League). Tu veux que je regarde les **stats du match** (fixture 1557369) ou les **compositions** ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 5763.0,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

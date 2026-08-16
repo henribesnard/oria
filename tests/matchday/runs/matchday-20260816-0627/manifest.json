@@ -1,0 +1,21 @@
+{
+  "run_id": "matchday-20260816-0627",
+  "created_utc": "2026-08-16T06:43:18.986+00:00",
+  "mode": "live",
+  "total_exchanges": 104,
+  "matches_count": 8,
+  "waves_count": 9,
+  "api_calls_estimate": 208,
+  "structure": {
+    "plan": "plan.json",
+    "personas": "personas.json",
+    "oracle": "oracle/",
+    "raw_exchanges": "raw/",
+    "metrics": "metrics/",
+    "logs": "logs/",
+    "anomalies": "anomalies/",
+    "judging": "judging/ (vide, rempli par Cowork)"
+  },
+  "format_version": "1.0",
+  "notes": "Chaque fichier dans raw/ est un echange auto-suffisant. Il contient la question, la reponse ORIA, le contexte, l'horodatage UTC, le persona, la categorie, et la reference au match. Les donnees oracle dans oracle/fixtures.json fournissent la verite terrain pour appariement."
+}

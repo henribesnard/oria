@@ -1,0 +1,322 @@
+{
+  "exchange_id": "W03-Q020",
+  "ts_utc": "2026-08-15T20:55:00.552+00:00",
+  "wave": "W03",
+  "persona": "guest_adversarial",
+  "persona_tier": "guest",
+  "category": "A8",
+  "question": "forme de Alianza FC",
+  "context": {
+    "fixture_id": 1548357,
+    "league_id": 1028,
+    "team_id": 2881
+  },
+  "fixture_ref": 1548357,
+  "response_text": "Voici la forme récente.",
+  "attachments": [
+    {
+      "kind": "table",
+      "data": {
+        "form": [
+          {
+            "id": 1548357,
+            "referee": "J. Valladares",
+            "date": "2026-08-14T00:00:00+00:00",
+            "timestamp": 1786665600,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 4
+            },
+            "venue": {
+              "id": null,
+              "name": "Estadio Javier Cruz",
+              "city": "Panama City"
+            },
+            "league": {
+              "id": 1028,
+              "name": "CONCACAF Central American Cup",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/1028.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Group Stage"
+            },
+            "home": {
+              "id": 2881,
+              "name": "Alianza FC",
+              "logo": "https://media.api-sports.io/football/teams/2881.png",
+              "winner": true
+            },
+            "away": {
+              "id": 20788,
+              "name": "UMECIT",
+              "logo": "https://media.api-sports.io/football/teams/20788.png",
+              "winner": false
+            },
+            "goals_home": 1,
+            "goals_away": 0,
+            "score": {
+              "halftime": {
+                "home": 1,
+                "away": 0
+              },
+              "fulltime": {
+                "home": 1,
+                "away": 0
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1583733,
+            "referee": null,
+            "date": "2026-08-09T23:15:00+00:00",
+            "timestamp": 1786317300,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 4
+            },
+            "venue": {
+              "id": null,
+              "name": "Estadio Los Andes II",
+              "city": "San Miguelito"
+            },
+            "league": {
+              "id": 304,
+              "name": "Liga Panameña de Fútbol",
+              "country": "Panama",
+              "logo": "https://media.api-sports.io/football/leagues/304.png",
+              "flag": "https://media.api-sports.io/flags/pa.svg",
+              "season": 2026,
+              "round": "Apertura - 3"
+            },
+            "home": {
+              "id": 2889,
+              "name": "Sporting San Miguelito",
+              "logo": "https://media.api-sports.io/football/teams/2889.png",
+              "winner": null
+            },
+            "away": {
+              "id": 2881,
+              "name": "Alianza FC",
+              "logo": "https://media.api-sports.io/football/teams/2881.png",
+              "winner": null
+            },
+            "goals_home": 0,
+            "goals_away": 0,
+            "score": {
+              "halftime": {
+                "home": 0,
+                "away": 0
+              },
+              "fulltime": {
+                "home": 0,
+                "away": 0
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1548349,
+            "referee": "D. Gonzalez",
+            "date": "2026-08-06T02:00:00+00:00",
+            "timestamp": 1785981600,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 6
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": null
+            },
+            "league": {
+              "id": 1028,
+              "name": "CONCACAF Central American Cup",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/1028.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Group Stage"
+            },
+            "home": {
+              "id": 816,
+              "name": "Deportivo Saprissa",
+              "logo": "https://media.api-sports.io/football/teams/816.png",
+              "winner": true
+            },
+            "away": {
+              "id": 2881,
+              "name": "Alianza FC",
+              "logo": "https://media.api-sports.io/football/teams/2881.png",
+              "winner": false
+            },
+            "goals_home": 2,
+            "goals_away": 1,
+            "score": {
+              "halftime": {
+                "home": 1,
+                "away": 0
+              },
+              "fulltime": {
+                "home": 2,
+                "away": 1
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1583723,
+            "referee": null,
+            "date": "2026-08-01T01:30:00+00:00",
+            "timestamp": 1785547800,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 4
+            },
+            "venue": {
+              "id": null,
+              "name": "Estadio Armando Dely Valdes",
+              "city": null
+            },
+            "league": {
+              "id": 304,
+              "name": "Liga Panameña de Fútbol",
+              "country": "Panama",
+              "logo": "https://media.api-sports.io/football/leagues/304.png",
+              "flag": "https://media.api-sports.io/flags/pa.svg",
+              "season": 2026,
+              "round": "Apertura - 2"
+            },
+            "home": {
+              "id": 2882,
+              "name": "CD Arabe Unido",
+              "logo": "https://media.api-sports.io/football/teams/2882.png",
+              "winner": false
+            },
+            "away": {
+              "id": 2881,
+              "name": "Alianza FC",
+              "logo": "https://media.api-sports.io/football/teams/2881.png",
+              "winner": true
+            },
+            "goals_home": 0,
+            "goals_away": 1,
+            "score": {
+              "halftime": {
+                "home": 0,
+                "away": 1
+              },
+              "fulltime": {
+                "home": 0,
+                "away": 1
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1583718,
+            "referee": null,
+            "date": "2026-07-25T23:15:00+00:00",
+            "timestamp": 1785021300,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 2
+            },
+            "venue": {
+              "id": null,
+              "name": "Estadio Javier Cruz",
+              "city": "Panama City"
+            },
+            "league": {
+              "id": 304,
+              "name": "Liga Panameña de Fútbol",
+              "country": "Panama",
+              "logo": "https://media.api-sports.io/football/leagues/304.png",
+              "flag": "https://media.api-sports.io/flags/pa.svg",
+              "season": 2026,
+              "round": "Apertura - 1"
+            },
+            "home": {
+              "id": 2881,
+              "name": "Alianza FC",
+              "logo": "https://media.api-sports.io/football/teams/2881.png",
+              "winner": null
+            },
+            "away": {
+              "id": 20788,
+              "name": "UMECIT",
+              "logo": "https://media.api-sports.io/football/teams/20788.png",
+              "winner": null
+            },
+            "goals_home": 0,
+            "goals_away": 0,
+            "score": {
+              "halftime": {
+                "home": 0,
+                "away": 0
+              },
+              "fulltime": {
+                "home": 0,
+                "away": 0
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 43.7,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

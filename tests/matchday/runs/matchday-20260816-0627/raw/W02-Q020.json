@@ -1,0 +1,31 @@
+{
+  "exchange_id": "W02-Q020",
+  "ts_utc": "2026-08-16T06:29:48.873+00:00",
+  "wave": "W02",
+  "persona": "free_limite",
+  "persona_tier": "free",
+  "category": "C1",
+  "question": "score de Hull City en ce moment ?",
+  "context": {
+    "fixture_id": 1557368,
+    "league_id": 39,
+    "team_id": 64
+  },
+  "fixture_ref": 1557368,
+  "response_text": "Le direct en temps réel est réservé au palier Premium.",
+  "attachments": [],
+  "suggested_actions": [
+    {
+      "label": "Passer Premium",
+      "payload": {
+        "action": "upgrade"
+      }
+    }
+  ],
+  "degraded": true,
+  "freshness": null,
+  "latency_ms": 33.3,
+  "http_status": 200,
+  "error": null,
+  "route": "fallback"
+}

@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W06-Q057",
+  "ts_utc": "2026-08-16T06:36:02.202+00:00",
+  "wave": "W06",
+  "persona": "free_actif",
+  "persona_tier": "free",
+  "category": "A1",
+  "question": "les matchs de Premier League aujourd'hui",
+  "context": {
+    "fixture_id": 1557369,
+    "league_id": 39,
+    "team_id": 45
+  },
+  "fixture_ref": 1557369,
+  "response_text": "Voici les **matchs de Premier League aujourd'hui** 🏴󠁧󠁢󠁥󠁮󠁧󠁿 (journée 1 de la saison 2026-27) — **aucun n'a encore commencé** (statut : à venir) :\n\n| Heure (UTC) | Match | Stade |\n|---|---|---|\n| 11:30 | **Hull City – Manchester United** | MKM Stadium |\n| 14:00 | **Everton – Crystal Palace** 🔵 | Hill Dickinson Stadium |\n| 14:00 | **Ipswich – Sunderland** | Portman Road |\n| 14:00 | **Nottingham Forest – Leeds** | City Ground |\n\n**Dans ton contexte :** le match **Everton – Crystal Palace** (fixture 1557369) est bien au programme aujourd'hui à **14h00 UTC** au Hill Dickinson Stadium. Aucun événement enregistré pour l'instant (match pas encore joué).\n\n**À noter aussi :**\n- **Arsenal – Coventry** s'est joué hier (21/08, 19h00 UTC) — c'était le premier match de la journée 1.\n- Les scores en direct ne remontent aucun match en cours pour l'instant.\n\n**Fraîcheur des données :** calendrier saison 2026, extrait à jour (statuts \"Not Started\" confirmés pour aujourd'hui).\n\nTu veux les **cotes**, les **compos probables** ou le **face-à-face** pour l'un de ces matchs, par exemple Everton – Crystal Palace ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 11875.1,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

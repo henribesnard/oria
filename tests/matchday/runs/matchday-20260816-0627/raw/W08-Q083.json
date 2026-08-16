@@ -1,0 +1,90 @@
+{
+  "exchange_id": "W08-Q083",
+  "ts_utc": "2026-08-16T06:40:09.804+00:00",
+  "wave": "W08",
+  "persona": "free_limite",
+  "persona_tier": "free",
+  "category": "A3",
+  "question": "dernier resultat de Nottingham Forest",
+  "context": {
+    "fixture_id": 1557371,
+    "league_id": 39,
+    "team_id": 65
+  },
+  "fixture_ref": 1557371,
+  "response_text": "Voici le dernier résultat.",
+  "attachments": [
+    {
+      "kind": "fixture_card",
+      "data": {
+        "fixtures": [
+          {
+            "id": 1379345,
+            "referee": "C. Pawson",
+            "date": "2026-05-24T15:00:00+00:00",
+            "timestamp": 1779634800,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 11
+            },
+            "venue": {
+              "id": 566,
+              "name": "City Ground",
+              "city": "Nottingham"
+            },
+            "league": {
+              "id": 39,
+              "name": "Premier League",
+              "country": "England",
+              "logo": "https://media.api-sports.io/football/leagues/39.png",
+              "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+              "season": 2025,
+              "round": "Regular Season - 38"
+            },
+            "home": {
+              "id": 65,
+              "name": "Nottingham Forest",
+              "logo": "https://media.api-sports.io/football/teams/65.png",
+              "winner": null
+            },
+            "away": {
+              "id": 35,
+              "name": "Bournemouth",
+              "logo": "https://media.api-sports.io/football/teams/35.png",
+              "winner": null
+            },
+            "goals_home": 1,
+            "goals_away": 1,
+            "score": {
+              "halftime": {
+                "home": 1,
+                "away": 0
+              },
+              "fulltime": {
+                "home": 1,
+                "away": 1
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 95.7,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

@@ -1,0 +1,31 @@
+{
+  "exchange_id": "W05-Q056",
+  "ts_utc": "2026-08-16T06:36:00.133+00:00",
+  "wave": "W05",
+  "persona": "free_limite",
+  "persona_tier": "free",
+  "category": "C1",
+  "question": "score de Athletic Club en ce moment ?",
+  "context": {
+    "fixture_id": 1570343,
+    "league_id": 140,
+    "team_id": 531
+  },
+  "fixture_ref": 1570343,
+  "response_text": "Le direct en temps réel est réservé au palier Premium.",
+  "attachments": [],
+  "suggested_actions": [
+    {
+      "label": "Passer Premium",
+      "payload": {
+        "action": "upgrade"
+      }
+    }
+  ],
+  "degraded": true,
+  "freshness": null,
+  "latency_ms": 56.2,
+  "http_status": 200,
+  "error": null,
+  "route": "fallback"
+}

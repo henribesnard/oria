@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W03-Q028",
+  "ts_utc": "2026-08-16T06:30:54.029+00:00",
+  "wave": "W03",
+  "persona": "guest_adversarial",
+  "persona_tier": "guest",
+  "category": "A12",
+  "question": "blesses de Lens",
+  "context": {
+    "fixture_id": 1552732,
+    "league_id": 61,
+    "team_id": 116
+  },
+  "fixture_ref": 1552732,
+  "response_text": "Aucune donnée de blessure ou suspension n'est disponible pour **Lens** sur ce match (fixture 1552732) dans la base actuellement. 🩹\n\nCela peut signifier que :\n- Le club n'a pas de blessés recensés pour cette rencontre\n- Les données ne sont pas encore à jour dans le système\n\n⚠️ **Précision** : l'absence de données ne signifie pas forcément un effectif au complet — c'est une limite de la base actuelle.\n\nJe peux vérifier les **compositions probables** (lineups) de ce match si tu veux une meilleure idée de l'équipe attendue ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 4114.3,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

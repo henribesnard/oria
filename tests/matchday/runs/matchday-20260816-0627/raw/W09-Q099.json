@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W09-Q099",
+  "ts_utc": "2026-08-16T06:42:18.090+00:00",
+  "wave": "W09",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "A10",
+  "question": "stats des joueurs de Udinese",
+  "context": {
+    "fixture_id": 1550095,
+    "league_id": 135,
+    "team_id": 494
+  },
+  "fixture_ref": 1550095,
+  "response_text": "Aucune statistique individuelle n'est disponible pour **Udinese** (team_id 494) en Serie A (saison 2024-2025) dans la base actuellement. 😕\n\nLes données de joueurs ne sont pas remontées pour cette équipe, comme pour les autres équipes demandées précédemment.\n\nJe peux essayer autre chose à la place :\n- 📊 **Stats d'équipe** d'Udinese (buts, forme, série, clean sheets…)\n- ⚽ **Événements du match** (fixture 1550095)\n- 📋 **Compositions probables** de ce match\n- 🗓️ **Résultats ou prochains matchs**\n\nTu veux que je regarde l'un de ces points ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 5315.2,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

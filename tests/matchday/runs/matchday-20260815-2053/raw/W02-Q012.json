@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W02-Q012",
+  "ts_utc": "2026-08-15T20:54:10.842+00:00",
+  "wave": "W02",
+  "persona": "dryrun_user",
+  "persona_tier": "guest",
+  "category": "A4",
+  "question": "classement UEFA Europa League",
+  "context": {
+    "fixture_id": 1607181,
+    "league_id": 3,
+    "team_id": 701
+  },
+  "fixture_ref": 1607181,
+  "response_text": "Je n'arrive pas à récupérer le classement de l'**UEFA Europa League** pour le moment — mes outils ne renvoient aucune donnée pour cette compétition (ni pour la saison 2024-2025, ni 2025-2026). 😕\n\nCela peut être dû au fait que le classement de la phase de ligue n'est pas disponible via mes sources actuelles.\n\nEn revanche, je peux t'aider sur :\n- ⚽ **Les matchs en direct** de l'Europa League (dont Anderlecht – PAOK, Rangers – Jagiellonia, etc.)\n- 📊 **Les statistiques** ou événements d'un match précis\n- 🏆 Le classement d'un **championnat national** (Ligue 1, 3. Division, etc.)\n\nTu veux que je te montre autre chose ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 7748.0,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

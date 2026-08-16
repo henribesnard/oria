@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W05-Q055",
+  "ts_utc": "2026-08-16T06:35:37.236+00:00",
+  "wave": "W05",
+  "persona": "free_vierge",
+  "persona_tier": "free",
+  "category": "B2",
+  "question": "analyse-moi Athletic Club vs Sevilla",
+  "context": {
+    "fixture_id": 1570343,
+    "league_id": 140,
+    "team_id": 531
+  },
+  "fixture_ref": 1570343,
+  "response_text": "Voici mon analyse de **Athletic Club vs Sevilla** (La Liga, saison 2026) 🏟️\n\n## 📋 Le match\n- **Date** : 22 août 2026, 15h00 UTC (17h00 heure espagnole)\n- **Compétition** : La Liga — ouverture de saison\n- **Statut** : Match à venir — données pré-match\n\n## 💰 Les cotes (consensus 11 bookmakers : Bet365, Pinnacle, William Hill, 1xBet, Betfair...)\n\n**Athletic Club net favori à domicile** à San Mamés :\n\n| Marché | Cote moyenne | Lecture |\n|--------|-------------|---------|\n| **Victoire Athletic** | ~1.65 – 1.75 | ~58% de probabilité implicite |\n| Nul | ~3.40 – 3.84 | ~27% |\n| **Victoire Sevilla** | ~4.75 – 5.50 | ~19% |\n\n**Handicap asiatique :** Athletic **-0,75 / -1** — les bookmakers donnent près d'un but d'avance aux Basques à domicile.\n\n**Marchés clés :**\n- **Moins de 2,5 buts : 1,62-1,73** → match **plutôt fermé attendu** (probabilité de 2 buts max ~60%)\n- **Les deux équipes marquent : Non à 1,65-1,73** → le marché n'attend pas de but sévillan\n- **Clean sheet Athletic : Oui ~2,00-2,05** → possible, mais pas le scénario le plus probable\n- **Clean sheet Sevilla : Non à 1,20** → l'Athletic devrait marquer (probabilité ~83%)\n- **Scores exacts favoris** : **1-0** (~5,4-6,0) et **2-0** (~6,5-7,5), puis 1-1 (~6,3-7,2) et 2-1 (~7,0-8,5)\n- **Win to Nil Athletic : ~2,50-2,62**\n\n**Joueurs à suivre selon les cotes buteurs (Bet365) :**\n- **Athletic** : Gorka Guruzeta (2,38), Iñaki Williams (3,00), Nico Williams (3,10), Oihan Sancet (3,10)\n- **Sevilla** : Robert Navarro (3,00), Isaac Romero (4,00), Chidera Ejuke (5,50)\n\n**Lecture du marché :**\n- L'Athletic, porté par son public à San Mamés, est donné **gagnant d'une courte tête** (~1 but d'avance), dans un match **peu prolifique**.\n- Sevilla est attendu **en difficulté offensive à l'extérieur** (probabilité de but sévillan ~40-50% seulement).\n- L'ouverture de saison + le facteur domicile expliquent l'avantage basque.\n\n## ⚠️ Limites des données\nJe n'ai **pas pu récupérer** pour cette rencontre :\n- ❌ Confrontations directes (H2H)\n- ❌ Statistiques de saison (saison 2026 pas encore alimentée)\n- ❌ Compositions / infirmerie\n- ❌ Classement actuel\n\n👉 L'analyse repose donc **uniquement sur les cotes des bookmakers** (très détaillées et cohérentes entre elles). C'est un signal fort, mais sans les données d'équipe je ne peux pas vérifier la forme actuelle des joueurs. Veux-tu que je suive l'Athletic Club pour te prévenir des compos et résultats dès que disponibles ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 20892.6,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

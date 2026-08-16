@@ -1,0 +1,130 @@
+{
+  "generated_utc": "2026-08-16T06:43:18.978757+00:00",
+  "total_exchanges": 104,
+  "latency": {
+    "count": 104,
+    "avg": 7242.4,
+    "p50": 5763.0,
+    "p90": 20543.0,
+    "p95": 21541.1,
+    "max": 29066.7,
+    "min": 7.3
+  },
+  "routes": {
+    "prerouter": 44,
+    "orchestrator": 45,
+    "safety:injection": 1,
+    "fallback": 14
+  },
+  "errors": [],
+  "by_category": {
+    "F0": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "G1": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "F1": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "H1": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "F7": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "B8": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "A4": {
+      "total": 9,
+      "ok": 8,
+      "degraded": 1,
+      "error": 0
+    },
+    "C1": {
+      "total": 9,
+      "ok": 0,
+      "degraded": 9,
+      "error": 0
+    },
+    "A1": {
+      "total": 8,
+      "ok": 8,
+      "degraded": 0,
+      "error": 0
+    },
+    "A2": {
+      "total": 8,
+      "ok": 8,
+      "degraded": 0,
+      "error": 0
+    },
+    "A3": {
+      "total": 8,
+      "ok": 8,
+      "degraded": 0,
+      "error": 0
+    },
+    "A6": {
+      "total": 8,
+      "ok": 7,
+      "degraded": 1,
+      "error": 0
+    },
+    "A8": {
+      "total": 8,
+      "ok": 6,
+      "degraded": 2,
+      "error": 0
+    },
+    "A10": {
+      "total": 8,
+      "ok": 8,
+      "degraded": 0,
+      "error": 0
+    },
+    "A12": {
+      "total": 8,
+      "ok": 8,
+      "degraded": 0,
+      "error": 0
+    },
+    "A16": {
+      "total": 8,
+      "ok": 8,
+      "degraded": 0,
+      "error": 0
+    },
+    "B1": {
+      "total": 8,
+      "ok": 7,
+      "degraded": 1,
+      "error": 0
+    },
+    "B2": {
+      "total": 8,
+      "ok": 8,
+      "degraded": 0,
+      "error": 0
+    }
+  }
+}

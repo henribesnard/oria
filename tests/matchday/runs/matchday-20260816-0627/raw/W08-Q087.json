@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W08-Q087",
+  "ts_utc": "2026-08-16T06:40:27.595+00:00",
+  "wave": "W08",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "A10",
+  "question": "stats des joueurs de Nottingham Forest",
+  "context": {
+    "fixture_id": 1557371,
+    "league_id": 39,
+    "team_id": 65
+  },
+  "fixture_ref": 1557371,
+  "response_text": "Aucune statistique individuelle n'est disponible pour **Nottingham Forest** (team_id 65) en Premier League (saison 2024-2025) dans la base actuellement. 😕\n\nLes données de joueurs ne sont pas remontées pour cette équipe.\n\nJe peux essayer autre chose à la place :\n- 📊 **Stats d'équipe** de Nottingham Forest (buts, forme, série, clean sheets…)\n- ⚽ **Événements du match** (fixture 1557371)\n- 📋 **Compositions probables** de ce match\n- 🗓️ **Résultats ou prochains matchs**\n\nTu veux que je regarde l'un de ces points ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 3563.1,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

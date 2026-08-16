@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W02-Q013",
+  "ts_utc": "2026-08-15T20:54:19.101+00:00",
+  "wave": "W02",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "A6",
+  "question": "calendrier de KI Klaksvik",
+  "context": {
+    "fixture_id": 1607181,
+    "league_id": 3,
+    "team_id": 701
+  },
+  "fixture_ref": 1607181,
+  "response_text": "Je suis désolé, mais malgré toutes mes recherches (calendrier, saisons 2024 et 2025, ligue, recherche d'équipe), mes sources ne renvoient **aucune donnée** pour **KI Klaksvik** en ce moment. 😕\n\nCela peut être dû à :\n- 📡 Une indisponibilité temporaire de la base de données\n- 🔍 L'équipe absente de mes sources actuelles\n\n**Je ne peux donc pas te donner son calendrier de façon fiable**, et je préfère te le dire plutôt que d'inventer des dates.\n\nEn attendant, je peux t'aider sur :\n- ⚽ **Les scores en direct** (Europa League, etc.)\n- 📊 **Classements** des championnats disponibles\n- 🔎 Une **autre équipe** que tu souhaites suivre\n\nTu veux que je regarde autre chose ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 10424.7,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

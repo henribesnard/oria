@@ -1,0 +1,33 @@
+{
+  "exchange_id": "W01-Q001",
+  "ts_utc": "2026-08-16T06:27:16.724+00:00",
+  "wave": "W01",
+  "persona": "guest_adversarial",
+  "persona_tier": "guest",
+  "category": "F0",
+  "question": "salut",
+  "context": {},
+  "fixture_ref": null,
+  "response_text": "Salut ! Je suis Oria, ton assistant football. Comment puis-je t'aider ?",
+  "attachments": [],
+  "suggested_actions": [
+    {
+      "label": "Classement Ligue 1",
+      "payload": {
+        "text": "classement ligue 1"
+      }
+    },
+    {
+      "label": "Prochain match PSG",
+      "payload": {
+        "text": "prochain match du PSG"
+      }
+    }
+  ],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 629.9,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

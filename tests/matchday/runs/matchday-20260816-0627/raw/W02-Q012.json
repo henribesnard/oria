@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W02-Q012",
+  "ts_utc": "2026-08-16T06:28:03.233+00:00",
+  "wave": "W02",
+  "persona": "premium_actif",
+  "persona_tier": "premium",
+  "category": "A4",
+  "question": "classement Premier League",
+  "context": {
+    "fixture_id": 1557368,
+    "league_id": 39,
+    "team_id": 64
+  },
+  "fixture_ref": 1557368,
+  "response_text": "Je n'ai pas pu traiter ta demande « classement Premier League » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": true,
+  "freshness": null,
+  "latency_ms": 8744.2,
+  "http_status": 200,
+  "error": null,
+  "route": "fallback"
+}

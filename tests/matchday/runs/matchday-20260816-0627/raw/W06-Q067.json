@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W06-Q067",
+  "ts_utc": "2026-08-16T06:37:31.791+00:00",
+  "wave": "W06",
+  "persona": "free_vierge",
+  "persona_tier": "free",
+  "category": "B2",
+  "question": "analyse-moi Everton vs Crystal Palace",
+  "context": {
+    "fixture_id": 1557369,
+    "league_id": 39,
+    "team_id": 45
+  },
+  "fixture_ref": 1557369,
+  "response_text": "Voici mon analyse de **Everton vs Crystal Palace** (Premier League, saison 2026) 🏟️\n\n## 📋 Le match\n- **Date** : 22 août 2026, 14h00 UTC (16h00 heure française)\n- **Compétition** : Premier League — journée 1 (ouverture de saison)\n- **Stade** : Hill Dickinson Stadium (Goodison), Liverpool\n- **Statut** : Match à venir — données pré-match\n\n## 🔄 Confrontations directes (10 derniers matchs)\n\n| Date | Lieu | Compétition | Score |\n|------|------|-------------|-------|\n| Mai 2026 | Selhurst Park | PL | Palace 2-2 Everton |\n| Oct. 2025 | Goodison | PL | **Everton 2-1 Palace** |\n| Fév. 2025 | Selhurst Park | PL | Palace 1-**2** Everton |\n| Sept. 2024 | Goodison | PL | **Everton 2-1 Palace** |\n| Fév. 2024 | Goodison | PL | Everton 1-1 Palace |\n| Jan. 2024 | Goodison | FA Cup | **Everton 1-0 Palace** |\n| Jan. 2024 | Selhurst Park | FA Cup | Palace 0-0 Everton |\n| Nov. 2023 | Selhurst Park | PL | Palace 2-**3** Everton |\n| Avr. 2023 | Selhurst Park | PL | Palace 0-0 Everton |\n| Oct. 2022 | Goodison | PL | **Everton 3-0 Palace** |\n\n**📊 Enseignements majeurs :**\n- **Everton est INVAINCU lors des 10 dernières confrontations** : 6 victoires, 4 nuls, 0 défaite.\n- **À domicile, Everton n'a jamais perdu contre Palace** (5 matchs, 4 victoires et 1 nul).\n- Les matchs sont souvent **serrés et décidés sur de petits écarts** : jamais plus de 2 buts d'écart en PL, et de nombreux matchs à 1 but ou nul.\n- Le dernier match (mai 2026) s'est soldé par un **2-2** animé à Selhurst Park.\n\n## 💰 Les cotes (consensus 12 bookmakers)\n\n**Un léger avantage à Everton, loin d'être écrasant :**\n\n| Marché | Cote moyenne | Lecture |\n|--------|-------------|---------|\n| **Victoire Everton** | ~2.10 – 2.20 | ~45% de probabilité implicite |\n| Nul | ~3.30 – 3.50 | |\n| **Victoire Palace** | ~3.20 – 3.50 | ~29% |\n\n**Handicap asiatique :** Everton **-0,25 / -0,5** → les bookmakers donnent une **demi-tête d'avance** aux Toffees à domicile. Match très ouvert.\n\n**Marchés clés :**\n- **Les deux équipes marquent : Oui à 1,67-1,75** → le marché attend un but des deux côtés (probabilité ~57%).\n- **Plus de 2,5 buts : ~1,85-1,95** (équilibré) → match plutôt prolifique attendu, en cohérence avec le 2-2 de mai 2026.\n- **Clean sheet Palace : Non à 1,20-1,22** → Everton très probablement au score (~80%).\n- **Clean sheet Everton : Non à 1,33-1,36** → Palace a de bonnes chances de marquer (~74%).\n- **Mi-temps : 0-0 à la pause favori (~2,80-3,25)** → les buts arrivent souvent en 2e période.\n- **Scores exacts favoris : 1-1 (~6,00-7,00)**, puis 1-0, 2-1 et 2-0 (~7,50-11,00).\n- **Corners : Over 9,5 (~1,75-1,77)** → match animé attendu dans le jeu.\n\n**Lecture du marché :**\n- **Aucun favori net** : Everton à peine devant à domicile, ce qui reflète une opposition de niveau proche en ouverture de saison.\n- Le scénario type du marché : un match **ouvert, avec des buts des deux côtés**, probablement décidé sur un écart d'un but — ou un partage des points (1-1 très prisé).\n- L'avantage domicile + l'historique très favorable (Everton invaincu sur 10 H2H) font pencher la balance côté Toffees, mais **prudence** : Palace n'est pas loin du tout sur les cotes.\n\n## ⚠️ Limites des données\n- ❌ Statistiques de saison 2026 : **aucune donnée** (0 match joué, ouverture de saison)\n- ❌ Compositions probables / infirmerie : **non disponibles**\n- ❌ Classement : **non disponible** (saison pas encore lancée)\n\n👉 L'analyse repose sur les **cotes pré-match** et l'**historique des confrontations**. Veux-tu que je suive Everton pour te notifier les compositions et le résultat dès le coup d'envoi ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 25584.6,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

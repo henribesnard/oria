@@ -1,0 +1,10 @@
+{
+  "started_utc": "2026-08-15T20:53:29.997473+00:00",
+  "finished_utc": "2026-08-15T20:55:01.105+00:00",
+  "mode": "dry-run",
+  "fixture_date": "2026-08-14",
+  "matches": 2,
+  "total_exchanges": 20,
+  "errors": 0,
+  "degraded": 0
+}

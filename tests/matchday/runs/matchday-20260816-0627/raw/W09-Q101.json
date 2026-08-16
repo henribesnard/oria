@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W09-Q101",
+  "ts_utc": "2026-08-16T06:42:31.025+00:00",
+  "wave": "W09",
+  "persona": "guest_live",
+  "persona_tier": "guest",
+  "category": "A16",
+  "question": "infos Udinese",
+  "context": {
+    "fixture_id": 1550095,
+    "league_id": 135,
+    "team_id": 494
+  },
+  "fixture_ref": 1550095,
+  "response_text": "Aucune donnée n'est disponible pour **Udinese** (team_id 494) en Serie A (league_id 135, saison 2024) dans la base actuellement. 😕\n\nLes requêtes d'infos club et de stats d'équipe renvoient une réponse vide, donc je ne peux pas te fournir de fiche fiable sur ce club pour l'instant.\n\nCe que je peux tenter à la place :\n- 📋 **Compositions probables** du match (fixture 1550095)\n- ⚽ **Événements du match** (buts, cartons, remplacements)\n- 📊 **Classement** Serie A 2024-2025\n\nTu veux que je regarde l'un de ces points ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 3457.6,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

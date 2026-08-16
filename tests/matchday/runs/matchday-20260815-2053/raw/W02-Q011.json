@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W02-Q011",
+  "ts_utc": "2026-08-15T20:54:04.039+00:00",
+  "wave": "W02",
+  "persona": "guest_live",
+  "persona_tier": "guest",
+  "category": "A3",
+  "question": "dernier resultat de KI Klaksvik",
+  "context": {
+    "fixture_id": 1607181,
+    "league_id": 3,
+    "team_id": 701
+  },
+  "fixture_ref": 1607181,
+  "response_text": "Désolé, je n'arrive toujours pas à récupérer les données sur le **KI Klaksvik** 😕\n\nMalgré plusieurs tentatives (recherche d'équipe, matchs, événements), mes outils ne renvoient aucun résultat pour cette équipe en ce moment.\n\nCela peut être dû à :\n- 📡 Une indisponibilité temporaire des données\n- 🔍 L'équipe absente de ma base actuelle\n\nJe te conseille de réessayer un peu plus tard. En attendant, je peux t'aider sur une autre équipe ou un autre championnat si tu veux ! ⚽",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 6296.7,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

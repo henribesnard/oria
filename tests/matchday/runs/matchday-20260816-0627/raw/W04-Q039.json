@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W04-Q039",
+  "ts_utc": "2026-08-16T06:32:50.133+00:00",
+  "wave": "W04",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "A10",
+  "question": "stats des joueurs de Inter",
+  "context": {
+    "fixture_id": 1550092,
+    "league_id": 135,
+    "team_id": 505
+  },
+  "fixture_ref": 1550092,
+  "response_text": "Aucune statistique de joueurs n'est disponible pour **l'Inter Milan** (team_id 505) dans la base pour la saison 2024. 😕\n\nLes données ne sont pas remontées pour cette équipe, que ce soit via la Serie A (league_id 135) ou via une recherche directe.\n\nJe peux essayer autre chose :\n- 📊 **Stats d'équipe** (saisonnières) de l'Inter\n- ⚽ **Scores en direct** ou **résultats** des matchs de l'Inter\n- 🗓️ **Prochains matchs** de l'Inter\n\nTu veux que je regarde l'un de ces points ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 8236.0,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

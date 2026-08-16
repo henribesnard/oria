@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W09-Q093",
+  "ts_utc": "2026-08-16T06:41:33.705+00:00",
+  "wave": "W09",
+  "persona": "free_actif",
+  "persona_tier": "free",
+  "category": "A1",
+  "question": "les matchs de Serie A aujourd'hui",
+  "context": {
+    "fixture_id": 1550095,
+    "league_id": 135,
+    "team_id": 494
+  },
+  "fixture_ref": 1550095,
+  "response_text": "Je n'ai **toujours aucun match de Serie A** à te montrer. ⚠️\n\n**Ce que montrent mes vérifications :**\n- **Calendrier Serie A (league_id=135) :** aucune donnée.\n- **Scores en direct Serie A :** aucun résultat.\n- **Match de ton contexte (fixture 1550095, team 494) :** aucune donnée non plus.\n\nComme je te l'avais indiqué plus tôt, **la Serie A n'est pas couverte par ma base de données actuelle**. Je ne peux donc pas te donner le calendrier, les scores ou le moindre détail sur cette compétition — et je préfère te le dire franchement plutôt que d'inventer des matchs.\n\n**Ce que je peux faire pour toi :**\n- Vérifier les **matchs du jour** dans les championnats que je couvre (Premier League, Championship, La Liga…),\n- Te donner un **classement**, des **stats** ou un **face-à-face** dans ces compétitions,\n- ou toute autre question football sur ces ligues. ⚽\n\nTu veux que je te sorte les matchs d'une autre compétition aujourd'hui ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 10179.2,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

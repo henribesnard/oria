@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W05-Q049",
+  "ts_utc": "2026-08-16T06:34:21.643+00:00",
+  "wave": "W05",
+  "persona": "premium_vierge",
+  "persona_tier": "premium",
+  "category": "A6",
+  "question": "calendrier de Athletic Club",
+  "context": {
+    "fixture_id": 1570343,
+    "league_id": 140,
+    "team_id": 531
+  },
+  "fixture_ref": 1570343,
+  "response_text": "Voici le calendrier de l'**Athletic Club** (équipe suivie) 📅\n\n## 🗓️ Prochains matchs\n\n**Matches amicaux (préparation été 2026) :**\n| Date | Match |\n|------|-------|\n| 21/08/2026 | Zaragoza – Athletic Club |\n\n**La Liga 2026/27 (saison qui démarre) :**\n| Journée | Date | Match |\n|---------|------|-------|\n| J2 | 22/08/2026 | Athletic Club – Sevilla |\n| J1* | 27/08/2026 | Barcelona – Athletic Club |\n| J3 | 30/08/2026 | Celta Vigo – Athletic Club |\n| J4 | 05/09/2026 | Athletic Club – Atlético Madrid |\n| J5 | 13/09/2026 | Athletic Club – Elche |\n| J6 | 16/09/2026 | Levante – Athletic Club |\n| J7 | 20/09/2026 | Athletic Club – Alavés |\n| J8 | 11/10/2026 | Rayo Vallecano – Athletic Club |\n| J9 | 18/10/2026 | Valencia – Athletic Club |\n\n*La J1 (Barcelona–Athletic) se joue après la J2.\n\n## 📋 Derniers résultats (fin de saison 2025/26)\n- **18/07/26** : Leioa 0-11 Athletic (amiical)\n- **22/07/26** : Sestao River 0-2 Athletic (amiical)\n- **25/07/26** : Athletic 2-2 Eibar (amiical)\n- **29/07/26** : Racing Santander 0-3 Athletic (amiical)\n- **01/08/26** : Burgos 0-3 Athletic (amiical)\n- **09/08/26** : Marseille 3-1 Athletic (amiical)\n- **14/08/26** : Atalanta 1-0 Athletic (amiical)\n- **17/05/26** : Athletic 1-1 Celta Vigo (La Liga J37)\n- **23/05/26** : Real Madrid 4-2 Athletic (La Liga J38)\n\n⚠️ **Rappel** : en 2025/26, l'Athletic a terminé **4e de La Liga** (70 pts, 19V-13N-6D), qualifié pour la **Ligue des Champions**.\n\nDonnées à jour au moment de la consultation (calendrier La Liga 2026/27). Veux-tu les cotes, les compos probables ou les stats d'un de ces matchs ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 16708.0,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

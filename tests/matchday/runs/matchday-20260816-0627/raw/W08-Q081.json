@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W08-Q081",
+  "ts_utc": "2026-08-16T06:39:57.610+00:00",
+  "wave": "W08",
+  "persona": "free_actif",
+  "persona_tier": "free",
+  "category": "A1",
+  "question": "les matchs de Premier League aujourd'hui",
+  "context": {
+    "fixture_id": 1557371,
+    "league_id": 39,
+    "team_id": 65
+  },
+  "fixture_ref": 1557371,
+  "response_text": "Toujours rien — la source de données ne répond plus. ⚠️\n\n**Ce que je constate :** mes requêtes (calendrier Premier League id 39, scores en direct, match 1557371, équipe 65) renvoient toutes **aucune donnée**. Impossible pour moi de confirmer quoi que ce soit en ce moment.\n\n**D'après les dernières données valides que j'ai obtenues plus tôt** (mise à jour il y a quelques minutes) :\n- **Aujourd'hui = Journée 1 de Premier League (saison 2026-27)**\n- 11h30 UTC : **Hull City – Manchester United**\n- 14h00 UTC : **Everton – Crystal Palace**, **Ipswich – Sunderland** (fixture 1557370), **Nottingham Forest – Leeds**\n- Le match de ton contexte (fixture 1557371) fait partie de cette journée, très probablement **Nottingham Forest – Leeds** au City Ground, à 14h00 UTC.\n\n⚠️ **Attention :** je ne peux **pas confirmer les scores ni le statut actuel** de ces matchs, car mes données ne sont plus accessibles. Ne prends pas ces infos pour du temps réel.\n\n**Que faire ?** Réessaie dans quelques minutes et je retenterai la récupération. Tu veux que je retente maintenant, ou que je te sorte autre chose (classement, stats) ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 7994.1,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

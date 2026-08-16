@@ -1,0 +1,20 @@
+{
+  "exchange_id": "W01-Q003",
+  "ts_utc": "2026-08-16T06:27:21.474+00:00",
+  "wave": "W01",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "F1",
+  "question": "recette de la carbonara",
+  "context": {},
+  "fixture_ref": null,
+  "response_text": "Je suis Oria, un assistant spécialisé football. Je ne peux pas t'aider sur ce sujet, mais n'hésite pas à me poser une question sur le foot !",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 1351.6,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

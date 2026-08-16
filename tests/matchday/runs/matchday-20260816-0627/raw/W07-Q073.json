@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W07-Q073",
+  "ts_utc": "2026-08-16T06:38:34.563+00:00",
+  "wave": "W07",
+  "persona": "premium_vierge",
+  "persona_tier": "premium",
+  "category": "A6",
+  "question": "calendrier de Ipswich",
+  "context": {
+    "fixture_id": 1557370,
+    "league_id": 39,
+    "team_id": 57
+  },
+  "fixture_ref": 1557370,
+  "response_text": "Voici le calendrier de l'**Ipswich Town** 📅 (équipe remontée en Premier League pour la saison 2026/27)\n\n## 🔜 Prochains matchs officiels\n\n| Date | Compétition | Match |\n|------|-------------|-------|\n| **22/08/2026** | Premier League (J1) | Ipswich – Sunderland (dom.) |\n| **25/08/2026** | League Cup (1/32) | Ipswich – Leicester (dom.) |\n| **30/08/2026** | Premier League (J2) | Manchester United – Ipswich (ext.) |\n| **04/09/2026** | Premier League (J3) | Ipswich – Liverpool (dom.) |\n| **12/09/2026** | Premier League (J4) | Crystal Palace – Ipswich (ext.) |\n\n## 🥅 Derniers matchs (préparation estivale 2026)\n- **01/08/26** : Oxford United 2-0 Ipswich (amiical)\n- **01/08/26** : Wycombe 1-2 Ipswich (amiical)\n- **04/08/26** : Ipswich 1-0 Le Havre (amiical)\n- **08/08/26** : Ipswich 3-0 Rayo Vallecano (amiical)\n- **15/08/26** : Union Berlin 2-4 Ipswich (amiical)\n\n## 📌 À retenir\n- **Début de saison costaud** : après Sunderland, Ipswich enchaîne avec **Manchester United** à l'extérieur et la réception de **Liverpool** à Portman Road.\n- Le match de la J1 (Ipswich – Sunderland, fixture 1557370) se jouera le **22 août 2026 à 16h00** (heure française).\n\nDonnées issues de la saison 2026 (Premier League, League Cup et amicaux). Tu veux les cotes, compos probables ou stats pour l'un de ces matchs ? ⚽",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 8714.5,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W05-Q051",
+  "ts_utc": "2026-08-16T06:34:52.509+00:00",
+  "wave": "W05",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "A10",
+  "question": "stats des joueurs de Athletic Club",
+  "context": {
+    "fixture_id": 1570343,
+    "league_id": 140,
+    "team_id": 531
+  },
+  "fixture_ref": 1570343,
+  "response_text": "Voici les statistiques des joueurs de l'**Athletic Club** (La Liga 2024-2025) 📊\n\n**Joueurs avec du temps de jeu :**\n\n| Joueur | Poste | Matchs | Minutes | Buts | Passes | Note moy. |\n|--------|-------|--------|---------|------|--------|-----------|\n| Ó. De Marcos | Défenseur | 26 | 1562 | 0 | 4 | 6,87 |\n| Á. Djaló | Attaquant | 29 | 657 | 1 | 0 | 6,61 |\n| U. Núñez | Défenseur | 10 | 644 | 0 | 0 | 7,01 |\n| P. Canales | Milieu | 8 | 255 | 0 | 0 | 6,64 |\n| J. Martón | Attaquant | 3 | 49 | 0 | 0 | 6,20 |\n| A. Olabarrieta | Attaquant | 1 | 55 | 0 | 0 | 6,30 |\n| E. Bujan | Attaquant | 1 | 6 | 0 | 0 | 6,20 |\n\n**Faits marquants :**\n- **Óscar De Marcos** : 19 passes clés, 33 tacles, 50 duels gagnés sur 108, 0 carton jaune en 26 matchs.\n- **Unai Núñez** : 4 cartons jaunes, 16 interceptions, 31 duels gagnés sur 56 — solide défensivement.\n- **Álvaro Djaló** : 14 dribbles réussis sur 33 tentés, 114 duels disputés.\n\n⚠️ **Précision** : la base ne contient que des données partielles — les cadres habituels (Sancet, I. Williams, N. Williams, Guruzeta, Paredes, Simón…) n'apparaissent pas. Les stats ci-dessus couvrent donc uniquement une partie de l'effectif.\n\nTu veux que je regarde les stats d'un joueur en particulier ou le classement de la Liga ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 11069.7,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

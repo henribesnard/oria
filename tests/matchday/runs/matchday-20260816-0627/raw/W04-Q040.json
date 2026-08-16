@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W04-Q040",
+  "ts_utc": "2026-08-16T06:33:00.376+00:00",
+  "wave": "W04",
+  "persona": "guest_adversarial",
+  "persona_tier": "guest",
+  "category": "A12",
+  "question": "blesses de Inter",
+  "context": {
+    "fixture_id": 1550092,
+    "league_id": 135,
+    "team_id": 505
+  },
+  "fixture_ref": 1550092,
+  "response_text": "Aucune donnée de blessure ou suspension n'est disponible pour **l'Inter Milan** sur ce match (fixture 1550092) dans la base actuellement. 🩹\n\nComme pour les autres équipes vérifiées, cela peut signifier :\n- Aucun blessé recensé pour cette rencontre\n- Des données non remontées dans le système\n\n⚠️ L'absence de données ne signifie pas forcément un effectif au complet.\n\nJe peux vérifier les **compositions probables** ou les **stats d'équipe** de l'Inter si tu veux une vision plus précise ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 3356.7,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

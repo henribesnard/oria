@@ -1,0 +1,27 @@
+{
+  "exchange_id": "W01-Q008",
+  "ts_utc": "2026-08-16T06:27:40.468+00:00",
+  "wave": "W01",
+  "persona": "guest_live",
+  "persona_tier": "guest",
+  "category": "C1",
+  "question": "en direct",
+  "context": {},
+  "fixture_ref": null,
+  "response_text": "Le direct en temps réel est réservé au palier Premium.",
+  "attachments": [],
+  "suggested_actions": [
+    {
+      "label": "Passer Premium",
+      "payload": {
+        "action": "upgrade"
+      }
+    }
+  ],
+  "degraded": true,
+  "freshness": null,
+  "latency_ms": 45.3,
+  "http_status": 200,
+  "error": null,
+  "route": "fallback"
+}

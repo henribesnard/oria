@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W07-Q076",
+  "ts_utc": "2026-08-16T06:38:55.220+00:00",
+  "wave": "W07",
+  "persona": "guest_adversarial",
+  "persona_tier": "guest",
+  "category": "A12",
+  "question": "blesses de Ipswich",
+  "context": {
+    "fixture_id": 1557370,
+    "league_id": 39,
+    "team_id": 57
+  },
+  "fixture_ref": 1557370,
+  "response_text": "Aucune donnée de blessure ou suspension n'est disponible pour **Ipswich Town** sur ce match (fixture 1557370) dans la base actuellement. 🩹\n\nComme pour les autres équipes, cela peut signifier :\n- Aucun blessé recensé pour cette rencontre\n- Des données non remontées dans le système\n\n⚠️ L'absence de données ne garantit pas un effectif au complet.\n\nJe peux vérifier les **compositions probables** (lineups) de ce match ou les **stats d'équipe** d'Ipswich si tu veux une meilleure visibilité ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 3064.9,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W02-Q016",
+  "ts_utc": "2026-08-16T06:28:55.186+00:00",
+  "wave": "W02",
+  "persona": "guest_adversarial",
+  "persona_tier": "guest",
+  "category": "A12",
+  "question": "blesses de Hull City",
+  "context": {
+    "fixture_id": 1557368,
+    "league_id": 39,
+    "team_id": 64
+  },
+  "fixture_ref": 1557368,
+  "response_text": "Aucune donnée de blessure ou suspension n'est disponible pour **Hull City** dans la base actuellement. 🩹\n\nIl est possible que :\n- Le club n'ait pas de blessés recensés pour ce match\n- Les données ne soient pas encore remontées dans le système\n\nJe peux essayer de vérifier d'autres sources (compositions probables, stats d'équipe) si tu veux. Tu souhaites que je regarde autre chose ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 3782.4,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

@@ -1,0 +1,322 @@
+{
+  "exchange_id": "W09-Q097",
+  "ts_utc": "2026-08-16T06:42:13.842+00:00",
+  "wave": "W09",
+  "persona": "premium_vierge",
+  "persona_tier": "premium",
+  "category": "A6",
+  "question": "calendrier de Udinese",
+  "context": {
+    "fixture_id": 1550095,
+    "league_id": 135,
+    "team_id": 494
+  },
+  "fixture_ref": 1550095,
+  "response_text": "Voici les prochains matchs.",
+  "attachments": [
+    {
+      "kind": "table",
+      "data": {
+        "schedule": [
+          {
+            "id": 1550095,
+            "referee": null,
+            "date": "2026-08-22T16:30:00+00:00",
+            "timestamp": 1787416200,
+            "status": {
+              "long": "Not Started",
+              "short": "NS",
+              "elapsed": null,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": "Bluenergy Stadium - Stadio Friuli",
+              "city": "Udine"
+            },
+            "league": {
+              "id": 135,
+              "name": "Serie A",
+              "country": "Italy",
+              "logo": "https://media.api-sports.io/football/leagues/135.png",
+              "flag": "https://media.api-sports.io/flags/it.svg",
+              "season": 2026,
+              "round": "Regular Season - 1"
+            },
+            "home": {
+              "id": 494,
+              "name": "Udinese",
+              "logo": "https://media.api-sports.io/football/teams/494.png",
+              "winner": null
+            },
+            "away": {
+              "id": 895,
+              "name": "Como",
+              "logo": "https://media.api-sports.io/football/teams/895.png",
+              "winner": null
+            },
+            "goals_home": null,
+            "goals_away": null,
+            "score": {
+              "halftime": {
+                "home": null,
+                "away": null
+              },
+              "fulltime": {
+                "home": null,
+                "away": null
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1550104,
+            "referee": null,
+            "date": "2026-08-29T16:30:00+00:00",
+            "timestamp": 1788021000,
+            "status": {
+              "long": "Not Started",
+              "short": "NS",
+              "elapsed": null,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": "Monza"
+            },
+            "league": {
+              "id": 135,
+              "name": "Serie A",
+              "country": "Italy",
+              "logo": "https://media.api-sports.io/football/leagues/135.png",
+              "flag": "https://media.api-sports.io/flags/it.svg",
+              "season": 2026,
+              "round": "Regular Season - 2"
+            },
+            "home": {
+              "id": 1579,
+              "name": "Monza",
+              "logo": "https://media.api-sports.io/football/teams/1579.png",
+              "winner": null
+            },
+            "away": {
+              "id": 494,
+              "name": "Udinese",
+              "logo": "https://media.api-sports.io/football/teams/494.png",
+              "winner": null
+            },
+            "goals_home": null,
+            "goals_away": null,
+            "score": {
+              "halftime": {
+                "home": null,
+                "away": null
+              },
+              "fulltime": {
+                "home": null,
+                "away": null
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1550116,
+            "referee": null,
+            "date": "2026-09-07T18:45:00+00:00",
+            "timestamp": 1788806700,
+            "status": {
+              "long": "Not Started",
+              "short": "NS",
+              "elapsed": null,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": "Bluenergy Stadium - Stadio Friuli",
+              "city": "Udine"
+            },
+            "league": {
+              "id": 135,
+              "name": "Serie A",
+              "country": "Italy",
+              "logo": "https://media.api-sports.io/football/leagues/135.png",
+              "flag": "https://media.api-sports.io/flags/it.svg",
+              "season": 2026,
+              "round": "Regular Season - 3"
+            },
+            "home": {
+              "id": 494,
+              "name": "Udinese",
+              "logo": "https://media.api-sports.io/football/teams/494.png",
+              "winner": null
+            },
+            "away": {
+              "id": 487,
+              "name": "Lazio",
+              "logo": "https://media.api-sports.io/football/teams/487.png",
+              "winner": null
+            },
+            "goals_home": null,
+            "goals_away": null,
+            "score": {
+              "halftime": {
+                "home": null,
+                "away": null
+              },
+              "fulltime": {
+                "home": null,
+                "away": null
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1550120,
+            "referee": null,
+            "date": "2026-09-14T18:45:00+00:00",
+            "timestamp": 1789411500,
+            "status": {
+              "long": "Not Started",
+              "short": "NS",
+              "elapsed": null,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": "Milan"
+            },
+            "league": {
+              "id": 135,
+              "name": "Serie A",
+              "country": "Italy",
+              "logo": "https://media.api-sports.io/football/leagues/135.png",
+              "flag": "https://media.api-sports.io/flags/it.svg",
+              "season": 2026,
+              "round": "Regular Season - 4"
+            },
+            "home": {
+              "id": 505,
+              "name": "Inter",
+              "logo": "https://media.api-sports.io/football/teams/505.png",
+              "winner": null
+            },
+            "away": {
+              "id": 494,
+              "name": "Udinese",
+              "logo": "https://media.api-sports.io/football/teams/494.png",
+              "winner": null
+            },
+            "goals_home": null,
+            "goals_away": null,
+            "score": {
+              "halftime": {
+                "home": null,
+                "away": null
+              },
+              "fulltime": {
+                "home": null,
+                "away": null
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1550135,
+            "referee": null,
+            "date": "2026-09-19T13:00:00+00:00",
+            "timestamp": 1789822800,
+            "status": {
+              "long": "Not Started",
+              "short": "NS",
+              "elapsed": null,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": "Bluenergy Stadium - Stadio Friuli",
+              "city": "Udine"
+            },
+            "league": {
+              "id": 135,
+              "name": "Serie A",
+              "country": "Italy",
+              "logo": "https://media.api-sports.io/football/leagues/135.png",
+              "flag": "https://media.api-sports.io/flags/it.svg",
+              "season": 2026,
+              "round": "Regular Season - 5"
+            },
+            "home": {
+              "id": 494,
+              "name": "Udinese",
+              "logo": "https://media.api-sports.io/football/teams/494.png",
+              "winner": null
+            },
+            "away": {
+              "id": 490,
+              "name": "Cagliari",
+              "logo": "https://media.api-sports.io/football/teams/490.png",
+              "winner": null
+            },
+            "goals_home": null,
+            "goals_away": null,
+            "score": {
+              "halftime": {
+                "home": null,
+                "away": null
+              },
+              "fulltime": {
+                "home": null,
+                "away": null
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 128.8,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

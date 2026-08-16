@@ -1,0 +1,322 @@
+{
+  "exchange_id": "W07-Q074",
+  "ts_utc": "2026-08-16T06:38:45.286+00:00",
+  "wave": "W07",
+  "persona": "premium_intensif",
+  "persona_tier": "premium",
+  "category": "A8",
+  "question": "forme de Ipswich",
+  "context": {
+    "fixture_id": 1557370,
+    "league_id": 39,
+    "team_id": 57
+  },
+  "fixture_ref": 1557370,
+  "response_text": "Voici la forme récente.",
+  "attachments": [
+    {
+      "kind": "table",
+      "data": {
+        "form": [
+          {
+            "id": 1598616,
+            "referee": null,
+            "date": "2026-08-15T13:30:00+00:00",
+            "timestamp": 1786800600,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 2
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": null
+            },
+            "league": {
+              "id": 667,
+              "name": "Friendlies Clubs",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/667.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Club Friendlies"
+            },
+            "home": {
+              "id": 182,
+              "name": "Union Berlin",
+              "logo": "https://media.api-sports.io/football/teams/182.png",
+              "winner": false
+            },
+            "away": {
+              "id": 57,
+              "name": "Ipswich",
+              "logo": "https://media.api-sports.io/football/teams/57.png",
+              "winner": true
+            },
+            "goals_home": 2,
+            "goals_away": 4,
+            "score": {
+              "halftime": {
+                "home": 1,
+                "away": 3
+              },
+              "fulltime": {
+                "home": 2,
+                "away": 4
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1585060,
+            "referee": null,
+            "date": "2026-08-08T14:00:00+00:00",
+            "timestamp": 1786197600,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 4
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": null
+            },
+            "league": {
+              "id": 667,
+              "name": "Friendlies Clubs",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/667.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Club Friendlies"
+            },
+            "home": {
+              "id": 57,
+              "name": "Ipswich",
+              "logo": "https://media.api-sports.io/football/teams/57.png",
+              "winner": true
+            },
+            "away": {
+              "id": 728,
+              "name": "Rayo Vallecano",
+              "logo": "https://media.api-sports.io/football/teams/728.png",
+              "winner": false
+            },
+            "goals_home": 3,
+            "goals_away": 0,
+            "score": {
+              "halftime": {
+                "home": 3,
+                "away": 0
+              },
+              "fulltime": {
+                "home": 3,
+                "away": 0
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1583616,
+            "referee": null,
+            "date": "2026-08-04T18:45:00+00:00",
+            "timestamp": 1785869100,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 2
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": null
+            },
+            "league": {
+              "id": 667,
+              "name": "Friendlies Clubs",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/667.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Club Friendlies"
+            },
+            "home": {
+              "id": 57,
+              "name": "Ipswich",
+              "logo": "https://media.api-sports.io/football/teams/57.png",
+              "winner": true
+            },
+            "away": {
+              "id": 111,
+              "name": "Le Havre",
+              "logo": "https://media.api-sports.io/football/teams/111.png",
+              "winner": false
+            },
+            "goals_home": 1,
+            "goals_away": 0,
+            "score": {
+              "halftime": {
+                "home": 0,
+                "away": 0
+              },
+              "fulltime": {
+                "home": 1,
+                "away": 0
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1583580,
+            "referee": null,
+            "date": "2026-08-01T15:00:00+00:00",
+            "timestamp": 1785596400,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": null
+            },
+            "league": {
+              "id": 667,
+              "name": "Friendlies Clubs",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/667.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Club Friendlies"
+            },
+            "home": {
+              "id": 1358,
+              "name": "Wycombe",
+              "logo": "https://media.api-sports.io/football/teams/1358.png",
+              "winner": false
+            },
+            "away": {
+              "id": 57,
+              "name": "Ipswich",
+              "logo": "https://media.api-sports.io/football/teams/57.png",
+              "winner": true
+            },
+            "goals_home": 1,
+            "goals_away": 2,
+            "score": {
+              "halftime": {
+                "home": 0,
+                "away": 0
+              },
+              "fulltime": {
+                "home": 1,
+                "away": 2
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1583519,
+            "referee": null,
+            "date": "2026-08-01T11:00:00+00:00",
+            "timestamp": 1785582000,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": null
+            },
+            "league": {
+              "id": 667,
+              "name": "Friendlies Clubs",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/667.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Club Friendlies"
+            },
+            "home": {
+              "id": 1338,
+              "name": "Oxford United",
+              "logo": "https://media.api-sports.io/football/teams/1338.png",
+              "winner": true
+            },
+            "away": {
+              "id": 57,
+              "name": "Ipswich",
+              "logo": "https://media.api-sports.io/football/teams/57.png",
+              "winner": false
+            },
+            "goals_home": 2,
+            "goals_away": 0,
+            "score": {
+              "halftime": {
+                "home": 0,
+                "away": 0
+              },
+              "fulltime": {
+                "home": 2,
+                "away": 0
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 32.3,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W04-Q037",
+  "ts_utc": "2026-08-16T06:32:16.897+00:00",
+  "wave": "W04",
+  "persona": "premium_vierge",
+  "persona_tier": "premium",
+  "category": "A6",
+  "question": "calendrier de Inter",
+  "context": {
+    "fixture_id": 1550092,
+    "league_id": 135,
+    "team_id": 505
+  },
+  "fixture_ref": 1550092,
+  "response_text": "Voici le calendrier complet de l'**Inter Milan** en **Serie A 2024/25** (saison terminée, toutes les journées jouées) :\n\n| Journée | Date | Match | Score |\n|---------|------|-------|-------|\n| J1 | 17/08/24 | Genoa – Inter (ext.) | 2-2 |\n| J2 | 24/08/24 | Inter – Lecce (dom.) | 2-0 |\n| J3 | 30/08/24 | Inter – Atalanta (dom.) | 4-0 |\n| J4 | 15/09/24 | Monza – Inter (ext.) | 1-1 |\n| J5 | 22/09/24 | Inter – AC Milan (dom.) | 1-2 |\n| J6 | 28/09/24 | Udinese – Inter (ext.) | 2-3 |\n| J7 | 05/10/24 | Inter – Torino (dom.) | 3-2 |\n| J8 | 20/10/24 | AS Roma – Inter (ext.) | 0-1 |\n| J9 | 27/10/24 | Inter – Juventus (dom.) | 4-4 |\n| J10 | 30/10/24 | Empoli – Inter (ext.) | 0-3 |\n| J11 | 03/11/24 | Inter – Venezia (dom.) | 1-0 |\n| J12 | 10/11/24 | Inter – Napoli (dom.) | 1-1 |\n| J13 | 23/11/24 | Hellas Verona – Inter (ext.) | 0-5 |\n| J16 | 16/12/24 | Lazio – Inter (ext.) | 0-6 |\n| J17 | 23/12/24 | Inter – Como (dom.) | 2-0 |\n| J18 | 28/12/24 | Cagliari – Inter (ext.) | 0-3 |\n| J19 | 15/01/25 | Inter – Bologna (dom.) | 2-2 |\n| J20 | 12/01/25 | Venezia – Inter (ext.) | 0-1 |\n| J21 | 19/01/25 | Inter – Empoli (dom.) | 3-1 |\n| J22 | 26/01/25 | Lecce – Inter (ext.) | 0-4 |\n| J23 | 02/02/25 | AC Milan – Inter (ext.) | 1-1 |\n| J14* | 06/02/25 | Fiorentina – Inter (ext.) | 3-0 |\n| J24 | 10/02/25 | Inter – Fiorentina (dom.) | 2-1 |\n| J25 | 16/02/25 | Juventus – Inter (ext.) | 1-0 |\n| J26 | 22/02/25 | Inter – Genoa (dom.) | 1-0 |\n| J27 | 01/03/25 | Napoli – Inter (ext.) | 1-1 |\n| J28 | 08/03/25 | Inter – Monza (dom.) | 3-2 |\n| J29 | 16/03/25 | Atalanta – Inter (ext.) | 0-2 |\n| J30 | 30/03/25 | Inter – Udinese (dom.) | 2-1 |\n| J31 | 05/04/25 | Parma – Inter (ext.) | 2-2 |\n| J32 | 12/04/25 | Inter – Cagliari (dom.) | 3-1 |\n| J33 | 20/04/25 | Bologna – Inter (ext.) | 1-0 |\n| J34 | 27/04/25 | Inter – AS Roma (dom.) | 0-1 |\n| J35 | 03/05/25 | Inter – Hellas Verona (dom.) | 1-0 |\n| J36 | 11/05/25 | Torino – Inter (ext.) | 0-2 |\n| J37 | 18/05/25 | Inter – Lazio (dom.) | 2-2 |\n| J38 | 23/05/25 | Como – Inter (ext.) | 0-2 |\n\n*La J14 (Fiorentina–Inter, 3-0) avait été reportée au 6 février 2025.\n\n**Bilan Inter :** 38 matchs, 24 victoires, 9 nuls, 5 défaites, 79 buts marqués / 35 encaissés → **2e de Serie A** (81 pts), qualifié en Ligue des Champions. Données issues de la saison 2024/25 (Serie A).",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 29066.7,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

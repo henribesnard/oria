@@ -1,0 +1,12 @@
+{
+  "started_utc": "2026-08-15T21:27:37.125586+00:00",
+  "finished_utc": "2026-08-16T06:43:18.983+00:00",
+  "mode": "live",
+  "total_exchanges": 104,
+  "matches_count": 8,
+  "waves_count": 9,
+  "elapsed_seconds": 965.4,
+  "errors": 0,
+  "degraded": 14,
+  "watchdog_alerts": 0
+}

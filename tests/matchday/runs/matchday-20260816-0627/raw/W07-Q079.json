@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W07-Q079",
+  "ts_utc": "2026-08-16T06:39:32.019+00:00",
+  "wave": "W07",
+  "persona": "free_vierge",
+  "persona_tier": "free",
+  "category": "B2",
+  "question": "analyse-moi Ipswich vs Sunderland",
+  "context": {
+    "fixture_id": 1557370,
+    "league_id": 39,
+    "team_id": 57
+  },
+  "fixture_ref": 1557370,
+  "response_text": "Voici mon analyse de **Ipswich vs Sunderland** (Premier League, saison 2026) 🏟️\n\n## 📋 Le match\n- **Date** : 22 août 2026, 14h00 UTC (16h00 heure française)\n- **Compétition** : Premier League — journée 1 (ouverture de saison)\n- **Stade** : Portman Road, Ipswich\n- **Statut** : À venir — aucune donnée pré-match alimentée pour l'instant\n\n## 🔄 Confrontations directes (10 derniers matchs)\n\n| Date | Lieu | Compétition | Score |\n|------|------|-------------|-------|\n| Jan. 2024 | Portman Road | Championship | **Ipswich 2-1 Sunderland** |\n| Août 2023 | Stadium of Light | Championship | Sunderland 1-**2 Ipswich** |\n| Déc. 2021 | Portman Road | League One | Ipswich 1-1 Sunderland |\n| Nov. 2021 | Stadium of Light | League One | Sunderland 2-0 Ipswich |\n| Jan. 2021 | Portman Road | League One | Ipswich 0-1 Sunderland |\n| Nov. 2020 | Stadium of Light | League One | Sunderland 2-1 Ipswich |\n| Fév. 2020 | Stadium of Light | League One | Sunderland 1-0 Ipswich |\n| Août 2019 | Portman Road | League One | Ipswich 1-1 Sunderland |\n| Fév. 2018 | Stadium of Light | Championship | Sunderland 0-2 Ipswich |\n| Sept. 2017 | Portman Road | Championship | **Ipswich 5-2 Sunderland** |\n\n**📊 Enseignements :**\n- **Bilan équilibré** : 4 victoires Ipswich, 3 nuls, 3 victoires Sunderland sur les 10 dernières confrontations.\n- **À Portman Road** (5 matchs) : Ipswich 2 victoires, 2 nuls, 1 défaite → léger avantage à domicile, mais aucun match sans but des deux côtés à domicile récemment.\n- **Les deux dernières confrontations (2023-2024) sont des victoires d'Ipswich** (2-1 à domicile, 2-1 à l'extérieur) — série en cours pour les Tractor Boys.\n- **Fait marquant** : le 5-2 de septembre 2017 à Portman Road, le match le plus prolifique de la série.\n- Toutes ces confrontations datent des divisions inférieures (Championship / League One) — les deux clubs montent progressivement en Premier League, ce qui rend ce duel d'**ouverture de saison** intéressant : une vraie première en PL dans l'ère moderne.\n\n## ⚠️ Limites des données\nJe n'ai **pas pu récupérer** pour cette rencontre :\n- ❌ Cotes bookmakers (non disponibles)\n- ❌ Compositions / infirmerie\n- ❌ Statistiques de saison (ouverture de saison — aucun match joué)\n- ❌ Classement actuel\n\n👉 L'analyse repose donc **uniquement sur l'historique des confrontations**. Le contexte (2 promus/remontés qui se retrouvent en PL) et l'avantage de Portman Road plaident pour un match serré, avec Ipswich légèrement favori sur l'historique récent. Dès que les cotes ou les compos seront disponibles, je pourrai affiner l'analyse ! Veux-tu que je suive Ipswich pour te tenir informé ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 21541.1,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

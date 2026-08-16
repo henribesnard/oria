@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W03-Q015",
+  "ts_utc": "2026-08-15T20:54:30.725+00:00",
+  "wave": "W03",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "A1",
+  "question": "les matchs de CONCACAF Central American Cup aujourd'hui",
+  "context": {
+    "fixture_id": 1548357,
+    "league_id": 1028,
+    "team_id": 2881
+  },
+  "fixture_ref": 1548357,
+  "response_text": "Je suis désolé, mais mes recherches sur la **CONCACAF Central American Cup** ne renvoient **aucune donnée** pour le moment (ni scores en direct, ni calendrier). 😕\n\nCela peut être dû à :\n- 📡 Une indisponibilité temporaire des données\n- 🔍 La compétition absente de mes sources actuelles\n\nJe préfère te le dire plutôt que d'inventer des matchs.\n\nEn attendant, je peux t'aider sur :\n- ⚽ **Les scores en direct** des autres compétitions (Europa League, etc.)\n- 📊 **Classements** et **statistiques** des championnats disponibles\n- 🔎 Une **autre équipe** ou compétition\n\nTu veux que je regarde autre chose ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 5704.8,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

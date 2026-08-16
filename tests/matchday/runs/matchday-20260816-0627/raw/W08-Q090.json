@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W08-Q090",
+  "ts_utc": "2026-08-16T06:40:44.330+00:00",
+  "wave": "W08",
+  "persona": "free_actif",
+  "persona_tier": "free",
+  "category": "B1",
+  "question": "Nottingham Forest ou Leeds, qui est le plus fort ?",
+  "context": {
+    "fixture_id": 1557371,
+    "league_id": 39,
+    "team_id": 65
+  },
+  "fixture_ref": 1557371,
+  "response_text": "Comparaison claire : **Nottingham Forest est plus fort que Leeds** — mais avec une nuance intéressante. 📊\n\n**Saison 2024-2025 (la dernière complète) :**\n\n| | Nottingham Forest | Leeds |\n|---|---|---|\n| Division | **Premier League** (élite) | Championship (D2) |\n| Position | **7e** | **1er** |\n| Points | **65** | 100 |\n| Victoires / Nuls / Défaites | 19 / 8 / 11 | 29 / 13 / 4 |\n| Buts pour / contre | 58 / 46 (+12) | 95 / 30 (+65) |\n| Issue | **Qualification Conf. League** 🏆 | **Promu en Premier League** |\n\n**L'analyse :**\n- **Nottingham Forest évolue au plus haut niveau** et a terminé **7e de Premier League**, décrochant une qualification européenne (Conference League). C'est la référence.\n- **Leeds a survolé la Championship** (100 points, 95 buts marqués, seulement 4 défaites) et remonte en Premier League cette saison — d'où leur affrontement d'aujourd'hui au City Ground. Mais ses statistiques impressionnantes ont été réalisées **une division en dessous**.\n- Le niveau de l'adversité fait toute la différence : Forest affronte Liverpool, Arsenal ou City chaque semaine ; Leeds affrontait des clubs de D2.\n\n⚠️ Les **confrontations directes** et les **stats détaillées** de ces deux équipes ne sont pas disponibles dans ma base (requêtes vides), je m'appuie donc sur les classements finaux.\n\n**En résumé :** sur les données 2024-25, **Nottingham Forest est un cran au-dessus** (équipe installée en PL, qualification européenne). Mais Leeds arrive avec un moral et une dynamique énormes (25 derniers matchs quasi parfaits en Championship) — ce choc d'aujourd'hui s'annonce ouvert. ⚽\n\n**Fraîcheur des données :** classements finaux complets des saisons 2024-25 (Premier League et Championship).",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 16660.4,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

@@ -1,0 +1,46 @@
+{
+  "exchange_id": "W02-Q017",
+  "ts_utc": "2026-08-16T06:29:00.976+00:00",
+  "wave": "W02",
+  "persona": "guest_live",
+  "persona_tier": "guest",
+  "category": "A16",
+  "question": "infos Hull City",
+  "context": {
+    "fixture_id": 1557368,
+    "league_id": 39,
+    "team_id": 64
+  },
+  "fixture_ref": 1557368,
+  "response_text": "Voici les informations sur l'équipe.",
+  "attachments": [
+    {
+      "kind": "table",
+      "data": {
+        "team": [
+          {
+            "id": 64,
+            "name": "Hull City",
+            "code": "HUL",
+            "country": "England",
+            "founded": 1904,
+            "logo": "https://media.api-sports.io/football/teams/64.png",
+            "venue": {
+              "id": 12051,
+              "name": "The MKM Stadium",
+              "city": "Hull",
+              "capacity": 25504
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 146.2,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

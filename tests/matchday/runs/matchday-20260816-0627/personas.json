@@ -1,0 +1,118 @@
+[
+  {
+    "name": "free_actif",
+    "tier": "free",
+    "email": "matchday-free1@testoria.example.com",
+    "user_id": "aeb79578193e4d4195200521ccc26064",
+    "follows": [
+      {
+        "entity_type": "team",
+        "entity_id": 85,
+        "name": "Paris Saint Germain"
+      },
+      {
+        "entity_type": "league",
+        "entity_id": 61,
+        "name": "Ligue 1"
+      }
+    ],
+    "description": "Utilisateur free avec follows (PSG, Ligue 1)"
+  },
+  {
+    "name": "free_vierge",
+    "tier": "free",
+    "email": "matchday-free2@testoria.example.com",
+    "user_id": "22c2bdde70104e83a111ba9cc3fca663",
+    "follows": [],
+    "description": "Utilisateur free sans follows"
+  },
+  {
+    "name": "free_limite",
+    "tier": "free",
+    "email": "matchday-free3@testoria.example.com",
+    "user_id": "2b396e37a32c42f8a3c928e72ae1c52b",
+    "follows": [
+      {
+        "entity_type": "team",
+        "entity_id": 81,
+        "name": "Marseille"
+      }
+    ],
+    "description": "Utilisateur free qui testera les limites de quota"
+  },
+  {
+    "name": "premium_actif",
+    "tier": "premium",
+    "email": "matchday-prem1@testoria.example.com",
+    "user_id": "563b946106644ca795306e31480c58fc",
+    "follows": [
+      {
+        "entity_type": "team",
+        "entity_id": 85,
+        "name": "Paris Saint Germain"
+      },
+      {
+        "entity_type": "team",
+        "entity_id": 541,
+        "name": "Real Madrid"
+      },
+      {
+        "entity_type": "league",
+        "entity_id": 61,
+        "name": "Ligue 1"
+      },
+      {
+        "entity_type": "league",
+        "entity_id": 2,
+        "name": "Champions League"
+      }
+    ],
+    "description": "Premium actif, multi-follows"
+  },
+  {
+    "name": "premium_vierge",
+    "tier": "premium",
+    "email": "matchday-prem2@testoria.example.com",
+    "user_id": "fcaafc331aea42b68010e6d165fea2f5",
+    "follows": [],
+    "description": "Premium sans follows, teste l'acces features premium"
+  },
+  {
+    "name": "premium_intensif",
+    "tier": "premium",
+    "email": "matchday-prem3@testoria.example.com",
+    "user_id": "89c65ec33c3a4b78946ff546efee30cb",
+    "follows": [
+      {
+        "entity_type": "team",
+        "entity_id": 40,
+        "name": "Liverpool"
+      }
+    ],
+    "description": "Premium qui envoie beaucoup de requetes (test charge)"
+  },
+  {
+    "name": "guest_curieux",
+    "tier": "guest",
+    "email": "",
+    "user_id": "",
+    "follows": [],
+    "description": "Guest anonyme, questions factuelles variees"
+  },
+  {
+    "name": "guest_adversarial",
+    "tier": "guest",
+    "email": "",
+    "user_id": "",
+    "follows": [],
+    "description": "Guest anonyme, questions adversariales et edge cases"
+  },
+  {
+    "name": "guest_live",
+    "tier": "guest",
+    "email": "",
+    "user_id": "",
+    "follows": [],
+    "description": "Guest anonyme, questions sur les matchs en direct"
+  }
+]

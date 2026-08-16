@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W02-Q014",
+  "ts_utc": "2026-08-16T06:28:31.078+00:00",
+  "wave": "W02",
+  "persona": "premium_intensif",
+  "persona_tier": "premium",
+  "category": "A8",
+  "question": "forme de Hull City",
+  "context": {
+    "fixture_id": 1557368,
+    "league_id": 39,
+    "team_id": 64
+  },
+  "fixture_ref": 1557368,
+  "response_text": "Je n'ai pas pu traiter ta demande « forme de Hull City » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": true,
+  "freshness": null,
+  "latency_ms": 9009.9,
+  "http_status": 200,
+  "error": null,
+  "route": "fallback"
+}

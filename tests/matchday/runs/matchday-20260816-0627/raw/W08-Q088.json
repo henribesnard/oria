@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W08-Q088",
+  "ts_utc": "2026-08-16T06:40:33.173+00:00",
+  "wave": "W08",
+  "persona": "guest_adversarial",
+  "persona_tier": "guest",
+  "category": "A12",
+  "question": "blesses de Nottingham Forest",
+  "context": {
+    "fixture_id": 1557371,
+    "league_id": 39,
+    "team_id": 65
+  },
+  "fixture_ref": 1557371,
+  "response_text": "Aucune donnée de blessure ou suspension n'est disponible pour **Nottingham Forest** sur ce match (fixture 1557371) dans la base actuellement. 🩹\n\nCela peut signifier :\n- Aucun blessé recensé pour cette rencontre\n- Des données non remontées dans le système\n\n⚠️ L'absence de données ne garantit pas un effectif au complet.\n\nJe peux vérifier les **compositions probables** (lineups) de ce match ou les **stats d'équipe** de Nottingham Forest si tu veux une meilleure visibilité ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 3279.0,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W09-Q095",
+  "ts_utc": "2026-08-16T06:41:53.904+00:00",
+  "wave": "W09",
+  "persona": "free_limite",
+  "persona_tier": "free",
+  "category": "A3",
+  "question": "dernier resultat de Udinese",
+  "context": {
+    "fixture_id": 1550095,
+    "league_id": 135,
+    "team_id": 494
+  },
+  "fixture_ref": 1550095,
+  "response_text": "Je n'ai malheureusement pas réussi à récupérer les données de l'Udinese pour le moment (les requêtes n'ont rien renvoyé). Je préfère ne pas spéculer sur un résultat sans source.\n\nTu peux réessayer dans quelques instants, ou me demander une autre équipe ou compétition si tu veux.",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 7706.8,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

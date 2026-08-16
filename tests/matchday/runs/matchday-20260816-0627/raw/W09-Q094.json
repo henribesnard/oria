@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W09-Q094",
+  "ts_utc": "2026-08-16T06:41:45.894+00:00",
+  "wave": "W09",
+  "persona": "free_vierge",
+  "persona_tier": "free",
+  "category": "A2",
+  "question": "prochain match de Udinese",
+  "context": {
+    "fixture_id": 1550095,
+    "league_id": 135,
+    "team_id": 494
+  },
+  "fixture_ref": 1550095,
+  "response_text": "Voici le prochain match de l'**Udinese** :\n\n## ⚽ Udinese vs Como\n- **Compétition** : Serie A — journée 1 (ouverture de saison)\n- **Date** : 22 août 2026, 16h30 UTC (18h30 heure italienne)\n- **Stade** : Bluenergy Stadium – Stadio Friuli, Udine\n- **Statut** : À venir (pas encore commencé)\n\nLe match est bien identifié dans ma base (fixture n°1550095). Veux-tu que je te fasse une analyse complète (cotes, confrontations, forme des équipes) ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 5994.1,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

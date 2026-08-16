@@ -1,0 +1,51 @@
+{
+  "exchange_id": "W01-Q007",
+  "ts_utc": "2026-08-16T06:27:38.400+00:00",
+  "wave": "W01",
+  "persona": "guest_adversarial",
+  "persona_tier": "guest",
+  "category": "A4",
+  "question": "classement Ligue 1",
+  "context": {},
+  "fixture_ref": null,
+  "response_text": "De quel championnat veux-tu le classement ?",
+  "attachments": [],
+  "suggested_actions": [
+    {
+      "label": "Ligue 1",
+      "payload": {
+        "text": "classement ligue 1"
+      }
+    },
+    {
+      "label": "Premier League",
+      "payload": {
+        "text": "classement Premier League"
+      }
+    },
+    {
+      "label": "La Liga",
+      "payload": {
+        "text": "classement La Liga"
+      }
+    },
+    {
+      "label": "Serie A",
+      "payload": {
+        "text": "classement Serie A"
+      }
+    },
+    {
+      "label": "Bundesliga",
+      "payload": {
+        "text": "classement Bundesliga"
+      }
+    }
+  ],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 60.6,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

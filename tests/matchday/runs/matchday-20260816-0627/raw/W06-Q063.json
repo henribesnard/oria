@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W06-Q063",
+  "ts_utc": "2026-08-16T06:36:49.737+00:00",
+  "wave": "W06",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "A10",
+  "question": "stats des joueurs de Everton",
+  "context": {
+    "fixture_id": 1557369,
+    "league_id": 39,
+    "team_id": 45
+  },
+  "fixture_ref": 1557369,
+  "response_text": "Aucune statistique individuelle n'est disponible pour **Everton** (team_id 45) en Premier League (saison 2024-2025) dans la base actuellement. 😕\n\nLes données de joueurs ne sont pas remontées pour cette équipe.\n\nJe peux essayer autre chose à la place :\n- 📊 **Stats d'équipe** d'Everton (buts, forme, série, clean sheets…)\n- ⚽ **Événements du match** (fixture 1557369)\n- 📋 **Compositions probables** de ce match\n- 🗓️ **Résultats ou prochains matchs** d'Everton\n\nTu veux que je regarde l'un de ces points ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 4284.6,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

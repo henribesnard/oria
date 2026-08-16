@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W02-Q018",
+  "ts_utc": "2026-08-16T06:29:03.137+00:00",
+  "wave": "W02",
+  "persona": "free_actif",
+  "persona_tier": "free",
+  "category": "B1",
+  "question": "Hull City ou Manchester United, qui est le plus fort ?",
+  "context": {
+    "fixture_id": 1557368,
+    "league_id": 39,
+    "team_id": 64
+  },
+  "fixture_ref": 1557368,
+  "response_text": "Voici la réponse claire : **Manchester United est plus fort que Hull City**, et les données le confirment largement. ⚽\n\n**Le niveau des divisions (saison 2024-25) :**\n- **Manchester United** évolue en **Premier League** (1re division anglaise).\n- **Hull City** évolue en **Championship** (2e division).\n\n**Saison 2024-25 (données complètes) :**\n| | Man United (PL) | Hull City (Championship) |\n|---|---|---|\n| Classement | 15e / 20 | 21e / 24 |\n| Points | 42 | 49 |\n| Victoires / Nuls / Défaites | 11 / 9 / 18 | 12 / 13 / 21 |\n| Buts pour / contre | 44 / 54 | 44 / 54 |\n| Différence de buts | -10 | -10 |\n\n*Note : Hull City a fini à égalité de points avec Luton (49 pts) et n'a évité la relégation en League One que grâce à une meilleure différence de buts (-10 contre -24).*\n\n**Face-à-face (dernières confrontations, 2013-2017) :** Manchester United domine très nettement. Sur les 10 derniers affrontements, MU l'emporte dans les matchs de Premier League (ex. 3-0, 3-1, 3-2) ; Hull n'a gagné qu'une fois, en demi-finale aller de League Cup (2-1 en janvier 2017), sans empêcher la qualification de United.\n\n**En résumé :** même si Manchester United a réalisé sa pire saison de l'ère moderne (15e, 18 défaites), le club reste dans l'élite, avec un historique et un effectif bien supérieurs à ceux de Hull City, qui lutte désormais en 2e division. La hiérarchie est donc claire.\n\n**Fraîcheur des données :** saison 2024-2025 complète (classements finaux) ; face-à-face non mis à jour depuis 2017 (les deux clubs ne se sont plus croisés).",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 20353.7,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

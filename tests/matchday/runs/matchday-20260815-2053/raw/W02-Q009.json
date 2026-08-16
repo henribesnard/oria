@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W02-Q009",
+  "ts_utc": "2026-08-15T20:53:47.611+00:00",
+  "wave": "W02",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "A1",
+  "question": "les matchs de UEFA Europa League aujourd'hui",
+  "context": {
+    "fixture_id": 1607181,
+    "league_id": 3,
+    "team_id": 701
+  },
+  "fixture_ref": 1607181,
+  "response_text": "Voici les matchs de l'**UEFA Europa League** en ce moment (3ᵉ tour de qualification) 📅⚽\n\n**🟢 Matchs en cours :**\n\n| Match | Score | Minute |\n|---|---|---|\n| **Egnatia Rrogozhinë** – Shamrock Rovers | **4-0** (4-0 mi-temps) | 45' +4 |\n| **Rangers** – Jagiellonia | **1-0** (1-0 mi-temps) | 61' |\n| **Anderlecht** – PAOK | **3-1** (1-1 mi-temps) | 59' |\n| CSKA Sofia – **Maccabi Tel Aviv** | **1-3** (0-1 mi-temps) | 88' |\n| Heart Of Midlothian – Benfica | **0-0** | 46' |\n\n**📌 Résumé :**\n- 🔥 **Egnatia** écrase Shamrock Rovers 4-0\n- ⚪ **Rangers** mène 1-0 face à Jagiellonia\n- 🔵 **Anderlecht** mène 3-1 contre le PAOK\n- 🟡 **Maccabi Tel Aviv** domine le CSKA Sofia 3-1\n- 🤝 **Hearts** et **Benfica** sont à égalité 0-0\n\nTu veux le détail d'un de ces matchs (compositions, statistiques, événements) ? 📊",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 10038.7,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

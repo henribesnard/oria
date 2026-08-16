@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W08-Q089",
+  "ts_utc": "2026-08-16T06:40:38.455+00:00",
+  "wave": "W08",
+  "persona": "guest_live",
+  "persona_tier": "guest",
+  "category": "A16",
+  "question": "infos Nottingham Forest",
+  "context": {
+    "fixture_id": 1557371,
+    "league_id": 39,
+    "team_id": 65
+  },
+  "fixture_ref": 1557371,
+  "response_text": "Aucune donnée n'est disponible pour **Nottingham Forest** (team_id 65) dans la base actuellement. 😕\n\nLes requêtes d'infos club et de stats d'équipe (league_id 39, saison 2024) renvoient une réponse vide, donc je ne peux pas te fournir de fiche fiable sur ce club pour l'instant.\n\nCe que je peux tenter à la place :\n- 📋 **Compositions probables** du match (fixture 1557371)\n- ⚽ **Événements du match** (buts, cartons, remplacements)\n- 📊 **Classement** Premier League 2024-2025\n\nTu veux que je regarde l'un de ces points ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 3869.4,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

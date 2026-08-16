@@ -1,0 +1,46 @@
+{
+  "exchange_id": "W04-Q041",
+  "ts_utc": "2026-08-16T06:33:05.742+00:00",
+  "wave": "W04",
+  "persona": "guest_live",
+  "persona_tier": "guest",
+  "category": "A16",
+  "question": "infos Inter",
+  "context": {
+    "fixture_id": 1550092,
+    "league_id": 135,
+    "team_id": 505
+  },
+  "fixture_ref": 1550092,
+  "response_text": "Voici les informations sur l'équipe.",
+  "attachments": [
+    {
+      "kind": "table",
+      "data": {
+        "team": [
+          {
+            "id": 505,
+            "name": "Inter",
+            "code": "INT",
+            "country": "Italy",
+            "founded": 1908,
+            "logo": "https://media.api-sports.io/football/teams/505.png",
+            "venue": {
+              "id": 907,
+              "name": "Stadio Giuseppe Meazza",
+              "city": "Milano",
+              "capacity": 80018
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 179.5,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

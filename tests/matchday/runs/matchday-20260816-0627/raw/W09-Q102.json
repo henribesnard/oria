@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W09-Q102",
+  "ts_utc": "2026-08-16T06:42:36.492+00:00",
+  "wave": "W09",
+  "persona": "free_actif",
+  "persona_tier": "free",
+  "category": "B1",
+  "question": "Udinese ou Como, qui est le plus fort ?",
+  "context": {
+    "fixture_id": 1550095,
+    "league_id": 135,
+    "team_id": 494
+  },
+  "fixture_ref": 1550095,
+  "response_text": "Bonne nouvelle : cette fois la **Serie A est bien dans ma base** (j'avais eu une erreur de récupération tout à l'heure — je corrige). Voici la comparaison basée sur le classement final 2024-25. 📊\n\n**Classement final Serie A 2024-2025 :**\n\n| | Como | Udinese |\n|---|---|---|\n| Position | **10e** | 12e |\n| Points | **49** | 44 |\n| Victoires / Nuls / Défaites | 13 / 10 / 15 | 12 / 8 / 18 |\n| Buts pour / contre | 49 / 52 (-3) | 41 / 56 (-15) |\n| Forme (5 derniers) | **LDWWW** | LLLWD |\n| Domicile / Extérieur | 8V / 5N / 6D – 5V / 5N / 9D | 7V / 3N / 9D – 5V / 5N / 9D |\n\n**L'analyse :**\n- **Como est clairement au-dessus** : 5 points d'avance (49 contre 44), une **meilleure attaque** (49 buts) et une **meilleure défense** (52 encaissés contre 56).\n- **La dynamique penche aussi pour Como** : 3 victoires sur les 5 dernières journées (LDWWW) contre une seule pour l'Udinese (LLLWD), qui a fini en chute libre.\n- À l'extérieur, les deux équipes ont un bilan quasi identique (5V/5N/9D), mais Como compense mieux à domicile (8 victoires contre 7).\n\n**En résumé :** sur les données 2024-25, **Como est plus fort qu'Udinese**, que ce soit au classement, à l'attaque, en défense ou sur la forme de fin de saison.\n\n**Fraîcheur des données :** classement final complet Serie A saison 2024-25 (league_id=135). ⚽\n\nTu veux que je regarde le **face-à-face** ou les **stats détaillées** de ces deux équipes ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 11403.3,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

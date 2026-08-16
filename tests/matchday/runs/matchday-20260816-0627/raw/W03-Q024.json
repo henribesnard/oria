@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W03-Q024",
+  "ts_utc": "2026-08-16T06:30:11.747+00:00",
+  "wave": "W03",
+  "persona": "premium_actif",
+  "persona_tier": "premium",
+  "category": "A4",
+  "question": "classement Ligue 1",
+  "context": {
+    "fixture_id": 1552732,
+    "league_id": 61,
+    "team_id": 116
+  },
+  "fixture_ref": 1552732,
+  "response_text": "Voici le classement de la **Ligue 1** (saison 2024-2025, 34 journées jouées) :\n\n| # | Équipe | Pts | J | G | N | P | Diff |\n|---|--------|-----|---|----|----|----|------|\n| 1 | Paris SG | 84 | 34 | 26 | 6 | 2 | +57 |\n| 2 | Marseille | 65 | 34 | 20 | 5 | 9 | +27 |\n| 3 | Monaco | 61 | 34 | 18 | 7 | 9 | +22 |\n| 4 | Nice | 60 | 34 | 17 | 9 | 8 | +25 |\n| 5 | Lille | 60 | 34 | 17 | 9 | 8 | +16 |\n| 6 | Lyon | 57 | 34 | 17 | 6 | 11 | +19 |\n| 7 | Strasbourg | 57 | 34 | 16 | 9 | 9 | +12 |\n| **8** | **Lens** | **52** | **34** | **15** | **7** | **12** | **+3** |\n| 9 | Brest | 50 | 34 | 15 | 5 | 14 | -7 |\n| 10 | Toulouse | 42 | 34 | 11 | 9 | 14 | +1 |\n| 11 | Auxerre | 42 | 34 | 11 | 9 | 14 | -3 |\n| 12 | Rennes | 41 | 34 | 13 | 2 | 19 | +1 |\n| 13 | Nantes | 36 | 34 | 8 | 12 | 14 | -13 |\n| 14 | Angers | 36 | 34 | 10 | 6 | 18 | -21 |\n| 15 | Le Havre | 34 | 34 | 10 | 4 | 20 | -31 |\n| 16 | Reims | 33 | 34 | 8 | 9 | 17 | -14 |\n| 17 | Saint-Étienne | 30 | 34 | 8 | 6 | 20 | -38 |\n| 18 | Montpellier | 16 | 34 | 4 | 4 | 26 | -56 |\n\n**Points clés :**\n- 🏆 **Paris SG** champion avec 84 pts, sacré bien avant la fin.\n- 🥇 C1 : PSG, Marseille, Monaco / Barrage C1 : Nice / C3 : Lille, Lyon / C4 : Strasbourg.\n- ⚠️ Zone rouge : Reims (barrage), Saint-Étienne et Montpellier relégués.\n- **Lens** (ton équipe suivie) termine **8e** avec 52 pts, à 5 points d'une place européenne.\n\nDonnées du classement final de la saison 2024-2025. Tu veux le détail d'un match de Lens ou les stats d'un joueur ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 8423.4,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

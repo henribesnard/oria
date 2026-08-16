@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W03-Q031",
+  "ts_utc": "2026-08-16T06:31:18.010+00:00",
+  "wave": "W03",
+  "persona": "free_vierge",
+  "persona_tier": "free",
+  "category": "B2",
+  "question": "analyse-moi Lens vs Auxerre",
+  "context": {
+    "fixture_id": 1552732,
+    "league_id": 61,
+    "team_id": 116
+  },
+  "fixture_ref": 1552732,
+  "response_text": "Voici mon analyse de **Lens vs Auxerre** (Ligue 1, saison 2026) 🏟️\n\n## 📋 Le match\n- **Date** : 22 août 2026 (17h15 heure locale)\n- **Stade** : Bollaert-Delelis, Lens\n- **Statut** : Match à venir — données pré-match\n\n## 🔄 Confrontations directes (9 derniers matchs joués)\n\n| Date | Lieu | Compétition | Score |\n|------|------|-------------|-------|\n| Jan. 2026 | Lens | Ligue 1 | **Lens 1-0 Auxerre** |\n| Oct. 2025 | Auxerre | Ligue 1 | **Auxerre 1-2 Lens** |\n| Avr. 2025 | Lens | Ligue 1 | Lens 0-**4** Auxerre |\n| Déc. 2024 | Auxerre | Ligue 1 | Auxerre 2-2 Lens |\n| Juin 2023 | Auxerre | Ligue 1 | Auxerre 1-3 Lens |\n| Jan. 2023 | Lens | Ligue 1 | **Lens 1-0 Auxerre** |\n\n**Bilan des 9 dernières confrontations :** Lens 6 victoires, 2 nuls, 1 défaite.\n- **Lens est sur une série de 3 matchs sans défaite** face à Auxerre (2 victoires, 1 nul).\n- Attention : le dernier match à Bollaert (avril 2025) s'était soldé par une **défaite 0-4**, la plus lourde de cette série — Lens avait pris sa revanche en janvier 2026 (1-0).\n\n## 💰 Les cotes (bookmakers, pré-match)\nLes bookmakers font de **Lens un net favori** :\n\n| Marché | Cote (Bet365) | Lecture |\n|--------|---------------|---------|\n| Victoire Lens | ~1.57 | ~64% de probabilité implicite |\n| Nul | ~4.10 | |\n| Victoire Auxerre | ~5.00 | ~20% |\n| Les deux équipes marquent : Oui | ~1.65 | Scénario ouvert |\n| Plus de 2,5 buts | ~1.62 | |\n| Handicap asiatique | Lens -0,75/-1 | |\n\n**Lecture des cotes :**\n- Les bookmakers anticipent un match **dominé par Lens**, avec un avantage d'environ 1 but.\n- Le marché \"les deux équipes marquent\" est très ouvert (1,65), ce qui suggère qu'Auxerre peut **marquer à l'extérieur** malgré le statut de favori lensois.\n- Clean sheet de Lens : seulement ~2,55-2,62 → pas considéré comme très probable par le marché.\n\n## ⚠️ Limites de l'analyse\nJe n'ai **pas pu récupérer** pour cette rencontre :\n- ❌ Les compositions probables / l'infirmerie\n- ❌ Les statistiques de saison en cours (les deux équipes)\n- ❌ Les classements actuels\n\nL'analyse repose donc sur les **confrontations directes** et les **cotes** uniquement. Si tu veux, je peux te donner le classement de Ligue 1 ou les stats des joueurs dès qu'elles seront disponibles.",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 22550.0,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

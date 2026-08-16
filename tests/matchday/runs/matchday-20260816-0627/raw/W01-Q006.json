@@ -1,0 +1,20 @@
+{
+  "exchange_id": "W01-Q006",
+  "ts_utc": "2026-08-16T06:27:31.108+00:00",
+  "wave": "W01",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "B8",
+  "question": "c'est quoi le xG ?",
+  "context": {},
+  "fixture_ref": null,
+  "response_text": "Le **xG** (Expected Goals, ou \"buts attendus\" en français) est une statistique avancée qui mesure la **probabilité qu'un tir finisse au fond des filets**. 🎯\n\n**Comment ça marche ?**\nChaque tir reçoit une valeur entre 0 et 1 selon sa dangerosité :\n- Un penalty : ~0,76\n- Une occasion face au gardien : ~0,50\n- Un tir de loin / angle fermé : ~0,05\n\nLe xG est calculé à partir de facteurs comme la **distance**, l'**angle de tir**, la **position des défenseurs**, la **partie du corps utilisée**, etc.\n\n**À quoi ça sert ?**\n- 📊 **Évaluer la qualité des occasions**, pas seulement le résultat\n- 🔮 **Prédire la performance future** (un joueur avec un xG élevé mais peu de buts marque souvent \"plus que sa chance\")\n- ⚖️ **Juger l'efficacité** : marquer beaucoup avec un faible xG = surperformance\n\n**Exemple** : si une équipe a un xG de 3,0 mais marque seulement 1 but, elle a créé beaucoup d'occasions mais a manqué de réalisme (ou le gardien a été décisif). À l'inverse, gagner 1-0 avec un xG de 0,4 peut être considéré comme une \"victoire chanceuse\".\n\nC'est un excellent outil pour analyser la performance réelle d'une équipe au-delà du simple score ! Tu veux que je récupère des statistiques de xG pour une équipe ou un match en particulier ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 5286.6,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

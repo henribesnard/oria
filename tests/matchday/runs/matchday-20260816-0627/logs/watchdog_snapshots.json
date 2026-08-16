@@ -1,0 +1,431 @@
+[
+  {
+    "ts": "2026-08-16T06:27:17.301+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 8,
+      "remaining_budget": 7470,
+      "rate_per_min": 10,
+      "calls_this_minute": 0,
+      "in_flight_count": 0,
+      "negative_cache_size": 7
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:27:47.352+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 12,
+      "remaining_budget": 7462,
+      "rate_per_min": 10,
+      "calls_this_minute": 4,
+      "in_flight_count": 0,
+      "negative_cache_size": 7
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:28:17.420+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 19,
+      "remaining_budget": 7464,
+      "rate_per_min": 10,
+      "calls_this_minute": 11,
+      "in_flight_count": 0,
+      "negative_cache_size": 8
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:28:47.454+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 22,
+      "remaining_budget": 7451,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 9
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:29:17.493+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 29,
+      "remaining_budget": 7453,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 10
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:29:47.517+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 29,
+      "remaining_budget": 7453,
+      "rate_per_min": 10,
+      "calls_this_minute": 7,
+      "in_flight_count": 0,
+      "negative_cache_size": 10
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:30:17.537+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 39,
+      "remaining_budget": 7443,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 11
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:30:47.566+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 39,
+      "remaining_budget": 7443,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 11
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:31:17.612+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 44,
+      "remaining_budget": 7437,
+      "rate_per_min": 10,
+      "calls_this_minute": 5,
+      "in_flight_count": 0,
+      "negative_cache_size": 13
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:31:47.637+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 49,
+      "remaining_budget": 7432,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 16
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:32:17.674+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 54,
+      "remaining_budget": 7426,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 16
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:32:47.698+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 56,
+      "remaining_budget": 7424,
+      "rate_per_min": 10,
+      "calls_this_minute": 7,
+      "in_flight_count": 0,
+      "negative_cache_size": 16
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:33:17.756+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 64,
+      "remaining_budget": 7416,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 17
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:33:47.788+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 66,
+      "remaining_budget": 7414,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 18
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:34:17.821+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 74,
+      "remaining_budget": 7405,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 18
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:34:47.846+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 76,
+      "remaining_budget": 7403,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 18
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:35:17.870+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 84,
+      "remaining_budget": 7393,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 20
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:35:47.902+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 86,
+      "remaining_budget": 7390,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 20
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:36:17.937+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 93,
+      "remaining_budget": 7380,
+      "rate_per_min": 10,
+      "calls_this_minute": 9,
+      "in_flight_count": 0,
+      "negative_cache_size": 20
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:36:47.956+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 96,
+      "remaining_budget": 7376,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 20
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:37:17.972+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 101,
+      "remaining_budget": 7375,
+      "rate_per_min": 10,
+      "calls_this_minute": 8,
+      "in_flight_count": 0,
+      "negative_cache_size": 20
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:37:47.997+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 104,
+      "remaining_budget": 7372,
+      "rate_per_min": 10,
+      "calls_this_minute": 8,
+      "in_flight_count": 0,
+      "negative_cache_size": 22
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:38:18.022+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 108,
+      "remaining_budget": 7356,
+      "rate_per_min": 10,
+      "calls_this_minute": 7,
+      "in_flight_count": 0,
+      "negative_cache_size": 22
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:38:48.086+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 114,
+      "remaining_budget": 7350,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 22
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:39:18.112+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 117,
+      "remaining_budget": 7357,
+      "rate_per_min": 10,
+      "calls_this_minute": 9,
+      "in_flight_count": 0,
+      "negative_cache_size": 22
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:39:48.129+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 124,
+      "remaining_budget": 7338,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 22
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:40:18.153+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 129,
+      "remaining_budget": 7344,
+      "rate_per_min": 10,
+      "calls_this_minute": 12,
+      "in_flight_count": 0,
+      "negative_cache_size": 22
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:40:48.174+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 134,
+      "remaining_budget": 7327,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 0,
+      "negative_cache_size": 23
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:41:18.206+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 137,
+      "remaining_budget": 7335,
+      "rate_per_min": 10,
+      "calls_this_minute": 8,
+      "in_flight_count": 0,
+      "negative_cache_size": 24
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:41:48.229+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 143,
+      "remaining_budget": 7318,
+      "rate_per_min": 10,
+      "calls_this_minute": 9,
+      "in_flight_count": 0,
+      "negative_cache_size": 24
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:42:18.425+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 147,
+      "remaining_budget": 7324,
+      "rate_per_min": 10,
+      "calls_this_minute": 10,
+      "in_flight_count": 1,
+      "negative_cache_size": 24
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:42:48.459+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 151,
+      "remaining_budget": 7309,
+      "rate_per_min": 10,
+      "calls_this_minute": 8,
+      "in_flight_count": 0,
+      "negative_cache_size": 24
+    },
+    "health_status": "up"
+  },
+  {
+    "ts": "2026-08-16T06:43:18.478+00:00",
+    "quota": {
+      "daily_budget": 100,
+      "calls_today": 154,
+      "remaining_budget": 7305,
+      "rate_per_min": 10,
+      "calls_this_minute": 7,
+      "in_flight_count": 0,
+      "negative_cache_size": 24
+    },
+    "health_status": "up"
+  }
+]

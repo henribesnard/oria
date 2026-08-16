@@ -1,0 +1,57 @@
+{
+  "run_dir": "C:\\Users\\henri\\Projets\\oria\\tests\\matchday\\runs\\matchday-20260816-0627",
+  "all_passed": true,
+  "summary": "10/10 checks passed",
+  "checks": [
+    {
+      "name": "structure",
+      "passed": true,
+      "detail": "tous les repertoires et fichiers presents"
+    },
+    {
+      "name": "manifest",
+      "passed": true,
+      "detail": "run_id=matchday-20260816-0627, 104 exchanges"
+    },
+    {
+      "name": "plan",
+      "passed": true,
+      "detail": "9 vagues, 104 questions planifiees"
+    },
+    {
+      "name": "personas",
+      "passed": true,
+      "detail": "9 personas"
+    },
+    {
+      "name": "raw_exchanges",
+      "passed": true,
+      "detail": "104 echanges"
+    },
+    {
+      "name": "exchange_completeness",
+      "passed": true,
+      "detail": "104 echanges complets et jugeables"
+    },
+    {
+      "name": "oracle",
+      "passed": true,
+      "detail": "3 fichiers oracle"
+    },
+    {
+      "name": "metrics",
+      "passed": true,
+      "detail": "1 fichiers metriques"
+    },
+    {
+      "name": "timestamps",
+      "passed": true,
+      "detail": "tous les horodatages en UTC"
+    },
+    {
+      "name": "no_secrets",
+      "passed": true,
+      "detail": "aucun secret detecte"
+    }
+  ]
+}

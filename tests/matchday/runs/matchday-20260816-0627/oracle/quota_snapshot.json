@@ -1,0 +1,10 @@
+{
+  "daily_budget": 100,
+  "calls_today": 8,
+  "remaining_budget": 7470,
+  "rate_per_min": 10,
+  "calls_this_minute": 0,
+  "in_flight_count": 0,
+  "negative_cache_size": 7,
+  "collected_utc": "2026-08-16T06:27:16.156560+00:00"
+}

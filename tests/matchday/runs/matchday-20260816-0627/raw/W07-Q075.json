@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W07-Q075",
+  "ts_utc": "2026-08-16T06:38:47.323+00:00",
+  "wave": "W07",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "A10",
+  "question": "stats des joueurs de Ipswich",
+  "context": {
+    "fixture_id": 1557370,
+    "league_id": 39,
+    "team_id": 57
+  },
+  "fixture_ref": 1557370,
+  "response_text": "Aucune statistique individuelle n'est disponible pour **Ipswich Town** (team_id 57) en Premier League (saison 2024-2025) dans la base actuellement. 😕\n\nMême les infos de l'équipe ne remontent pas pour cet ID, donc les données de joueurs ne sont pas disponibles non plus.\n\nJe peux essayer autre chose :\n- 📋 **Compositions probables** du match (fixture 1557370)\n- ⚽ **Événements du match** (buts, cartons, remplacements)\n- 🗓️ **Résultats ou prochains matchs** d'Ipswich\n\nTu veux que je regarde l'un de ces points ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 5892.7,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

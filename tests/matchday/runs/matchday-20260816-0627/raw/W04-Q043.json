@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W04-Q043",
+  "ts_utc": "2026-08-16T06:33:21.680+00:00",
+  "wave": "W04",
+  "persona": "free_vierge",
+  "persona_tier": "free",
+  "category": "B2",
+  "question": "analyse-moi Inter vs Monza",
+  "context": {
+    "fixture_id": 1550092,
+    "league_id": 135,
+    "team_id": 505
+  },
+  "fixture_ref": 1550092,
+  "response_text": "Voici mon analyse de **Inter vs Monza** (Serie A, saison 2026) 🏟️\n\n## 📋 Le match\n- **Date** : 22 août 2026, coup d'envoi 16h30 UTC (18h30 heure italienne)\n- **Compétition** : Serie A — journée 1 (ouverture de saison)\n- **Stade** : Giuseppe Meazza (San Siro), Milan\n\n## 💰 Les cotes (consensus bookmakers)\n\n**Un favori écrasant : l'Inter** 🎯\n\n| Marché | Cote moyenne | Lecture |\n|--------|-------------|---------|\n| **Victoire Inter** | 1.20 – 1.26 | ~80% de probabilité implicite |\n| Nul | 5.5 – 6.7 | ~16% |\n| **Victoire Monza** | 9.6 – 15 | ~8% seulement |\n\n**Handicap asiatique :** Inter **-1,25 / -1,5** (les bookmakers donnent ~1 but et demi d'avance à l'Inter). L'Inter est donné gagnant par au moins 2 buts d'écart dans un scénario moyen.\n\n**Autres marchés clés :**\n- **Over 2,5 buts** : 1,65 vs Under 2,5 : 2,20 → un match à 3 buts ou plus est anticipé\n- **Les deux équipes marquent** : Oui 2,27-2,30 / Non 1,53-1,62 → le marché **n'attend pas de but de Monza** (défense interiste + faiblesse offensive de Monza)\n- **Clean sheet Inter** : Oui 1,62-1,65 → probabilité élevée que Monza ne marque pas\n- **Scores exacts favoris** : **2-0** (5,50) et **3-0** (6,50-7,00) devant 1-0 (6,50) et 3-1 (11,00)\n\n**Lecture du marché :**\n- Match à **sens unique attendu** : l'Inter à San Siro face à Monza, promu/maintenu, c'est le scénario type du \"gros\" face au \"petit\".\n- Le marché anticipe une **victoire nette de l'Inter** (handicap -1,5), probablement **sans encaisser de but**.\n- L'ouverture de saison joue en faveur d'une équipe de l'Inter au complet et ambitieuse.\n\n## ⚠️ Limites des données\nJe n'ai **pas pu récupérer** pour cette rencontre :\n- ❌ Confrontations directes (H2H non disponible dans ma base)\n- ❌ Compositions probables / infirmerie\n- ❌ Statistiques de saison (matchs de la saison 2026 pas encore alimentés)\n- ❌ Classement actuel\n\n👉 L'analyse repose donc **uniquement sur les cotes des bookmakers** (10Bet, Bet365, Pinnacle, William Hill, etc.). C'est un signal fort de marché, mais sans les données d'équipe je ne peux pas confirmer la forme actuelle des joueurs. Si tu veux, je peux suivre l'Inter pour te notifier les compos et résultats dès qu'ils seront disponibles !",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 21365.3,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

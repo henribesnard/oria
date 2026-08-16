@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W08-Q084",
+  "ts_utc": "2026-08-16T06:40:11.907+00:00",
+  "wave": "W08",
+  "persona": "premium_actif",
+  "persona_tier": "premium",
+  "category": "A4",
+  "question": "classement Premier League",
+  "context": {
+    "fixture_id": 1557371,
+    "league_id": 39,
+    "team_id": 65
+  },
+  "fixture_ref": 1557371,
+  "response_text": "Voici le classement de la **Premier League** (saison 2024-2025, 38 journées) :\n\n| # | Équipe | Pts | J | G | N | P | Diff |\n|---|--------|-----|---|----|----|----|------|\n| 1 | Liverpool | 84 | 38 | 25 | 9 | 4 | +45 |\n| 2 | Arsenal | 74 | 38 | 20 | 14 | 4 | +35 |\n| 3 | Manchester City | 71 | 38 | 21 | 8 | 9 | +28 |\n| 4 | Chelsea | 69 | 38 | 20 | 9 | 9 | +21 |\n| 5 | Newcastle | 66 | 38 | 20 | 6 | 12 | +21 |\n| 6 | Aston Villa | 66 | 38 | 19 | 9 | 10 | +7 |\n| **7** | **Nottingham Forest** | **65** | **38** | **19** | **8** | **11** | **+12** |\n| 8 | Brighton | 61 | 38 | 16 | 13 | 9 | +7 |\n| 9 | Bournemouth | 56 | 38 | 15 | 11 | 12 | +12 |\n| 10 | Brentford | 56 | 38 | 16 | 8 | 14 | +9 |\n| 11 | Fulham | 54 | 38 | 15 | 9 | 14 | 0 |\n| 12 | Crystal Palace | 53 | 38 | 13 | 14 | 11 | 0 |\n| 13 | Everton | 48 | 38 | 11 | 15 | 12 | -2 |\n| 14 | West Ham | 43 | 38 | 11 | 10 | 17 | -16 |\n| 15 | Manchester United | 42 | 38 | 11 | 9 | 18 | -10 |\n| 16 | Wolves | 42 | 38 | 12 | 6 | 20 | -15 |\n| 17 | Tottenham | 38 | 38 | 11 | 5 | 22 | -1 |\n| 18 | Leicester | 25 | 38 | 6 | 7 | 25 | -47 |\n| 19 | Ipswich | 22 | 38 | 4 | 10 | 24 | -46 |\n| 20 | Southampton | 12 | 38 | 2 | 6 | 30 | -60 |\n\n**Points clés :**\n- 🏆 **Liverpool** champion (84 pts) devant Arsenal et Man City.\n- 🥇 C1 : Liverpool, Arsenal, Man City, Chelsea, Newcastle / C3 : Aston Villa, Crystal Palace / C4 : Nottingham Forest (via qualification Conference League).\n- ⚠️ Relégués : **Leicester**, **Ipswich** et **Southampton** (12 pts, pire total de l'histoire du club).\n\n**Focus sur Nottingham Forest** (ton équipe, ID 65) : une **saison exceptionnelle** avec une **7e place** et **65 points**, qualifiée pour la **Conference League**. Meilleure attaque à domicile limitée, mais 10 victoires à l'extérieur (2e meilleur bilan loin de ses bases). Forme récente : L-W-D-D-L.\n\nLe match de ton contexte (fixture 1557371) est lié à Forest. Tu veux les événements, la composition ou les statistiques de ce match ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 9410.8,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

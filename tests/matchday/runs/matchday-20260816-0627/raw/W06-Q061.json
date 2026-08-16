@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W06-Q061",
+  "ts_utc": "2026-08-16T06:36:29.015+00:00",
+  "wave": "W06",
+  "persona": "premium_vierge",
+  "persona_tier": "premium",
+  "category": "A6",
+  "question": "calendrier de Everton",
+  "context": {
+    "fixture_id": 1557369,
+    "league_id": 39,
+    "team_id": 45
+  },
+  "fixture_ref": 1557369,
+  "response_text": "Je n'ai pas réussi à récupérer le calendrier d'Everton malgré plusieurs tentatives :\n\n- **Recherche par équipe** (ID 45, recherche \"Everton\") → aucune donnée\n- **Matchs Premier League** (saisons 2024 et 2025, ID ligue 39) → aucune donnée\n- **Prochains / derniers matchs** → aucune donnée\n\n⚠️ La source de données ne me renvoie actuellement rien pour Everton. Cela peut être dû à :\n- Un identifiant d'équipe incorrect (le contexte indique team_id=45, mais aucune correspondance n'est trouvée)\n- Une indisponibilité temporaire de la source\n\n**Que peux-tu faire ?**\n- Vérifier l'ID exact d'Everton dans ta configuration\n- Ou reformuler ta demande (par exemple avec une compétition précise : Premier League, FA Cup...)\n\nJe suis désolé de ne pas pouvoir t'apporter le calendrier pour l'instant. N'hésite pas à me reposer la question, je retenterai ! ⚽",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 9423.6,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

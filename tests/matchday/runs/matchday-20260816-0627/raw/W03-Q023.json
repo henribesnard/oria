@@ -1,0 +1,90 @@
+{
+  "exchange_id": "W03-Q023",
+  "ts_utc": "2026-08-16T06:30:09.579+00:00",
+  "wave": "W03",
+  "persona": "free_limite",
+  "persona_tier": "free",
+  "category": "A3",
+  "question": "dernier resultat de Lens",
+  "context": {
+    "fixture_id": 1552732,
+    "league_id": 61,
+    "team_id": 116
+  },
+  "fixture_ref": 1552732,
+  "response_text": "Voici le dernier résultat.",
+  "attachments": [
+    {
+      "kind": "fixture_card",
+      "data": {
+        "fixtures": [
+          {
+            "id": 1387998,
+            "referee": "F. Letexier",
+            "date": "2026-05-17T19:00:00+00:00",
+            "timestamp": 1779044400,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 2
+            },
+            "venue": {
+              "id": null,
+              "name": "Parc Olympique Lyonnais",
+              "city": "Lyon"
+            },
+            "league": {
+              "id": 61,
+              "name": "Ligue 1",
+              "country": "France",
+              "logo": "https://media.api-sports.io/football/leagues/61.png",
+              "flag": "https://media.api-sports.io/flags/fr.svg",
+              "season": 2025,
+              "round": "Regular Season - 34"
+            },
+            "home": {
+              "id": 80,
+              "name": "Lyon",
+              "logo": "https://media.api-sports.io/football/teams/80.png",
+              "winner": false
+            },
+            "away": {
+              "id": 116,
+              "name": "Lens",
+              "logo": "https://media.api-sports.io/football/teams/116.png",
+              "winner": true
+            },
+            "goals_home": 0,
+            "goals_away": 4,
+            "score": {
+              "halftime": {
+                "home": 0,
+                "away": 3
+              },
+              "fulltime": {
+                "home": 0,
+                "away": 4
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 121.6,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W06-Q062",
+  "ts_utc": "2026-08-16T06:36:40.444+00:00",
+  "wave": "W06",
+  "persona": "premium_intensif",
+  "persona_tier": "premium",
+  "category": "A8",
+  "question": "forme de Everton",
+  "context": {
+    "fixture_id": 1557369,
+    "league_id": 39,
+    "team_id": 45
+  },
+  "fixture_ref": 1557369,
+  "response_text": "Voici la forme d'Everton en Premier League (saison 2024-2025, championnat terminé) :\n\n**Forme sur les 5 derniers matchs : W-W-W-D-L** ✅➡️✅➡️✅➡️🤝➡️❌\n\n| Match | Adversaire | Score | Résultat |\n|-------|-----------|-------|----------|\n| J38 (25/05) | Newcastle (ext.) | 1-0 | ✅ Victoire |\n| J37 (18/05) | Southampton (dom.) | 2-0 | ✅ Victoire |\n| J36 (10/05) | Fulham (ext.) | 3-1 | ✅ Victoire |\n| J35 (03/05) | Ipswich (dom.) | 2-2 | 🤝 Nul |\n| J34 (26/04) | Chelsea (ext.) | 0-1 | ❌ Défaite |\n\n**Bilan de la saison :**\n- **15e** de Premier League avec **48 points** (11 victoires, 15 nuls, 12 défaites)\n- 42 buts marqués, 44 encaissés\n- 12 clean sheets, mais 15 matchs sans marquer\n- Meilleure série : 3 victoires consécutives (atteinte sur les 3 derniers matchs)\n\n📊 Everton a terminé la saison sur une belle dynamique avec 3 victoires d'affilée. Les données datent de la fin de saison 2024-2025 (38 journées jouées).",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 7278.7,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W05-Q047",
+  "ts_utc": "2026-08-16T06:34:02.825+00:00",
+  "wave": "W05",
+  "persona": "free_limite",
+  "persona_tier": "free",
+  "category": "A3",
+  "question": "dernier resultat de Athletic Club",
+  "context": {
+    "fixture_id": 1570343,
+    "league_id": 140,
+    "team_id": 531
+  },
+  "fixture_ref": 1570343,
+  "response_text": "Dernier résultat de l'Athletic Club (La Liga 2024-25, saison terminée) :\n\n**Athletic Club 0-3 FC Barcelone** — le 25 mai 2025 à San Mamés (38e journée)\n\nBarcelone menait déjà 2-0 à la mi-temps. L'Athletic a terminé sa saison par une défaite à domicile.\n\nAvant ça : victoire 1-0 à Valence (37e j.) et 2-0 à Getafe (36e j.).",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 5403.9,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

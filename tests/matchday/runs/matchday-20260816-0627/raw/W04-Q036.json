@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W04-Q036",
+  "ts_utc": "2026-08-16T06:32:01.401+00:00",
+  "wave": "W04",
+  "persona": "premium_actif",
+  "persona_tier": "premium",
+  "category": "A4",
+  "question": "classement Serie A",
+  "context": {
+    "fixture_id": 1550092,
+    "league_id": 135,
+    "team_id": 505
+  },
+  "fixture_ref": 1550092,
+  "response_text": "Je suis désolé, mais je n'ai pas pu récupérer le classement de la Serie A : les requêtes ont renvoyé aucune donnée pour cette ligue (ID 135), que ce soit pour la saison 2024-2025 ou 2025-2026.\n\nQuelques pistes si tu veux :\n- Vérifier l'ID de la ligue (l'ID 135 ne correspond peut-être pas à la Serie A dans ma base).\n- Me redemander en précisant l'équipe ou le championnat (ex : \"classement de la Ligue 1\" fonctionne bien).\n\nTu veux que j'essaie autre chose, comme les scores en direct ou les matchs d'une équipe précise ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 13484.9,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

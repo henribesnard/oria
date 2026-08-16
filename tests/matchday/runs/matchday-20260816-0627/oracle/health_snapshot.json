@@ -1,0 +1,228 @@
+{
+  "status": "up",
+  "modules": {
+    "db": {
+      "name": "db",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "cache": {
+      "name": "cache",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "synthesis": {
+      "name": "synthesis",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "llm": {
+      "name": "llm",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "apifootball": {
+      "name": "apifootball",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "identity": {
+      "name": "identity",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "mail": {
+      "name": "mail",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "auth": {
+      "name": "auth",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "billing": {
+      "name": "billing",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "entitlements": {
+      "name": "entitlements",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "follows": {
+      "name": "follows",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "notification_settings": {
+      "name": "notification_settings",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "conversations": {
+      "name": "conversations",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "userstore": {
+      "name": "userstore",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_leagues": {
+      "name": "repo_leagues",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_fixtures": {
+      "name": "repo_fixtures",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_standings": {
+      "name": "repo_standings",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_teams": {
+      "name": "repo_teams",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_players": {
+      "name": "repo_players",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_injuries": {
+      "name": "repo_injuries",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_lineups": {
+      "name": "repo_lineups",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_odds": {
+      "name": "repo_odds",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_live": {
+      "name": "repo_live",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_events": {
+      "name": "repo_events",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_statistics": {
+      "name": "repo_statistics",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_head2head": {
+      "name": "repo_head2head",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_team_statistics": {
+      "name": "repo_team_statistics",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_top_scorers": {
+      "name": "repo_top_scorers",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "repo_top_assists": {
+      "name": "repo_top_assists",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "tools": {
+      "name": "tools",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "prerouter": {
+      "name": "prerouter",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "orchestrator": {
+      "name": "orchestrator",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "pipeline": {
+      "name": "pipeline",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "ingestion": {
+      "name": "ingestion",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "liveengine": {
+      "name": "liveengine",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "notifications": {
+      "name": "notifications",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    },
+    "admin": {
+      "name": "admin",
+      "availability": "up",
+      "detail": null,
+      "details": null
+    }
+  },
+  "collected_utc": "2026-08-16T06:27:16.156560+00:00"
+}

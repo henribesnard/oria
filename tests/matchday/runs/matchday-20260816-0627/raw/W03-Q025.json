@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W03-Q025",
+  "ts_utc": "2026-08-16T06:30:22.174+00:00",
+  "wave": "W03",
+  "persona": "premium_vierge",
+  "persona_tier": "premium",
+  "category": "A6",
+  "question": "calendrier de Lens",
+  "context": {
+    "fixture_id": 1552732,
+    "league_id": 61,
+    "team_id": 116
+  },
+  "fixture_ref": 1552732,
+  "response_text": "Je suis désolé, mais je n'ai pas réussi à récupérer le calendrier du RC Lens avec les informations fournies (league_id=61, team_id=116). Toutes mes requêtes sont revenues sans données.\n\nVoici ce que j'ai tenté :\n- Les prochains matchs de l'équipe 116 en Ligue 1 (saisons 2024 et 2025)\n- La recherche d'équipe par ID et par nom \"Lens\"\n\nAucune donnée n'a été trouvée. Cela peut venir d'un identifiant incorrect ou d'une indisponibilité temporaire de la source de données.\n\n**Peux-tu vérifier :**\n- L'ID de l'équipe (as-tu le bon identifiant pour Lens ?)\n- La saison concernée (2024/25 ou 2025/26 ?)\n\nN'hésite pas à reformuler ta demande, je réessaierai volontiers !",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 9932.4,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

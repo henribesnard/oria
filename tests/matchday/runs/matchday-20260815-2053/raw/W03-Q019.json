@@ -1,0 +1,148 @@
+{
+  "exchange_id": "W03-Q019",
+  "ts_utc": "2026-08-15T20:54:59.908+00:00",
+  "wave": "W03",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "A6",
+  "question": "calendrier de Alianza FC",
+  "context": {
+    "fixture_id": 1548357,
+    "league_id": 1028,
+    "team_id": 2881
+  },
+  "fixture_ref": 1548357,
+  "response_text": "Voici les prochains matchs.",
+  "attachments": [
+    {
+      "kind": "table",
+      "data": {
+        "schedule": [
+          {
+            "id": 1548366,
+            "referee": null,
+            "date": "2026-08-21T01:00:00+00:00",
+            "timestamp": 1787274000,
+            "status": {
+              "long": "Not Started",
+              "short": "NS",
+              "elapsed": null,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": "Estadio Javier Cruz",
+              "city": "Panama City"
+            },
+            "league": {
+              "id": 1028,
+              "name": "CONCACAF Central American Cup",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/1028.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Group Stage"
+            },
+            "home": {
+              "id": 2881,
+              "name": "Alianza FC",
+              "logo": "https://media.api-sports.io/football/teams/2881.png",
+              "winner": null
+            },
+            "away": {
+              "id": 1051,
+              "name": "CD Olimpia",
+              "logo": "https://media.api-sports.io/football/teams/1051.png",
+              "winner": null
+            },
+            "goals_home": null,
+            "goals_away": null,
+            "score": {
+              "halftime": {
+                "home": null,
+                "away": null
+              },
+              "fulltime": {
+                "home": null,
+                "away": null
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1548374,
+            "referee": null,
+            "date": "2026-08-28T02:30:00+00:00",
+            "timestamp": 1787884200,
+            "status": {
+              "long": "Not Started",
+              "short": "NS",
+              "elapsed": null,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": "Mixco"
+            },
+            "league": {
+              "id": 1028,
+              "name": "CONCACAF Central American Cup",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/1028.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Group Stage"
+            },
+            "home": {
+              "id": 3645,
+              "name": "Mixco",
+              "logo": "https://media.api-sports.io/football/teams/3645.png",
+              "winner": null
+            },
+            "away": {
+              "id": 2881,
+              "name": "Alianza FC",
+              "logo": "https://media.api-sports.io/football/teams/2881.png",
+              "winner": null
+            },
+            "goals_home": null,
+            "goals_away": null,
+            "score": {
+              "halftime": {
+                "home": null,
+                "away": null
+              },
+              "fulltime": {
+                "home": null,
+                "away": null
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 130.6,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

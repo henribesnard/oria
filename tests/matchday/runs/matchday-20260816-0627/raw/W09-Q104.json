@@ -1,0 +1,31 @@
+{
+  "exchange_id": "W09-Q104",
+  "ts_utc": "2026-08-16T06:43:16.876+00:00",
+  "wave": "W09",
+  "persona": "free_limite",
+  "persona_tier": "free",
+  "category": "C1",
+  "question": "score de Udinese en ce moment ?",
+  "context": {
+    "fixture_id": 1550095,
+    "league_id": 135,
+    "team_id": 494
+  },
+  "fixture_ref": 1550095,
+  "response_text": "Le direct en temps réel est réservé au palier Premium.",
+  "attachments": [],
+  "suggested_actions": [
+    {
+      "label": "Passer Premium",
+      "payload": {
+        "action": "upgrade"
+      }
+    }
+  ],
+  "degraded": true,
+  "freshness": null,
+  "latency_ms": 54.0,
+  "http_status": 200,
+  "error": null,
+  "route": "fallback"
+}

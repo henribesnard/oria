@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W05-Q050",
+  "ts_utc": "2026-08-16T06:34:40.358+00:00",
+  "wave": "W05",
+  "persona": "premium_intensif",
+  "persona_tier": "premium",
+  "category": "A8",
+  "question": "forme de Athletic Club",
+  "context": {
+    "fixture_id": 1570343,
+    "league_id": 140,
+    "team_id": 531
+  },
+  "fixture_ref": 1570343,
+  "response_text": "Voici la forme d'Athletic Club en Liga (saison 2024-2025, championnat terminé avec 38 journées) :\n\n**Forme sur les 5 derniers matchs : L-W-W-W-D** ❌➡️✅➡️✅➡️✅➡️🤝\n*(L = défaite, W = victoire, D = nul)*\n\n**Bilan global de la saison :**\n- 🥉 **4e** de Liga avec **70 points** (qualifié en Ligue des champions)\n- 19 victoires, 13 nuls, 6 défaites\n- 54 buts marqués, 29 encaissés (2e meilleure défense de la saison)\n- Différence de buts : +25\n\n⚠️ Note : les données détaillées des 5 derniers matchs (adversaires, scores) n'étaient pas disponibles via mon outil de matchs. La forme affichée provient du classement officiel de la Liga. Veux-tu que je te sorte le détail des prochains matchs ou des confrontations spécifiques ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 10146.4,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

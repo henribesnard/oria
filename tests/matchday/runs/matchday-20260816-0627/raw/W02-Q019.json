@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W02-Q019",
+  "ts_utc": "2026-08-16T06:29:25.500+00:00",
+  "wave": "W02",
+  "persona": "free_vierge",
+  "persona_tier": "free",
+  "category": "B2",
+  "question": "analyse-moi Hull City vs Manchester United",
+  "context": {
+    "fixture_id": 1557368,
+    "league_id": 39,
+    "team_id": 64
+  },
+  "fixture_ref": 1557368,
+  "response_text": "J'ai pu récupérer les confrontations directes, mais les autres données (stats de match, compositions, blessures, cotes, stats de saison) ne sont **pas disponibles** dans mon système pour cette rencontre. Voici ce que je peux te dire :\n\n## 🔄 Confrontations directes (H2H)\nHistorique complet disponible (9 derniers matchs, saisons 2013 à 2017) :\n\n| Date | Compétition | Score |\n|------|-------------|-------|\n| Fév. 2017 | Premier League (Old Trafford) | Man Utd 0-0 Hull |\n| Jan. 2017 | League Cup, demi-finale retour | **Hull 2-1 Man Utd** |\n| Jan. 2017 | League Cup, demi-finale aller | Man Utd 2-0 Hull |\n| Août 2016 | Premier League | Hull 0-1 Man Utd |\n| Mai 2015 | Premier League | Hull 0-0 Man Utd |\n| Nov. 2014 | Premier League | Man Utd 3-0 Hull |\n| Mai 2014 | Premier League | Man Utd 3-1 Hull |\n| Déc. 2013 | Premier League | Hull 2-3 Man Utd |\n\n**Enseignements du H2H :**\n- **Manchester United largement dominateur** : 5 victoires, 2 nuls, 1 défaite sur les 8 dernières confrontations (hors coupe, jamais battu par Hull en PL).\n- La seule victoire de Hull City date de **janvier 2017 en League Cup** (2-1 à domicile), mais MU s'était imposé 2-0 à l'aller.\n- Les matchs à Hull sont souvent **serrés** : deux 0-0, un 0-1, un 2-3. Rarement des scores fleuves pour MU à l'extérieur.\n- Dernière confrontation en PL : **0-0** en février 2017.\n\n## ⚠️ Limites des données\nJe n'ai **pas pu récupérer** pour ce match :\n- ❌ Statistiques de saison (Hull et Man Utd)\n- ❌ Compositions probables / blessures\n- ❌ Cotes\n- ❌ Forme récente des équipes\n\n👉 Je ne peux donc pas te faire une analyse tactique fiable ou un pronostic basé sur des données actuelles. Si tu veux, je peux te donner le classement actuel de la Premier League ou les stats des joueurs clés dès que les données seront disponibles !",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 21359.9,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

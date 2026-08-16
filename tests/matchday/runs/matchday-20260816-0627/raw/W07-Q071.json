@@ -1,0 +1,90 @@
+{
+  "exchange_id": "W07-Q071",
+  "ts_utc": "2026-08-16T06:38:19.502+00:00",
+  "wave": "W07",
+  "persona": "free_limite",
+  "persona_tier": "free",
+  "category": "A3",
+  "question": "dernier resultat de Ipswich",
+  "context": {
+    "fixture_id": 1557370,
+    "league_id": 39,
+    "team_id": 57
+  },
+  "fixture_ref": 1557370,
+  "response_text": "Voici le dernier résultat.",
+  "attachments": [
+    {
+      "kind": "fixture_card",
+      "data": {
+        "fixtures": [
+          {
+            "id": 1208395,
+            "referee": "T. Robinson",
+            "date": "2025-05-25T15:00:00+00:00",
+            "timestamp": 1748185200,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 8
+            },
+            "venue": {
+              "id": 545,
+              "name": "Portman Road",
+              "city": "Ipswich, Suffolk"
+            },
+            "league": {
+              "id": 39,
+              "name": "Premier League",
+              "country": "England",
+              "logo": "https://media.api-sports.io/football/leagues/39.png",
+              "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+              "season": 2024,
+              "round": "Regular Season - 38"
+            },
+            "home": {
+              "id": 57,
+              "name": "Ipswich",
+              "logo": "https://media.api-sports.io/football/teams/57.png",
+              "winner": false
+            },
+            "away": {
+              "id": 48,
+              "name": "West Ham",
+              "logo": "https://media.api-sports.io/football/teams/48.png",
+              "winner": true
+            },
+            "goals_home": 1,
+            "goals_away": 3,
+            "score": {
+              "halftime": {
+                "home": 0,
+                "away": 1
+              },
+              "fulltime": {
+                "home": 1,
+                "away": 3
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 111.0,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

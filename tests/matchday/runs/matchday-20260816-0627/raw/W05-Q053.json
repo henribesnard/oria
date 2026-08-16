@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W05-Q053",
+  "ts_utc": "2026-08-16T06:35:10.936+00:00",
+  "wave": "W05",
+  "persona": "guest_live",
+  "persona_tier": "guest",
+  "category": "A16",
+  "question": "infos Athletic Club",
+  "context": {
+    "fixture_id": 1570343,
+    "league_id": 140,
+    "team_id": 531
+  },
+  "fixture_ref": 1570343,
+  "response_text": "Voici les informations sur l'**Athletic Club** 🦁\n\n**Fiche du club :**\n- 📛 **Nom** : Athletic Club (code : BIL)\n- 🌍 **Pays** : Espagne\n- 🏟️ **Stade** : San Mamés Barria (Bilbao) — capacité 53 289 places\n- 🗓️ **Fondé** : 1898\n\n**Bilan saison 2024-2025 (La Liga) :**\n- 📊 **38 matchs** : 19 victoires, 13 nuls, 6 défaites\n- ⚽ **54 buts marqués** (1,4/match) — 29 encaissés (0,8/match)\n- 🧤 **15 clean sheets** — 9 matchs sans marquer\n- 📈 **Meilleure série** : 4 victoires consécutives\n- 🏠 **À domicile** : 11V / 6N / 2D (32 buts marqués, 13 encaissés)\n\n**Style de jeu :**\n- Formation principale : **4-2-3-1** (34 fois sur 38)\n- Score type défensif : très solide, **32 matchs sur 38 avec moins de 2,5 buts** côté adverses (37 sur 38 sous les 3,5 buts encaissés)\n\n**Points clés :**\n- L'équipe marque surtout en **fin de match** : 22% des buts entre la 76e et 90e minute\n- 3 penalties marqués sur 6 obtenus (50%)\n\nDonnées de la saison 2024-2025 (La Liga, league_id 140). Tu veux que je vérifie les **compositions** ou les **stats du match** concernant le fixture 1570343 ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 6267.1,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

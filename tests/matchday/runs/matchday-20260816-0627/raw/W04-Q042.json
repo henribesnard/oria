@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W04-Q042",
+  "ts_utc": "2026-08-16T06:33:07.934+00:00",
+  "wave": "W04",
+  "persona": "free_actif",
+  "persona_tier": "free",
+  "category": "B1",
+  "question": "Inter ou Monza, qui est le plus fort ?",
+  "context": {
+    "fixture_id": 1550092,
+    "league_id": 135,
+    "team_id": 505
+  },
+  "fixture_ref": 1550092,
+  "response_text": "La réponse est sans appel : **l'Inter Milan est bien plus fort que Monza**. 📊\n\n**Classement Serie A 2024-2025 (saison complète) :**\n\n| | Inter Milan | Monza |\n|---|---|---|\n| Position | **2e** | **20e (dernier)** |\n| Points | **81** | 18 |\n| Victoires / Nuls / Défaites | 24 / 9 / 5 | 3 / 9 / 26 |\n| Buts pour / contre | 79 / 35 (+44) | 28 / 69 (-41) |\n| Forme récente | WDWWL | LLWLL |\n\n**Les faits marquants :**\n- L'Inter a terminé **2e**, à 1 point du titre (Napoli 82 pts), avec la **meilleure attaque** (79 buts) et la **2e meilleure défense** (35 encaissés) du championnat.\n- Monza a fini **bon dernier avec 18 points**, relégué en Serie B, avec seulement 3 victoires et 69 buts encaissés — la pire défense de la saison.\n- Écart colossal : **63 points** de différence entre les deux clubs.\n\n⚠️ Le face-à-face direct n'est pas disponible dans mes données (pas de confrontations répertoriées), mais les classements suffisent largement : on parle d'un candidat au titre face à un club relégué.\n\n**Fraîcheur des données :** classement final de la saison 2024-2025 (Serie A, league_id=135).\n\nEn un mot : entre une équipe de Ligue des Champions et un relégué, il n'y a pas photo. 🏆",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 11739.5,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

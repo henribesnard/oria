@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W06-Q066",
+  "ts_utc": "2026-08-16T06:37:09.238+00:00",
+  "wave": "W06",
+  "persona": "free_actif",
+  "persona_tier": "free",
+  "category": "B1",
+  "question": "Everton ou Crystal Palace, qui est le plus fort ?",
+  "context": {
+    "fixture_id": 1557369,
+    "league_id": 39,
+    "team_id": 45
+  },
+  "fixture_ref": 1557369,
+  "response_text": "Comparaison serrée ! Sur le papier, **Crystal Palace** est légèrement au-dessus, mais Everton a un ascendant historique énorme dans ce duel. 📊\n\n**Classement final Premier League 2024-25 :**\n\n| | Crystal Palace | Everton |\n|---|---|---|\n| Position | **12e** | 13e |\n| Points | **53** | 48 |\n| Victoires / Nuls / Défaites | 13 / 14 / 11 | 11 / 15 / 12 |\n| Buts pour / contre | 51 / 51 (0) | 42 / 44 (-2) |\n| Forme (5 derniers) | DWWDD | WWWDL |\n| Qualification | **Ligue Europa** 🏆 | — |\n\n**Face-à-face (10 dernières confrontations, dont FA Cup) :** avantage net pour **Everton** :\n- ✅ 6 victoires d'Everton (dont 3-0 en oct. 2022, 3-2 en nov. 2023, 2-1 en fév. 2025 et sept. 2025)\n- 🤝 4 nuls (dont 2-2 en mai 2026)\n- ❌ **0 victoire de Crystal Palace** : Everton est invaincu depuis 10 duels !\n\n**Stats clés 2024-25 :**\n- Palace marque plus (51 buts) mais encaisse autant qu'il marque.\n- Everton est plus solide défensivement (12 clean sheets) mais a connu 15 matchs sans marquer.\n\n**Pour le match d'aujourd'hui (14h00 UTC) :** les bookmakers font d'Everton le favori à domicile (victoire Everton ~2,10-2,20 ; nul ~3,40 ; Palace ~3,30-3,45).\n\n**En résumé :** au classement et sur la saison, **Crystal Palace est un cran au-dessus** (53 pts, qualification européenne). Mais sur le duel direct, **Everton domine totalement** (invaincu sur 10 matchs) et arrive avec la meilleure dynamique récente. Un vrai 50/50 d'ambiance ! ⚽\n\n**Fraîcheur des données :** classements et stats = saison 2024-25 complète ; H2H à jour jusqu'en mai 2026 ; cotes du match du 22/08/2026.",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 20543.0,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

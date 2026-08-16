@@ -1,0 +1,46 @@
+{
+  "exchange_id": "W03-Q029",
+  "ts_utc": "2026-08-16T06:31:00.148+00:00",
+  "wave": "W03",
+  "persona": "guest_live",
+  "persona_tier": "guest",
+  "category": "A16",
+  "question": "infos Lens",
+  "context": {
+    "fixture_id": 1552732,
+    "league_id": 61,
+    "team_id": 116
+  },
+  "fixture_ref": 1552732,
+  "response_text": "Voici les informations sur l'équipe.",
+  "attachments": [
+    {
+      "kind": "table",
+      "data": {
+        "team": [
+          {
+            "id": 116,
+            "name": "Lens",
+            "code": "LEN",
+            "country": "France",
+            "founded": 1906,
+            "logo": "https://media.api-sports.io/football/teams/116.png",
+            "venue": {
+              "id": 654,
+              "name": "Stade Bollaert-Delelis",
+              "city": "Lens",
+              "capacity": 41233
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 101.8,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

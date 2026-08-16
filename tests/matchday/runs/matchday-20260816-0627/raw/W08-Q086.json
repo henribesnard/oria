@@ -1,0 +1,322 @@
+{
+  "exchange_id": "W08-Q086",
+  "ts_utc": "2026-08-16T06:40:25.494+00:00",
+  "wave": "W08",
+  "persona": "premium_intensif",
+  "persona_tier": "premium",
+  "category": "A8",
+  "question": "forme de Nottingham Forest",
+  "context": {
+    "fixture_id": 1557371,
+    "league_id": 39,
+    "team_id": 65
+  },
+  "fixture_ref": 1557371,
+  "response_text": "Voici la forme récente.",
+  "attachments": [
+    {
+      "kind": "table",
+      "data": {
+        "form": [
+          {
+            "id": 1591930,
+            "referee": null,
+            "date": "2026-08-12T18:45:00+00:00",
+            "timestamp": 1786560300,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 2
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": null
+            },
+            "league": {
+              "id": 667,
+              "name": "Friendlies Clubs",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/667.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Club Friendlies"
+            },
+            "home": {
+              "id": 65,
+              "name": "Nottingham Forest",
+              "logo": "https://media.api-sports.io/football/teams/65.png",
+              "winner": true
+            },
+            "away": {
+              "id": 168,
+              "name": "Bayer Leverkusen",
+              "logo": "https://media.api-sports.io/football/teams/168.png",
+              "winner": false
+            },
+            "goals_home": 2,
+            "goals_away": 1,
+            "score": {
+              "halftime": {
+                "home": 1,
+                "away": 1
+              },
+              "fulltime": {
+                "home": 2,
+                "away": 1
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1598601,
+            "referee": null,
+            "date": "2026-08-08T19:00:00+00:00",
+            "timestamp": 1786215600,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": null
+            },
+            "league": {
+              "id": 667,
+              "name": "Friendlies Clubs",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/667.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Club Friendlies"
+            },
+            "home": {
+              "id": 529,
+              "name": "Barcelona",
+              "logo": "https://media.api-sports.io/football/teams/529.png",
+              "winner": true
+            },
+            "away": {
+              "id": 65,
+              "name": "Nottingham Forest",
+              "logo": "https://media.api-sports.io/football/teams/65.png",
+              "winner": false
+            },
+            "goals_home": 1,
+            "goals_away": 0,
+            "score": {
+              "halftime": {
+                "home": 1,
+                "away": 0
+              },
+              "fulltime": {
+                "home": 1,
+                "away": 0
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1598600,
+            "referee": null,
+            "date": "2026-08-08T18:00:00+00:00",
+            "timestamp": 1786212000,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": null
+            },
+            "league": {
+              "id": 667,
+              "name": "Friendlies Clubs",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/667.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Club Friendlies"
+            },
+            "home": {
+              "id": 494,
+              "name": "Udinese",
+              "logo": "https://media.api-sports.io/football/teams/494.png",
+              "winner": true
+            },
+            "away": {
+              "id": 65,
+              "name": "Nottingham Forest",
+              "logo": "https://media.api-sports.io/football/teams/65.png",
+              "winner": false
+            },
+            "goals_home": 1,
+            "goals_away": 0,
+            "score": {
+              "halftime": {
+                "home": 1,
+                "away": 0
+              },
+              "fulltime": {
+                "home": 1,
+                "away": 0
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1583500,
+            "referee": null,
+            "date": "2026-07-31T18:45:00+00:00",
+            "timestamp": 1785523500,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": 2
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": null
+            },
+            "league": {
+              "id": 667,
+              "name": "Friendlies Clubs",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/667.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Club Friendlies"
+            },
+            "home": {
+              "id": 228,
+              "name": "Sporting CP",
+              "logo": "https://media.api-sports.io/football/teams/228.png",
+              "winner": true
+            },
+            "away": {
+              "id": 65,
+              "name": "Nottingham Forest",
+              "logo": "https://media.api-sports.io/football/teams/65.png",
+              "winner": false
+            },
+            "goals_home": 4,
+            "goals_away": 1,
+            "score": {
+              "halftime": {
+                "home": 1,
+                "away": 1
+              },
+              "fulltime": {
+                "home": 4,
+                "away": 1
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1604713,
+            "referee": null,
+            "date": "2026-07-31T10:00:00+00:00",
+            "timestamp": 1785492000,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": null,
+              "city": null
+            },
+            "league": {
+              "id": 667,
+              "name": "Friendlies Clubs",
+              "country": "World",
+              "logo": "https://media.api-sports.io/football/leagues/667.png",
+              "flag": null,
+              "season": 2026,
+              "round": "Club Friendlies"
+            },
+            "home": {
+              "id": 216,
+              "name": "Portimonense",
+              "logo": "https://media.api-sports.io/football/teams/216.png",
+              "winner": false
+            },
+            "away": {
+              "id": 65,
+              "name": "Nottingham Forest",
+              "logo": "https://media.api-sports.io/football/teams/65.png",
+              "winner": true
+            },
+            "goals_home": 1,
+            "goals_away": 2,
+            "score": {
+              "halftime": {
+                "home": 0,
+                "away": 1
+              },
+              "fulltime": {
+                "home": 1,
+                "away": 2
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 91.5,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

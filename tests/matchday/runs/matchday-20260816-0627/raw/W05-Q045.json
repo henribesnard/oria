@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W05-Q045",
+  "ts_utc": "2026-08-16T06:33:47.122+00:00",
+  "wave": "W05",
+  "persona": "free_actif",
+  "persona_tier": "free",
+  "category": "A1",
+  "question": "les matchs de La Liga aujourd'hui",
+  "context": {
+    "fixture_id": 1570343,
+    "league_id": 140,
+    "team_id": 531
+  },
+  "fixture_ref": 1570343,
+  "response_text": "Aucun match de La Liga aujourd'hui dans mes données. ⚠️\n\n**Ce que montrent les vérifications :**\n- **Scores en direct (La Liga, id 140) :** aucun match en cours ou à venir aujourd'hui.\n- **Calendrier La Liga à la date du jour :** aucun résultat.\n- Le match **1570343** de ton contexte est bien un match de La Liga (**Athletic Club – Séville**, journée 2), mais il est programmé au **22 août 2026** — pas aujourd'hui.\n- Aucun événement n'est enregistré pour ce match (pas encore joué).\n\n**Prochains matchs connus d'Athletic Club (id 531) :**\n| Date | Compétition | Match |\n|---|---|---|\n| 21/08/2026 | Amical | Zaragoza – Athletic Club |\n| 22/08/2026 | La Liga (J2) | Athletic Club – Séville |\n| 27/08/2026 | La Liga (J1) | Barcelone – Athletic Club |\n| 30/08/2026 | La Liga (J3) | Celta Vigo – Athletic Club |\n| 05/09/2026 | La Liga (J4) | Athletic Club – Atlético Madrid |\n\n**Fraîcheur des données :** calendrier La Liga saison 2026 (matchs à venir, aucun joué à ce jour).\n\nTu veux que je te détaille l'un de ces matchs (cotes, compos probables, face-à-face) ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 11555.4,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

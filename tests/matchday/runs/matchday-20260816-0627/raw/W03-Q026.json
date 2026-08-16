@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W03-Q026",
+  "ts_utc": "2026-08-16T06:30:34.118+00:00",
+  "wave": "W03",
+  "persona": "premium_intensif",
+  "persona_tier": "premium",
+  "category": "A8",
+  "question": "forme de Lens",
+  "context": {
+    "fixture_id": 1552732,
+    "league_id": 61,
+    "team_id": 116
+  },
+  "fixture_ref": 1552732,
+  "response_text": "Je n'ai pas pu traiter ta demande « forme de Lens » pour le moment. Essaie de reformuler ou réessaie plus tard.",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": true,
+  "freshness": null,
+  "latency_ms": 9412.5,
+  "http_status": 200,
+  "error": null,
+  "route": "fallback"
+}

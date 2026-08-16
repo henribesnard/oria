@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W04-Q033",
+  "ts_utc": "2026-08-16T06:31:44.616+00:00",
+  "wave": "W04",
+  "persona": "free_actif",
+  "persona_tier": "free",
+  "category": "A1",
+  "question": "les matchs de Serie A aujourd'hui",
+  "context": {
+    "fixture_id": 1550092,
+    "league_id": 135,
+    "team_id": 505
+  },
+  "fixture_ref": 1550092,
+  "response_text": "Je n'ai trouvé **aucun match de Serie A** aujourd'hui. ⚠️\n\n**Ce que montrent les données :**\n- Les **scores en direct** pour la Serie A (league_id=135) ne renvoient **aucun résultat**.\n- Le **calendrier** de la Serie A ne retourne **aucune donnée**.\n- L'équipe référencée (id 505) et le match (id 1550092) indiqués en contexte ne renvoient **rien non plus** — ils ne sont pas dans ma base.\n\n**En clair :** la Serie A n'est pas couverte par ma base de données actuelle, donc je ne peux pas te donner les matchs du jour. Je préfère te le dire franchement plutôt que d'inventer un calendrier.\n\n**Fraîcheur des données :** je dispose de données complètes sur la saison 2024-2025 pour la Premier League, le Championship et quelques autres compétitions — mais pas la Serie A.\n\nTu veux que je vérifie plutôt :\n- les **matchs de Premier League** d'aujourd'hui,\n- le **classement** ou les **stats** d'un championnat que je couvre,\n- ou autre chose sur le foot ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 10531.4,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

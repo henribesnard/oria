@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W03-Q016",
+  "ts_utc": "2026-08-15T20:54:36.938+00:00",
+  "wave": "W03",
+  "persona": "guest_adversarial",
+  "persona_tier": "guest",
+  "category": "A2",
+  "question": "prochain match de Alianza FC",
+  "context": {
+    "fixture_id": 1548357,
+    "league_id": 1028,
+    "team_id": 2881
+  },
+  "fixture_ref": 1548357,
+  "response_text": "Désolé, mais je n'arrive pas à récupérer le **prochain match de Alianza FC** en ce moment — mes recherches (calendrier, ligue, saisons 2024/2025) ne renvoient **aucune donnée**. 😕\n\nCela peut être dû à :\n- 📡 Une indisponibilité temporaire de la base de données\n- 🔍 Des données manquantes pour cette équipe dans mes sources\n\nJe préfère être honnête plutôt que d'inventer une date ou un adversaire.\n\nEn attendant, je peux t'aider sur :\n- ⚽ **Les scores en direct** et les résultats récents\n- 📊 **Classements** et **statistiques** d'autres équipes/compétitions\n- 🔎 Une autre équipe que tu souhaiterais suivre\n\nTu veux que je regarde autre chose ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 8908.7,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

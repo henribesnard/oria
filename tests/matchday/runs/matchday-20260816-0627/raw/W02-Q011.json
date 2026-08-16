@@ -1,0 +1,90 @@
+{
+  "exchange_id": "W02-Q011",
+  "ts_utc": "2026-08-16T06:28:01.132+00:00",
+  "wave": "W02",
+  "persona": "free_limite",
+  "persona_tier": "free",
+  "category": "A3",
+  "question": "dernier resultat de Hull City",
+  "context": {
+    "fixture_id": 1557368,
+    "league_id": 39,
+    "team_id": 64
+  },
+  "fixture_ref": 1557368,
+  "response_text": "Voici le dernier résultat.",
+  "attachments": [
+    {
+      "kind": "fixture_card",
+      "data": {
+        "fixtures": [
+          {
+            "id": 17320,
+            "referee": "Andre Marriner, England",
+            "date": "2017-05-21T14:00:00+00:00",
+            "timestamp": 1495375200,
+            "status": {
+              "long": "Match Finished",
+              "short": "FT",
+              "elapsed": 90,
+              "extra": null
+            },
+            "venue": {
+              "id": 544,
+              "name": "KCOM Stadium",
+              "city": "Hull"
+            },
+            "league": {
+              "id": 39,
+              "name": "Premier League",
+              "country": "England",
+              "logo": "https://media.api-sports.io/football/leagues/39.png",
+              "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+              "season": 2016,
+              "round": "Regular Season - 38"
+            },
+            "home": {
+              "id": 64,
+              "name": "Hull City",
+              "logo": "https://media.api-sports.io/football/teams/64.png",
+              "winner": false
+            },
+            "away": {
+              "id": 47,
+              "name": "Tottenham",
+              "logo": "https://media.api-sports.io/football/teams/47.png",
+              "winner": true
+            },
+            "goals_home": 1,
+            "goals_away": 7,
+            "score": {
+              "halftime": {
+                "home": 0,
+                "away": 3
+              },
+              "fulltime": {
+                "home": 1,
+                "away": 7
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 84.4,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

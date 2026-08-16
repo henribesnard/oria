@@ -1,0 +1,322 @@
+{
+  "exchange_id": "W08-Q085",
+  "ts_utc": "2026-08-16T06:40:23.321+00:00",
+  "wave": "W08",
+  "persona": "premium_vierge",
+  "persona_tier": "premium",
+  "category": "A6",
+  "question": "calendrier de Nottingham Forest",
+  "context": {
+    "fixture_id": 1557371,
+    "league_id": 39,
+    "team_id": 65
+  },
+  "fixture_ref": 1557371,
+  "response_text": "Voici les prochains matchs.",
+  "attachments": [
+    {
+      "kind": "table",
+      "data": {
+        "schedule": [
+          {
+            "id": 1557371,
+            "referee": null,
+            "date": "2026-08-22T14:00:00+00:00",
+            "timestamp": 1787407200,
+            "status": {
+              "long": "Not Started",
+              "short": "NS",
+              "elapsed": null,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": "City Ground",
+              "city": "Nottingham"
+            },
+            "league": {
+              "id": 39,
+              "name": "Premier League",
+              "country": "England",
+              "logo": "https://media.api-sports.io/football/leagues/39.png",
+              "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+              "season": 2026,
+              "round": "Regular Season - 1"
+            },
+            "home": {
+              "id": 65,
+              "name": "Nottingham Forest",
+              "logo": "https://media.api-sports.io/football/teams/65.png",
+              "winner": null
+            },
+            "away": {
+              "id": 63,
+              "name": "Leeds",
+              "logo": "https://media.api-sports.io/football/teams/63.png",
+              "winner": null
+            },
+            "goals_home": null,
+            "goals_away": null,
+            "score": {
+              "halftime": {
+                "home": null,
+                "away": null
+              },
+              "fulltime": {
+                "home": null,
+                "away": null
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1557383,
+            "referee": null,
+            "date": "2026-08-29T11:30:00+00:00",
+            "timestamp": 1788003000,
+            "status": {
+              "long": "Not Started",
+              "short": "NS",
+              "elapsed": null,
+              "extra": null
+            },
+            "venue": {
+              "id": 550,
+              "name": "Anfield",
+              "city": "Liverpool"
+            },
+            "league": {
+              "id": 39,
+              "name": "Premier League",
+              "country": "England",
+              "logo": "https://media.api-sports.io/football/leagues/39.png",
+              "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+              "season": 2026,
+              "round": "Regular Season - 2"
+            },
+            "home": {
+              "id": 40,
+              "name": "Liverpool",
+              "logo": "https://media.api-sports.io/football/teams/40.png",
+              "winner": null
+            },
+            "away": {
+              "id": 65,
+              "name": "Nottingham Forest",
+              "logo": "https://media.api-sports.io/football/teams/65.png",
+              "winner": null
+            },
+            "goals_home": null,
+            "goals_away": null,
+            "score": {
+              "halftime": {
+                "home": null,
+                "away": null
+              },
+              "fulltime": {
+                "home": null,
+                "away": null
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1557396,
+            "referee": null,
+            "date": "2026-09-05T14:00:00+00:00",
+            "timestamp": 1788616800,
+            "status": {
+              "long": "Not Started",
+              "short": "NS",
+              "elapsed": null,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": "City Ground",
+              "city": "Nottingham"
+            },
+            "league": {
+              "id": 39,
+              "name": "Premier League",
+              "country": "England",
+              "logo": "https://media.api-sports.io/football/leagues/39.png",
+              "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+              "season": 2026,
+              "round": "Regular Season - 3"
+            },
+            "home": {
+              "id": 65,
+              "name": "Nottingham Forest",
+              "logo": "https://media.api-sports.io/football/teams/65.png",
+              "winner": null
+            },
+            "away": {
+              "id": 47,
+              "name": "Tottenham",
+              "logo": "https://media.api-sports.io/football/teams/47.png",
+              "winner": null
+            },
+            "goals_home": null,
+            "goals_away": null,
+            "score": {
+              "halftime": {
+                "home": null,
+                "away": null
+              },
+              "fulltime": {
+                "home": null,
+                "away": null
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1557397,
+            "referee": null,
+            "date": "2026-09-12T14:00:00+00:00",
+            "timestamp": 1789221600,
+            "status": {
+              "long": "Not Started",
+              "short": "NS",
+              "elapsed": null,
+              "extra": null
+            },
+            "venue": {
+              "id": 495,
+              "name": "Villa Park",
+              "city": "Birmingham"
+            },
+            "league": {
+              "id": 39,
+              "name": "Premier League",
+              "country": "England",
+              "logo": "https://media.api-sports.io/football/leagues/39.png",
+              "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+              "season": 2026,
+              "round": "Regular Season - 4"
+            },
+            "home": {
+              "id": 66,
+              "name": "Aston Villa",
+              "logo": "https://media.api-sports.io/football/teams/66.png",
+              "winner": null
+            },
+            "away": {
+              "id": 65,
+              "name": "Nottingham Forest",
+              "logo": "https://media.api-sports.io/football/teams/65.png",
+              "winner": null
+            },
+            "goals_home": null,
+            "goals_away": null,
+            "score": {
+              "halftime": {
+                "home": null,
+                "away": null
+              },
+              "fulltime": {
+                "home": null,
+                "away": null
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          },
+          {
+            "id": 1557415,
+            "referee": null,
+            "date": "2026-09-19T16:30:00+00:00",
+            "timestamp": 1789835400,
+            "status": {
+              "long": "Not Started",
+              "short": "NS",
+              "elapsed": null,
+              "extra": null
+            },
+            "venue": {
+              "id": null,
+              "name": "City Ground",
+              "city": "Nottingham"
+            },
+            "league": {
+              "id": 39,
+              "name": "Premier League",
+              "country": "England",
+              "logo": "https://media.api-sports.io/football/leagues/39.png",
+              "flag": "https://media.api-sports.io/flags/gb-eng.svg",
+              "season": 2026,
+              "round": "Regular Season - 5"
+            },
+            "home": {
+              "id": 65,
+              "name": "Nottingham Forest",
+              "logo": "https://media.api-sports.io/football/teams/65.png",
+              "winner": null
+            },
+            "away": {
+              "id": 1346,
+              "name": "Coventry",
+              "logo": "https://media.api-sports.io/football/teams/1346.png",
+              "winner": null
+            },
+            "goals_home": null,
+            "goals_away": null,
+            "score": {
+              "halftime": {
+                "home": null,
+                "away": null
+              },
+              "fulltime": {
+                "home": null,
+                "away": null
+              },
+              "extratime": {
+                "home": null,
+                "away": null
+              },
+              "penalty": {
+                "home": null,
+                "away": null
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 155.9,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

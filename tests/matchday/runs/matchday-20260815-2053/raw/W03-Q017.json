@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W03-Q017",
+  "ts_utc": "2026-08-15T20:54:46.361+00:00",
+  "wave": "W03",
+  "persona": "guest_live",
+  "persona_tier": "guest",
+  "category": "A3",
+  "question": "dernier resultat de Alianza FC",
+  "context": {
+    "fixture_id": 1548357,
+    "league_id": 1028,
+    "team_id": 2881
+  },
+  "fixture_ref": 1548357,
+  "response_text": "Voici le **dernier résultat** de l'**Alianza FC** 🟣⚽\n\n**🏆 CONCACAF Central American Cup – Phase de groupes**\n**Alianza FC 1-0 UMECIT** ✅ Victoire\n📅 14 août 2026 – Estadio Javier Cruz (Panama City)\n\n- ⚽ **But :** A. Mendoza (30', passe décisive de R. Perdomo)\n- 🟨 Carton jaune UMECIT : A. Diaz (53')\n- Mi-temps : **1-0**\n\n**📊 Les 5 derniers matchs de l'Alianza FC :**\n\n| Compétition | Adversaire | Résultat |\n|---|---|---|\n| Central American Cup | UMECIT | ✅ 1-0 |\n| Liga Panameña | Sporting San Miguelito | 🤝 0-0 |\n| Central American Cup | Deportivo Saprissa | ❌ 1-2 |\n| Liga Panameña | CD Árabe Unido | ✅ 1-0 |\n| Liga Panameña | UMECIT | 🤝 0-0 |\n\nL'Alianza FC est sur une bonne dynamique avec cette victoire en coupe ! Tu veux le classement du groupe ou plus de détails ? 📊",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 5808.8,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

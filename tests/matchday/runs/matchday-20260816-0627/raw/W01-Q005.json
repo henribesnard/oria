@@ -1,0 +1,20 @@
+{
+  "exchange_id": "W01-Q005",
+  "ts_utc": "2026-08-16T06:27:26.852+00:00",
+  "wave": "W01",
+  "persona": "guest_live",
+  "persona_tier": "guest",
+  "category": "F7",
+  "question": "???",
+  "context": {},
+  "fixture_ref": null,
+  "response_text": "Désolé pour la confusion 😅 Je m'appelle **Oria**, et je suis un assistant **uniquement dédié au football**.\n\nJe ne peux pas donner de recettes de cuisine, mais je peux t'aider sur :\n- 📊 **Classements** (Ligue 1, Liga, Premier League, etc.)\n- ⚽ **Scores et résultats** en direct\n- 🗓️ **Matchs à venir** (comme le prochain match du PSG)\n- 🏃 **Stats joueurs et équipes**\n- 🩹 **Blessures et suspensions**\n\nUne question sur le foot ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 2245.2,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

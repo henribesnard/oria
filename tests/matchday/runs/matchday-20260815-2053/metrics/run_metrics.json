@@ -1,0 +1,99 @@
+{
+  "generated_utc": "2026-08-15T20:55:01.103072+00:00",
+  "total_exchanges": 20,
+  "latency": {
+    "count": 20,
+    "avg": 4014.7,
+    "p50": 5367.7,
+    "p90": 10038.7,
+    "p95": 10424.7,
+    "max": 10424.7,
+    "min": 6.6
+  },
+  "routes": {
+    "prerouter": 9,
+    "orchestrator": 10,
+    "safety:injection": 1
+  },
+  "errors": [],
+  "by_category": {
+    "F0": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "G1": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "F1": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "H1": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "F7": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "B8": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "A4": {
+      "total": 3,
+      "ok": 3,
+      "degraded": 0,
+      "error": 0
+    },
+    "C1": {
+      "total": 1,
+      "ok": 1,
+      "degraded": 0,
+      "error": 0
+    },
+    "A1": {
+      "total": 2,
+      "ok": 2,
+      "degraded": 0,
+      "error": 0
+    },
+    "A2": {
+      "total": 2,
+      "ok": 2,
+      "degraded": 0,
+      "error": 0
+    },
+    "A3": {
+      "total": 2,
+      "ok": 2,
+      "degraded": 0,
+      "error": 0
+    },
+    "A6": {
+      "total": 2,
+      "ok": 2,
+      "degraded": 0,
+      "error": 0
+    },
+    "A8": {
+      "total": 2,
+      "ok": 2,
+      "degraded": 0,
+      "error": 0
+    }
+  }
+}

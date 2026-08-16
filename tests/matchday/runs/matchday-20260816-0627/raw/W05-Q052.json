@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W05-Q052",
+  "ts_utc": "2026-08-16T06:35:05.588+00:00",
+  "wave": "W05",
+  "persona": "guest_adversarial",
+  "persona_tier": "guest",
+  "category": "A12",
+  "question": "blesses de Athletic Club",
+  "context": {
+    "fixture_id": 1570343,
+    "league_id": 140,
+    "team_id": 531
+  },
+  "fixture_ref": 1570343,
+  "response_text": "Aucune donnée de blessure ou suspension n'est disponible pour l'**Athletic Club** sur ce match (fixture 1570343) dans la base actuellement. 🩹\n\nCela peut signifier :\n- Aucun blessé recensé pour cette rencontre\n- Des données non remontées dans le système\n\n⚠️ Comme précédemment, l'absence de données ne garantit pas un effectif au complet.\n\nJe peux vérifier les **compositions probables** (lineups) de ce match pour te donner une meilleure visibilité ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 3342.7,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

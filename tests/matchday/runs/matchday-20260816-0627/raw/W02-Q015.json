@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W02-Q015",
+  "ts_utc": "2026-08-16T06:28:42.094+00:00",
+  "wave": "W02",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "A10",
+  "question": "stats des joueurs de Hull City",
+  "context": {
+    "fixture_id": 1557368,
+    "league_id": 39,
+    "team_id": 64
+  },
+  "fixture_ref": 1557368,
+  "response_text": "Voici les statistiques disponibles pour **Hull City** (Championship anglaise, saison 2024-2025) 📊\n\n**Joueurs avec des stats enregistrées :**\n\n| Joueur | Poste | Matchs | Buts | Passes | Note moy. |\n|--------|-------|--------|------|--------|-----------|\n| Ó. Zambrano Preciado | Milieu | 11 | 1 | 1 | 6,84 |\n| R. Longman | Milieu | 9 | 1 | 0 | 6,98 |\n\n**Détails clés :**\n- **Óscar Zambrano** : 398 min, 7 titularisations, 5 tirs (1 cadré), 147 passes, 11 tacles, 2 dribbles réussis sur 2.\n- **Ryan Longman** : 479 min, 6 titularisations, 10 tirs (6 cadrés), 7 passes clés, 25 duels gagnés sur 50.\n\n⚠️ **À noter** : la majorité de l'effectif (A. Connolly, L. Delap, T. Morton, G. Docherty, C. Christie, etc.) n'a **aucune statistique enregistrée** pour cette saison dans la base — probablement car Hull City évolue en **Championship** (et non en Premier League comme le suggérait le contexte), et la saison n'était pas encore complète.\n\nTu veux que je détaille un joueur en particulier, ou que je regarde les stats d'un autre match ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 11082.3,
+  "http_status": 200,
+  "error": null,
+  "route": "prerouter"
+}

@@ -1,0 +1,29 @@
+{
+  "collected_utc": "2026-08-15T20:53:30.001979+00:00",
+  "fixtures": [
+    {
+      "fixture_id": 1607181,
+      "home_team": "KI Klaksvik",
+      "away_team": "Lech Poznan",
+      "score_home": 0,
+      "score_away": 5,
+      "status": "FT",
+      "league_id": 3,
+      "league_name": "UEFA Europa League",
+      "date": "2026-08-14T18:00:00+00:00",
+      "round": "3rd Qualifying Round"
+    },
+    {
+      "fixture_id": 1548357,
+      "home_team": "Alianza FC",
+      "away_team": "UMECIT",
+      "score_home": 1,
+      "score_away": 0,
+      "status": "FT",
+      "league_id": 1028,
+      "league_name": "CONCACAF Central American Cup",
+      "date": "2026-08-14T00:00:00+00:00",
+      "round": "Group Stage"
+    }
+  ]
+}

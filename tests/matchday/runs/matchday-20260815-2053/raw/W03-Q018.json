@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W03-Q018",
+  "ts_utc": "2026-08-15T20:54:52.687+00:00",
+  "wave": "W03",
+  "persona": "dryrun_user",
+  "persona_tier": "guest",
+  "category": "A4",
+  "question": "classement CONCACAF Central American Cup",
+  "context": {
+    "fixture_id": 1548357,
+    "league_id": 1028,
+    "team_id": 2881
+  },
+  "fixture_ref": 1548357,
+  "response_text": "Je suis désolé, mais je n'arrive pas à récupérer le **classement de la CONCACAF Central American Cup** en ce moment — mes outils ne renvoient **aucune donnée** (ni pour la saison 2025, ni pour 2026). 😕\n\nCela peut être dû à une indisponibilité temporaire des données ou à l'absence de la compétition dans mes sources actuelles.\n\nEn attendant, je peux t'aider sur :\n- ⚽ **Les résultats** de l'Alianza FC (que je viens de te montrer)\n- 📊 **Les scores en direct** d'autres compétitions\n- 🔎 Une **autre équipe ou ligue**\n\nTu veux que je regarde autre chose ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 6710.3,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

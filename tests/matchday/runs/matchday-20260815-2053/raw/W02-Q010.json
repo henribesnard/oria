@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W02-Q010",
+  "ts_utc": "2026-08-15T20:53:58.162+00:00",
+  "wave": "W02",
+  "persona": "guest_adversarial",
+  "persona_tier": "guest",
+  "category": "A2",
+  "question": "prochain match de KI Klaksvik",
+  "context": {
+    "fixture_id": 1607181,
+    "league_id": 3,
+    "team_id": 701
+  },
+  "fixture_ref": 1607181,
+  "response_text": "Désolé, je n'arrive pas à récupérer les données sur le **KI Klaksvik** en ce moment — mes recherches ne renvoient aucun résultat. 😕\n\nCela peut être dû à :\n- 📡 Une indisponibilité temporaire des données\n- 🔍 Une référence à l'équipe introuvable dans ma base\n\nTu peux réessayer dans quelques instants, ou me demander un autre championnat/équipe (par exemple la Ligue 1 ou une autre équipe) pendant ce temps ! ⚽",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 5367.7,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

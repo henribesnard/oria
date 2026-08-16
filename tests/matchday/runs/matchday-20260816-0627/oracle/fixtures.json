@@ -1,0 +1,101 @@
+{
+  "collected_utc": "2026-08-16T06:27:16.156560+00:00",
+  "fixtures": [
+    {
+      "fixture_id": 1557368,
+      "home_team": "Hull City",
+      "away_team": "Manchester United",
+      "score_home": null,
+      "score_away": null,
+      "status": "NS",
+      "league_id": 39,
+      "league_name": "Premier League",
+      "date": "2026-08-22T11:30:00+00:00",
+      "round": "Regular Season - 1"
+    },
+    {
+      "fixture_id": 1552732,
+      "home_team": "Lens",
+      "away_team": "Auxerre",
+      "score_home": null,
+      "score_away": null,
+      "status": "NS",
+      "league_id": 61,
+      "league_name": "Ligue 1",
+      "date": "2026-08-22T15:15:00+00:00",
+      "round": "Regular Season - 1"
+    },
+    {
+      "fixture_id": 1550092,
+      "home_team": "Inter",
+      "away_team": "Monza",
+      "score_home": null,
+      "score_away": null,
+      "status": "NS",
+      "league_id": 135,
+      "league_name": "Serie A",
+      "date": "2026-08-22T16:30:00+00:00",
+      "round": "Regular Season - 1"
+    },
+    {
+      "fixture_id": 1570343,
+      "home_team": "Athletic Club",
+      "away_team": "Sevilla",
+      "score_home": null,
+      "score_away": null,
+      "status": "NS",
+      "league_id": 140,
+      "league_name": "La Liga",
+      "date": "2026-08-22T15:00:00+00:00",
+      "round": "Regular Season - 2"
+    },
+    {
+      "fixture_id": 1557369,
+      "home_team": "Everton",
+      "away_team": "Crystal Palace",
+      "score_home": null,
+      "score_away": null,
+      "status": "NS",
+      "league_id": 39,
+      "league_name": "Premier League",
+      "date": "2026-08-22T14:00:00+00:00",
+      "round": "Regular Season - 1"
+    },
+    {
+      "fixture_id": 1557370,
+      "home_team": "Ipswich",
+      "away_team": "Sunderland",
+      "score_home": null,
+      "score_away": null,
+      "status": "NS",
+      "league_id": 39,
+      "league_name": "Premier League",
+      "date": "2026-08-22T14:00:00+00:00",
+      "round": "Regular Season - 1"
+    },
+    {
+      "fixture_id": 1557371,
+      "home_team": "Nottingham Forest",
+      "away_team": "Leeds",
+      "score_home": null,
+      "score_away": null,
+      "status": "NS",
+      "league_id": 39,
+      "league_name": "Premier League",
+      "date": "2026-08-22T14:00:00+00:00",
+      "round": "Regular Season - 1"
+    },
+    {
+      "fixture_id": 1550095,
+      "home_team": "Udinese",
+      "away_team": "Como",
+      "score_home": null,
+      "score_away": null,
+      "status": "NS",
+      "league_id": 135,
+      "league_name": "Serie A",
+      "date": "2026-08-22T16:30:00+00:00",
+      "round": "Regular Season - 1"
+    }
+  ]
+}

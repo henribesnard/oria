@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W06-Q064",
+  "ts_utc": "2026-08-16T06:36:56.034+00:00",
+  "wave": "W06",
+  "persona": "guest_adversarial",
+  "persona_tier": "guest",
+  "category": "A12",
+  "question": "blesses de Everton",
+  "context": {
+    "fixture_id": 1557369,
+    "league_id": 39,
+    "team_id": 45
+  },
+  "fixture_ref": 1557369,
+  "response_text": "Aucune donnée de blessure ou suspension n'est disponible pour **Everton** sur ce match (fixture 1557369) dans la base actuellement. 🩹\n\nCela peut signifier :\n- Aucun blessé recensé pour cette rencontre\n- Des données non remontées dans le système\n\n⚠️ Comme pour les autres équipes, l'absence de données ne garantit pas un effectif au complet.\n\nJe peux vérifier les **compositions probables** (lineups) de ce match ou les **stats d'équipe** d'Everton si tu veux une meilleure visibilité ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 3413.8,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

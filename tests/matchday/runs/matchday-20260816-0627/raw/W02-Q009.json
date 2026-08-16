@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W02-Q009",
+  "ts_utc": "2026-08-16T06:27:42.517+00:00",
+  "wave": "W02",
+  "persona": "free_actif",
+  "persona_tier": "free",
+  "category": "A1",
+  "question": "les matchs de Premier League aujourd'hui",
+  "context": {
+    "fixture_id": 1557368,
+    "league_id": 39,
+    "team_id": 64
+  },
+  "fixture_ref": 1557368,
+  "response_text": "Je n'ai trouvé aucun match de Premier League aujourd'hui ⚽\n\nVoici ce que montrent les données :\n- **Scores en direct (Premier League) :** aucun match en cours ou à venir aujourd'hui.\n- **Calendrier saison 2024-2025 :** tous les matchs répertoriés sont terminés. La dernière journée (38e) s'est jouée le **25 mai 2025** (ex. Liverpool 1-1 Crystal Palace, Manchester City 2-0 à Fulham).\n\n**Fraîcheur des données :** le jeu de données couvre la saison 2024-2025 complète, sans match programmé pour aujourd'hui dans la Premier League.\n\nSi tu veux, je peux te donner :\n- le **classement final** de la saison 2024-2025,\n- les **derniers résultats** d'une équipe précise (ex. Liverpool, id 40),\n- ou les **stats d'une journée** en particulier.\n\nTu veux quoi ?",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 14446.1,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}

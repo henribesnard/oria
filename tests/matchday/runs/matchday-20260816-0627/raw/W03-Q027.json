@@ -1,0 +1,24 @@
+{
+  "exchange_id": "W03-Q027",
+  "ts_utc": "2026-08-16T06:30:45.533+00:00",
+  "wave": "W03",
+  "persona": "guest_curieux",
+  "persona_tier": "guest",
+  "category": "A10",
+  "question": "stats des joueurs de Lens",
+  "context": {
+    "fixture_id": 1552732,
+    "league_id": 61,
+    "team_id": 116
+  },
+  "fixture_ref": 1552732,
+  "response_text": "Je n'ai pas pu récupérer les statistiques des joueurs de **Lens** : les données ne sont pas disponibles dans la base pour cette équipe ou ce match (fixture 1552732) actuellement. 😕\n\nJe peux essayer autre chose si tu veux :\n- Les **stats d'une autre équipe**\n- Le **classement Ligue 1** (league_id 61)\n- Les **résultats** ou **scores en direct** d'un autre match\n\nDis-moi comment je peux t'aider !",
+  "attachments": [],
+  "suggested_actions": [],
+  "degraded": false,
+  "freshness": null,
+  "latency_ms": 6489.8,
+  "http_status": 200,
+  "error": null,
+  "route": "orchestrator"
+}
