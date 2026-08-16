@@ -6,6 +6,7 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
+    from oria.domain.base import BaseRepository
     from oria.domain.fixtures import FixturesRepository
     from oria.domain.head2head import HeadToHeadRepository
     from oria.domain.injuries import InjuriesRepository
@@ -22,6 +23,18 @@ if TYPE_CHECKING:
     from oria.tools.registry import ToolRegistry
 
 logger = logging.getLogger(__name__)
+
+
+async def _get_and_track(
+    registry: "ToolRegistry",
+    repo: "BaseRepository",
+    key: str,
+) -> Any:  # noqa: ANN401
+    """Appelle repo.get() et enregistre la fraîcheur dans le registre."""
+    result = await repo.get(key)
+    if result is not None and repo.last_fetched_at is not None:
+        registry.record_fetched_at(repo.last_fetched_at)
+    return result
 
 
 def register_football_tools(  # noqa: PLR0913
@@ -66,7 +79,7 @@ def register_football_tools(  # noqa: PLR0913
             parts.append(f"next={next}")
         if last:
             parts.append(f"last={last}")
-        return await fixtures.get("&".join(parts))
+        return await _get_and_track(registry, fixtures, "&".join(parts))
 
     registry.register(
         "get_fixtures",
@@ -108,8 +121,8 @@ def register_football_tools(  # noqa: PLR0913
         league_id: int = 0,
         season: int = 0,
     ) -> Any:  # noqa: ANN401
-        return await standings.get(
-            f"league={league_id}&season={season}",
+        return await _get_and_track(
+            registry, standings, f"league={league_id}&season={season}",
         )
 
     registry.register(
@@ -142,7 +155,7 @@ def register_football_tools(  # noqa: PLR0913
             parts.append(f"id={team_id}")
         if search:
             parts.append(f"search={search}")
-        return await teams.get("&".join(parts))
+        return await _get_and_track(registry, teams, "&".join(parts))
 
     registry.register(
         "get_team_info",
@@ -179,7 +192,7 @@ def register_football_tools(  # noqa: PLR0913
             parts.append(f"league={league_id}")
         if season:
             parts.append(f"season={season}")
-        return await players.get("&".join(parts))
+        return await _get_and_track(registry, players, "&".join(parts))
 
     registry.register(
         "get_player_stats",
@@ -224,7 +237,7 @@ def register_football_tools(  # noqa: PLR0913
             parts.append(f"season={season}")
         if team_id:
             parts.append(f"team={team_id}")
-        return await injuries.get("&".join(parts))
+        return await _get_and_track(registry, injuries, "&".join(parts))
 
     registry.register(
         "get_injuries",
@@ -255,7 +268,7 @@ def register_football_tools(  # noqa: PLR0913
 
     # ---- get_lineups ----
     async def get_lineups(fixture_id: int = 0) -> Any:  # noqa: ANN401
-        return await lineups.get(f"fixture={fixture_id}")
+        return await _get_and_track(registry, lineups, f"fixture={fixture_id}")
 
     registry.register(
         "get_lineups",
@@ -286,7 +299,7 @@ def register_football_tools(  # noqa: PLR0913
             parts.append(f"league={league_id}")
         if season:
             parts.append(f"season={season}")
-        return await odds.get("&".join(parts))
+        return await _get_and_track(registry, odds, "&".join(parts))
 
     registry.register(
         "get_odds",
@@ -316,7 +329,7 @@ def register_football_tools(  # noqa: PLR0913
         league_id: int = 0,
     ) -> Any:  # noqa: ANN401
         key = str(league_id) if league_id else ""
-        return await live.get(key)
+        return await _get_and_track(registry, live, key)
 
     registry.register(
         "get_live_scores",
@@ -335,7 +348,7 @@ def register_football_tools(  # noqa: PLR0913
 
     # ---- get_match_events ----
     async def get_match_events(fixture_id: int = 0) -> Any:  # noqa: ANN401
-        return await events.get(f"fixture={fixture_id}")
+        return await _get_and_track(registry, events, f"fixture={fixture_id}")
 
     registry.register(
         "get_match_events",
@@ -356,7 +369,7 @@ def register_football_tools(  # noqa: PLR0913
 
     # ---- get_match_statistics ----
     async def get_match_statistics(fixture_id: int = 0) -> Any:  # noqa: ANN401
-        return await statistics.get(f"fixture={fixture_id}")
+        return await _get_and_track(registry, statistics, f"fixture={fixture_id}")
 
     registry.register(
         "get_match_statistics",
@@ -381,8 +394,8 @@ def register_football_tools(  # noqa: PLR0913
         team_id_2: int = 0,
         last: int = 10,
     ) -> Any:  # noqa: ANN401
-        return await head2head.get(
-            f"h2h={team_id_1}-{team_id_2}&last={last}",
+        return await _get_and_track(
+            registry, head2head, f"h2h={team_id_1}-{team_id_2}&last={last}",
         )
 
     registry.register(
@@ -415,8 +428,8 @@ def register_football_tools(  # noqa: PLR0913
         league_id: int = 0,
         season: int = 0,
     ) -> Any:  # noqa: ANN401
-        return await team_statistics.get(
-            f"team={team_id}&league={league_id}&season={season}",
+        return await _get_and_track(
+            registry, team_statistics, f"team={team_id}&league={league_id}&season={season}",
         )
 
     registry.register(
@@ -449,8 +462,8 @@ def register_football_tools(  # noqa: PLR0913
         league_id: int = 0,
         season: int = 0,
     ) -> Any:  # noqa: ANN401
-        return await top_scorers.get(
-            f"league={league_id}&season={season}",
+        return await _get_and_track(
+            registry, top_scorers, f"league={league_id}&season={season}",
         )
 
     registry.register(
@@ -478,8 +491,8 @@ def register_football_tools(  # noqa: PLR0913
         league_id: int = 0,
         season: int = 0,
     ) -> Any:  # noqa: ANN401
-        return await top_assists.get(
-            f"league={league_id}&season={season}",
+        return await _get_and_track(
+            registry, top_assists, f"league={league_id}&season={season}",
         )
 
     registry.register(

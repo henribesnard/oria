@@ -359,7 +359,7 @@ class TestOrchestratorPertinence:
         orch = Orchestrator(llm=None, tools=None)
         req = _make_request("classement ligue 1")
         result = await orch.run(req)
-        assert result is None
+        assert result.text is None
 
     @pytest.mark.asyncio
     async def test_orchestrator_avec_llm_mock(self) -> None:
@@ -377,8 +377,8 @@ class TestOrchestratorPertinence:
         orch = Orchestrator(llm=mock_llm, tools=None)
         req = _make_request("Qui est premier en Ligue 1 ?")
         result = await orch.run(req)
-        assert result is not None
-        assert "PSG" in result
+        assert result.text is not None
+        assert "PSG" in result.text
 
     @pytest.mark.asyncio
     async def test_orchestrator_tool_calling_loop(self) -> None:
@@ -437,8 +437,8 @@ class TestOrchestratorPertinence:
         orch = Orchestrator(llm=mock_llm, tools=registry)
         req = _make_request("classement ligue 1", league_id=61, season=2024)
         result = await orch.run(req)
-        assert result is not None
-        assert "PSG" in result
+        assert result.text is not None
+        assert "PSG" in result.text
         assert call_count == 2  # 1 tool call + 1 final response
 
     @pytest.mark.asyncio
@@ -469,7 +469,7 @@ class TestOrchestratorPertinence:
             {"role": "assistant", "content": "Le PSG est premier."},
         ]
         result = await orch.run(req, conversation_history=history)
-        assert result is not None
+        assert result.text is not None
         # L'historique doit être dans les messages
         roles = [m["role"] for m in captured_messages]
         assert "system" in roles
@@ -484,7 +484,7 @@ class TestOrchestratorPertinence:
         orch = Orchestrator(llm=mock_llm, tools=None)
         req = _make_request("classement")
         result = await orch.run(req)
-        assert result is None
+        assert result.text is None
 
 
 # ---------------------------------------------------------------------------

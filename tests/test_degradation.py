@@ -194,7 +194,7 @@ class TestPipelineInvariant:
                 raise RuntimeError("prerouter crash")
 
         class BrokenOrchestrator(Orchestrator):
-            async def run(self, req: IncomingRequest) -> str | None:
+            async def run(self, req, **kwargs):  # type: ignore[override]
                 raise RuntimeError("orchestrator crash")
 
         synthesis = Synthesis()

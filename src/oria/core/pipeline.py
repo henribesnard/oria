@@ -110,12 +110,16 @@ class Pipeline:
         # Stage 2 : orchestrateur (LLM + outils)
         if self._orchestrator is not None:
             async with guard("orchestrator", on_error=lambda: None):
-                text = await self._orchestrator.run(
+                orch_result = await self._orchestrator.run(
                     req,
                     conversation_history=conversation_history,
                 )
-                if text:
-                    resp = await self._synthesis.render(text)
+                if orch_result.text:
+                    resp = await self._synthesis.render(
+                        orch_result.text,
+                        degraded=orch_result.degraded,
+                        freshness=orch_result.freshness,
+                    )
                     await self._persist_turn(req, resp)
                     return resp
 

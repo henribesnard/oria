@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
 from oria.kernel.health import Availability, ModuleStatus
@@ -31,6 +32,17 @@ mais n'hésite pas à me poser une question sur le foot !"
 Ne donne JAMAIS de recettes, conseils médicaux, code, ou tout contenu hors football."""
 
 _MAX_TOOL_ROUNDS = 5
+
+
+@dataclass
+class OrchestratorResult:
+    """Result returned by the orchestrator with degradation metadata."""
+
+    text: str | None
+    degraded: bool = False
+    tools_called: int = 0
+    tools_failed: int = 0
+    freshness: str | None = None
 
 
 class Orchestrator:
@@ -66,10 +78,14 @@ class Orchestrator:
         *,
         conversation_history: list[dict[str, str]] | None = None,
         model: str | None = None,
-    ) -> str | None:
-        """Exécute la boucle function-calling. Renvoie le texte brut ou None."""
+    ) -> OrchestratorResult:
+        """Exécute la boucle function-calling. Renvoie un OrchestratorResult."""
         if self._llm is None:
-            return None
+            return OrchestratorResult(text=None)
+
+        # Reset freshness tracking for this request cycle
+        if self._tools is not None:
+            self._tools.reset_freshness()
 
         messages: list[dict[str, Any]] = [{"role": "system", "content": _SYSTEM_PROMPT}]
 
@@ -87,6 +103,10 @@ class Orchestrator:
 
         tool_schemas = self._tools.schemas() if self._tools else None
 
+        # Track tool call success/failure across all rounds
+        tools_called = 0
+        tools_failed = 0
+
         for round_idx in range(_MAX_TOOL_ROUNDS):
             try:
                 result = await self._llm.complete(
@@ -94,11 +114,21 @@ class Orchestrator:
                 )
             except Exception:
                 logger.warning("orchestrator LLM call failed (round %d)", round_idx, exc_info=True)
-                return None
+                return OrchestratorResult(
+                    text=None,
+                    degraded=True,
+                    tools_called=tools_called,
+                    tools_failed=tools_failed,
+                )
 
             choices = result.get("choices", [])
             if not choices:
-                return None
+                return OrchestratorResult(
+                    text=None,
+                    degraded=True,
+                    tools_called=tools_called,
+                    tools_failed=tools_failed,
+                )
 
             message = choices[0].get("message", {})
             finish_reason = choices[0].get("finish_reason", "stop")
@@ -113,11 +143,14 @@ class Orchestrator:
                     fn_args_raw = tc.get("function", {}).get("arguments", "{}")
                     tc_id = tc.get("id", "")
 
+                    tools_called += 1
+
                     # Parser les arguments (le LLM peut halluciner)
                     try:
                         fn_args = json.loads(fn_args_raw) if isinstance(fn_args_raw, str) else fn_args_raw
                     except json.JSONDecodeError:
                         logger.warning("LLM returned invalid JSON for tool %s", fn_name)
+                        tools_failed += 1
                         messages.append({
                             "role": "tool", "tool_call_id": tc_id,
                             "content": json.dumps({"error": "invalid arguments"}),
@@ -130,9 +163,11 @@ class Orchestrator:
                         content = json.dumps(tool_result, default=str, ensure_ascii=False)
                     except KeyError:
                         logger.warning("LLM called unknown tool: %s", fn_name)
+                        tools_failed += 1
                         content = json.dumps({"error": f"unknown tool: {fn_name}"})
                     except Exception:
                         logger.warning("tool %s failed", fn_name, exc_info=True)
+                        tools_failed += 1
                         content = json.dumps({"error": f"tool {fn_name} failed"})
 
                     messages.append({
@@ -145,12 +180,36 @@ class Orchestrator:
             text = message.get("content", "")
             # Ne jamais exposer reasoning_content
             if text:
-                return str(text)
-            return None
+                # Mark as degraded if tools were called but ALL failed
+                degraded = tools_called > 0 and tools_failed == tools_called
+                if degraded:
+                    logger.warning(
+                        "all %d tool call(s) failed — marking response as degraded",
+                        tools_called,
+                    )
+                freshness = self._tools.freshness_label if self._tools else None
+                return OrchestratorResult(
+                    text=str(text),
+                    degraded=degraded,
+                    tools_called=tools_called,
+                    tools_failed=tools_failed,
+                    freshness=freshness,
+                )
+            return OrchestratorResult(
+                text=None,
+                degraded=True,
+                tools_called=tools_called,
+                tools_failed=tools_failed,
+            )
 
         # Limite de rounds atteinte
         logger.warning("orchestrator reached max tool rounds (%d)", _MAX_TOOL_ROUNDS)
-        return None
+        return OrchestratorResult(
+            text=None,
+            degraded=True,
+            tools_called=tools_called,
+            tools_failed=tools_failed,
+        )
 
     @staticmethod
     def _build_context_hint(req: IncomingRequest) -> str:
