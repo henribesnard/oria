@@ -44,11 +44,15 @@ class BaseRepository:
 
     async def get(self, key: str, *, allow_stale: bool = True) -> Any:  # noqa: ANN401
         """Chemin cache-first standard."""
+        import time
+
         cache_key = f"{self._domain}:{key}"
 
         # 1) Lire le cache
         entry = await self._cache.get(cache_key, domain=self._domain, allow_stale=allow_stale)
         if entry is not None and entry.is_fresh:
+            self._last_fetched_at = entry.fetched_at
+            self._last_age_label = entry.age_label
             return entry.value
 
         # 2) Tenter un fetch frais via le provider
@@ -61,6 +65,8 @@ class BaseRepository:
                     domain=self._domain,
                     volatility=self.volatility,
                 )
+                self._last_fetched_at = time.time()
+                self._last_age_label = "à l'instant"
                 return fresh
         except Exception:
             logger.warning(
@@ -71,9 +77,23 @@ class BaseRepository:
 
         # 3) Servir le cache périmé si disponible
         if entry is not None:
+            self._last_fetched_at = entry.fetched_at
+            self._last_age_label = entry.age_label
             return entry.value
 
+        self._last_fetched_at = None
+        self._last_age_label = None
         return None
+
+    @property
+    def last_fetched_at(self) -> float | None:
+        """Timestamp du dernier get() servi (pour propagation de fraîcheur)."""
+        return getattr(self, "_last_fetched_at", None)
+
+    @property
+    def last_age_label(self) -> str | None:
+        """Label de fraîcheur du dernier get() servi."""
+        return getattr(self, "_last_age_label", None)
 
     async def _fetch(self, key: str) -> Any:  # noqa: ANN401
         """À surcharger : fetch via le provider. Renvoie None si pas de données."""

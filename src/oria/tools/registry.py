@@ -50,6 +50,7 @@ class ToolRegistry:
 
     def __init__(self) -> None:
         self._tools: dict[str, ToolDef] = {}
+        self._oldest_fetched_at: float | None = None
 
     async def start(self) -> None:
         logger.info("tool registry ready", extra={"tool_count": len(self._tools)})
@@ -59,6 +60,30 @@ class ToolRegistry:
 
     async def health(self) -> ModuleStatus:
         return ModuleStatus(name=self.name, availability=Availability.UP)
+
+    def reset_freshness(self) -> None:
+        """Réinitialise le suivi de fraîcheur pour un nouveau cycle de requête."""
+        self._oldest_fetched_at = None
+
+    def record_fetched_at(self, fetched_at: float) -> None:
+        """Enregistre un timestamp de fraîcheur. Conserve le plus ancien."""
+        if self._oldest_fetched_at is None or fetched_at < self._oldest_fetched_at:
+            self._oldest_fetched_at = fetched_at
+
+    @property
+    def freshness_label(self) -> str | None:
+        """Libellé de fraîcheur basé sur la donnée la plus ancienne servie."""
+        if self._oldest_fetched_at is None:
+            return None
+        import time
+        age = time.time() - self._oldest_fetched_at
+        if age < 60:
+            return "à l'instant"
+        if age < 3600:
+            return f"il y a {int(age // 60)} min"
+        if age < 86400:
+            return f"il y a {int(age // 3600)} h"
+        return f"il y a {int(age // 86400)} j"
 
     def register(
         self,

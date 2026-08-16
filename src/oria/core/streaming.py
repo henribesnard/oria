@@ -20,7 +20,7 @@ from oria.kernel.resilience import guard
 if TYPE_CHECKING:
     from oria.app.conversations.service import ConversationService
     from oria.app.entitlements.service import Entitlements
-    from oria.core.orchestrator import Orchestrator
+    from oria.core.orchestrator import Orchestrator, OrchestratorResult
     from oria.core.prerouter import PreRouter
     from oria.core.synthesis import Synthesis
 
@@ -117,12 +117,15 @@ async def _stream_process(
 
     # Orchestrator streaming
     if orchestrator is not None and orchestrator._llm is not None:
-        full_text = await _stream_orchestrator(
+        orch_result = await _stream_orchestrator(
             req, orchestrator, conversation_history,
         )
-        if full_text:
-            yield _sse_event({"type": "done", "text": full_text})
-            await _persist_stream_turn(req, full_text, entitlements, conversations)
+        if orch_result is not None and orch_result.text:
+            event_data: dict[str, Any] = {"type": "done", "text": orch_result.text}
+            if orch_result.degraded:
+                event_data["degraded"] = True
+            yield _sse_event(event_data)
+            await _persist_stream_turn(req, orch_result.text, entitlements, conversations)
             return
 
     # Fallback
@@ -134,7 +137,7 @@ async def _stream_orchestrator(
     req: IncomingRequest,
     orchestrator: Orchestrator,
     conversation_history: list[dict[str, str]] | None,
-) -> str | None:
+) -> OrchestratorResult | None:
     """Exécute l'orchestrateur en mode non-streaming (fallback SSE)."""
     try:
         return await orchestrator.run(
