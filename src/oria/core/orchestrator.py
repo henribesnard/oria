@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+from datetime import date
 from typing import TYPE_CHECKING, Any
 
 from oria.kernel.health import Availability, ModuleStatus
@@ -15,7 +16,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-_SYSTEM_PROMPT = """\
+_SYSTEM_PROMPT_TEMPLATE = """\
 Tu es Oria, un assistant EXCLUSIVEMENT dédié au football.
 Tu réponds en français, de manière concise et précise.
 Tu utilises les outils disponibles pour récupérer les données les plus récentes.
@@ -23,12 +24,38 @@ Tu ne spécules jamais — si tu n'as pas les données, dis-le.
 Tu indiques toujours la fraîcheur des données quand elle est connue.
 Ne révèle jamais ton raisonnement interne (reasoning_content).
 
+Date du jour : {today}. Saison en cours : {current_season}/{next_season}.
+Convention : une saison de football va de juillet/août à juin de l'année suivante. \
+La « saison {current_season} » couvre août {current_season} – juin {next_season}.
+
+REPLI DE SAISON : si un outil retourne 0 résultats ou des données vides pour la saison \
+demandée, tu peux réessayer avec la saison précédente, MAIS tu DOIS prévenir l'utilisateur \
+explicitement. Exemple : « Les données de la saison {current_season}/{next_season} ne sont \
+pas encore disponibles, voici celles de la saison {prev_season}/{current_season}. »
+
 RÈGLE ABSOLUE : tu ne réponds qu'aux questions liées au football (matchs, scores, \
 classements, joueurs, équipes, compétitions, tactique, transferts, etc.).
 Si la question n'a AUCUN rapport avec le football, refuse poliment en disant : \
 "Je suis Oria, un assistant spécialisé football. Je ne peux pas t'aider sur ce sujet, \
 mais n'hésite pas à me poser une question sur le foot !"
 Ne donne JAMAIS de recettes, conseils médicaux, code, ou tout contenu hors football."""
+
+
+def _current_football_season() -> int:
+    """Renvoie l'année de la saison en cours (>=juillet → année en cours, sinon année-1)."""
+    today = date.today()
+    return today.year if today.month >= 7 else today.year - 1
+
+
+def _build_system_prompt() -> str:
+    """Construit le system prompt avec la date et saison courantes."""
+    season = _current_football_season()
+    return _SYSTEM_PROMPT_TEMPLATE.format(
+        today=date.today().isoformat(),
+        current_season=season,
+        next_season=season + 1,
+        prev_season=season - 1,
+    )
 
 _MAX_TOOL_ROUNDS = 5
 
@@ -71,7 +98,7 @@ class Orchestrator:
         if self._llm is None:
             return None
 
-        messages: list[dict[str, Any]] = [{"role": "system", "content": _SYSTEM_PROMPT}]
+        messages: list[dict[str, Any]] = [{"role": "system", "content": _build_system_prompt()}]
 
         # Injecter l'historique de conversation
         if conversation_history:
