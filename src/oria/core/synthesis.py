@@ -3,12 +3,37 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import Any
 
 from oria.kernel.health import Availability, ModuleStatus
 from oria.kernel.models import Attachment, Response, SuggestedAction
 
 logger = logging.getLogger(__name__)
+
+# Regex de détection de contenu de cotes/paris dans la réponse
+_ODDS_CONTENT_RE = re.compile(
+    r"\b(cote[s]?\b|bookmaker|1N2|over[/ ]under|handicap\s+asiatique|BTTS|"
+    r"both\s+teams?\s+to\s+score|clean\s+sheet|win\s+to\s+nil|"
+    r"\d+[.,]\d+\s*[-–]\s*\d+[.,]\d+)",
+    re.IGNORECASE,
+)
+
+# Formulations prescriptives interdites
+_PRESCRIPTIVE_RE = re.compile(
+    r"(favori\s+[eé]crasant|signal\s+fort|il\s+faut\s+miser|"
+    r"value\s+bet|donne(?:nt)?\s+.{1,30}d.avance|mise[rz]?\s+sur|"
+    r"parie[rz]?\s+sur|recommand[eé]|conseil\s+de\s+pari|"
+    r"tu\s+devrais\s+(?:miser|parier|jouer))",
+    re.IGNORECASE,
+)
+
+_GAMBLING_SUFFIX = (
+    "\n\n---\n"
+    "Les cotes sont fournies à titre informatif. "
+    "Le jeu comporte des risques : joue de manière responsable. "
+    "Aide : Joueurs Info Service 09 74 75 13 13."
+)
 
 
 class Synthesis:
@@ -37,6 +62,7 @@ class Synthesis:
         freshness: str | None = None,
     ) -> Response:
         """Produit une Response riche à partir des éléments du pipeline."""
+        text = self._apply_gambling_filters(text)
         return Response(
             text=text,
             degraded=degraded,
@@ -52,8 +78,14 @@ class Synthesis:
         freshness: str | None = None,
     ) -> Response:
         """Enrichit une Response existante (ex: prerouter) avec freshness."""
+        updates: dict[str, Any] = {}
         if freshness and not resp.freshness:
-            resp = resp.model_copy(update={"freshness": freshness})
+            updates["freshness"] = freshness
+        filtered = self._apply_gambling_filters(resp.text)
+        if filtered != resp.text:
+            updates["text"] = filtered
+        if updates:
+            resp = resp.model_copy(update=updates)
         return resp
 
     async def quota_exceeded(self, reason: str) -> Response:
@@ -76,3 +108,19 @@ class Synthesis:
             "Réessaie dans quelques instants.",
             degraded=True,
         )
+
+    @staticmethod
+    def _apply_gambling_filters(text: str) -> str:
+        """Applique les filtres de jeu responsable sur le texte de réponse.
+
+        1. Supprime les formulations prescriptives
+        2. Ajoute le suffixe de jeu responsable si des cotes sont présentes
+        """
+        # Supprimer les formulations prescriptives
+        text = _PRESCRIPTIVE_RE.sub("", text)
+
+        # Ajouter le suffixe de jeu responsable si la réponse contient des cotes
+        if _ODDS_CONTENT_RE.search(text) and _GAMBLING_SUFFIX not in text:
+            text = text.rstrip() + _GAMBLING_SUFFIX
+
+        return text
