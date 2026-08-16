@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 from typing import TYPE_CHECKING, Any
@@ -108,36 +109,9 @@ class Orchestrator:
             if tool_calls and self._tools and finish_reason == "tool_calls":
                 messages.append(message)
 
-                for tc in tool_calls:
-                    fn_name = tc.get("function", {}).get("name", "")
-                    fn_args_raw = tc.get("function", {}).get("arguments", "{}")
-                    tc_id = tc.get("id", "")
-
-                    # Parser les arguments (le LLM peut halluciner)
-                    try:
-                        fn_args = json.loads(fn_args_raw) if isinstance(fn_args_raw, str) else fn_args_raw
-                    except json.JSONDecodeError:
-                        logger.warning("LLM returned invalid JSON for tool %s", fn_name)
-                        messages.append({
-                            "role": "tool", "tool_call_id": tc_id,
-                            "content": json.dumps({"error": "invalid arguments"}),
-                        })
-                        continue
-
-                    # Appeler l'outil
-                    try:
-                        tool_result = await self._tools.call(fn_name, fn_args)
-                        content = json.dumps(tool_result, default=str, ensure_ascii=False)
-                    except KeyError:
-                        logger.warning("LLM called unknown tool: %s", fn_name)
-                        content = json.dumps({"error": f"unknown tool: {fn_name}"})
-                    except Exception:
-                        logger.warning("tool %s failed", fn_name, exc_info=True)
-                        content = json.dumps({"error": f"tool {fn_name} failed"})
-
-                    messages.append({
-                        "role": "tool", "tool_call_id": tc_id, "content": content,
-                    })
+                # Exécuter tous les appels outils en parallèle
+                tool_messages = await self._run_tool_calls(tool_calls)
+                messages.extend(tool_messages)
 
                 continue  # Boucler pour que le LLM utilise les résultats
 
@@ -151,6 +125,44 @@ class Orchestrator:
         # Limite de rounds atteinte
         logger.warning("orchestrator reached max tool rounds (%d)", _MAX_TOOL_ROUNDS)
         return None
+
+    async def _run_tool_calls(
+        self,
+        tool_calls: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        """Exécute les appels outils en parallèle et renvoie les messages résultats."""
+
+        async def _execute_one(tc: dict[str, Any]) -> dict[str, Any]:
+            fn_name = tc.get("function", {}).get("name", "")
+            fn_args_raw = tc.get("function", {}).get("arguments", "{}")
+            tc_id = tc.get("id", "")
+
+            # Parser les arguments (le LLM peut halluciner)
+            try:
+                fn_args = json.loads(fn_args_raw) if isinstance(fn_args_raw, str) else fn_args_raw
+            except json.JSONDecodeError:
+                logger.warning("LLM returned invalid JSON for tool %s", fn_name)
+                return {
+                    "role": "tool", "tool_call_id": tc_id,
+                    "content": json.dumps({"error": "invalid arguments"}),
+                }
+
+            # Appeler l'outil
+            try:
+                tool_result = await self._tools.call(fn_name, fn_args)  # type: ignore[union-attr]
+                content = json.dumps(tool_result, default=str, ensure_ascii=False)
+            except KeyError:
+                logger.warning("LLM called unknown tool: %s", fn_name)
+                content = json.dumps({"error": f"unknown tool: {fn_name}"})
+            except Exception:
+                logger.warning("tool %s failed", fn_name, exc_info=True)
+                content = json.dumps({"error": f"tool {fn_name} failed"})
+
+            return {"role": "tool", "tool_call_id": tc_id, "content": content}
+
+        # Lancer tous les appels en parallèle
+        results = await asyncio.gather(*[_execute_one(tc) for tc in tool_calls])
+        return list(results)
 
     @staticmethod
     def _build_context_hint(req: IncomingRequest) -> str:
