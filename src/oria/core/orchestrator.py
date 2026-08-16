@@ -166,4 +166,10 @@ class Orchestrator:
             parts.append(f"fixture_id={ctx.fixture_id}")
         if ctx.season:
             parts.append(f"season={ctx.season}")
+        if ctx.followed_league_ids:
+            ids = ", ".join(str(i) for i in ctx.followed_league_ids)
+            parts.append(f"followed_leagues=[{ids}]")
+        if ctx.followed_team_ids:
+            ids = ", ".join(str(i) for i in ctx.followed_team_ids)
+            parts.append(f"followed_teams=[{ids}]")
         return ", ".join(parts)

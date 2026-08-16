@@ -17,6 +17,8 @@ class Context(BaseModel):
     fixture_id: int | None = None
     team_id: int | None = None
     player_id: int | None = None
+    followed_league_ids: list[int] = []
+    followed_team_ids: list[int] = []
 
 
 class IncomingRequest(BaseModel):

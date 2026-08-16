@@ -20,6 +20,7 @@ from oria.kernel.resilience import guard
 if TYPE_CHECKING:
     from oria.app.conversations.service import ConversationService
     from oria.app.entitlements.service import Entitlements
+    from oria.app.preferences.service import FollowService
     from oria.core.orchestrator import Orchestrator
     from oria.core.prerouter import PreRouter
     from oria.core.synthesis import Synthesis
@@ -42,12 +43,14 @@ class Pipeline:
         orchestrator: Orchestrator | None = None,
         entitlements: Entitlements | None = None,
         conversations: ConversationService | None = None,
+        follow_service: FollowService | None = None,
     ) -> None:
         self._synthesis = synthesis
         self._prerouter = prerouter
         self._orchestrator = orchestrator
         self._entitlements = entitlements
         self._conversations = conversations
+        self._follow_service = follow_service
 
     async def start(self) -> None:
         logger.info("pipeline ready")
@@ -133,7 +136,7 @@ class Pipeline:
         return bool(_GREETING_RE.search(t) or _ACK_RE.search(t) or _HELP_RE.search(t))
 
     async def _merge_context(self, req: IncomingRequest) -> IncomingRequest:
-        """Fusionne le contexte persistant avec celui de la requête."""
+        """Fusionne le contexte persistant et les follows avec celui de la requête."""
         if self._conversations is None:
             return req
         persisted = await self._conversations.get_context(req.user_id)
@@ -142,6 +145,17 @@ class Pipeline:
         merged = persisted.model_copy(
             update={k: v for k, v in ctx.model_dump().items() if v is not None},
         )
+
+        # Injecter les follows si disponibles
+        if self._follow_service is not None:
+            follows = await self._follow_service.list_follows(req.user_id)
+            league_ids = [f.entity_id for f in follows if f.entity_type == "league"]
+            team_ids = [f.entity_id for f in follows if f.entity_type == "team"]
+            if league_ids:
+                merged = merged.model_copy(update={"followed_league_ids": league_ids})
+            if team_ids:
+                merged = merged.model_copy(update={"followed_team_ids": team_ids})
+
         return req.model_copy(update={"context": merged})
 
     async def _get_conversation_history(
