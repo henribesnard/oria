@@ -24,6 +24,58 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+def _h2h_summary(
+    fixtures: list[dict[str, Any]],
+    team_id_1: int,
+    team_id_2: int,
+) -> dict[str, Any]:
+    """Calcule un résumé H2H : victoires, nuls, buts pour chaque équipe."""
+    wins_1 = wins_2 = draws = 0
+    goals_1 = goals_2 = 0
+    name_1 = name_2 = ""
+
+    for fix in fixtures:
+        home = fix.get("home", {})
+        away = fix.get("away", {})
+        g_home = fix.get("goals_home") or 0
+        g_away = fix.get("goals_away") or 0
+
+        # Identify which team is home/away
+        if home.get("id") == team_id_1:
+            goals_1 += g_home
+            goals_2 += g_away
+            if not name_1:
+                name_1 = home.get("name", "")
+            if not name_2:
+                name_2 = away.get("name", "")
+            if home.get("winner") is True:
+                wins_1 += 1
+            elif away.get("winner") is True:
+                wins_2 += 1
+            else:
+                draws += 1
+        elif home.get("id") == team_id_2:
+            goals_2 += g_home
+            goals_1 += g_away
+            if not name_2:
+                name_2 = home.get("name", "")
+            if not name_1:
+                name_1 = away.get("name", "")
+            if home.get("winner") is True:
+                wins_2 += 1
+            elif away.get("winner") is True:
+                wins_1 += 1
+            else:
+                draws += 1
+
+    return {
+        "total_matches": len(fixtures),
+        "team_1": {"id": team_id_1, "name": name_1, "wins": wins_1, "goals": goals_1},
+        "team_2": {"id": team_id_2, "name": name_2, "wins": wins_2, "goals": goals_2},
+        "draws": draws,
+    }
+
+
 def register_football_tools(  # noqa: PLR0913
     registry: ToolRegistry,
     *,
@@ -381,13 +433,20 @@ def register_football_tools(  # noqa: PLR0913
         team_id_2: int = 0,
         last: int = 10,
     ) -> Any:  # noqa: ANN401
-        return await head2head.get(
+        fixtures = await head2head.get(
             f"h2h={team_id_1}-{team_id_2}&last={last}",
         )
+        if not fixtures:
+            return fixtures
+        return {
+            "summary": _h2h_summary(fixtures, team_id_1, team_id_2),
+            "fixtures": fixtures,
+        }
 
     registry.register(
         "get_h2h",
-        "Récupère les confrontations directes entre deux équipes.",
+        "Récupère les confrontations directes entre deux équipes "
+        "avec un résumé pré-calculé (victoires, nuls, défaites).",
         {
             "type": "object",
             "properties": {
