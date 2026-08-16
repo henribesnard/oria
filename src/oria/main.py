@@ -193,6 +193,7 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
         orchestrator=orchestrator,
         entitlements=entitlements,
         conversations=conversation_service,
+        follow_service=follow_service,
     )
 
     container.add(prerouter)
