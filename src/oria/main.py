@@ -182,6 +182,7 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
         notif_settings_service=notif_settings_service,
         entitlements=entitlements,
     )
+    tool_registry.set_entitlement_checker(entitlements.check)
     container.add(tool_registry)
 
     # --- Core (M12) ---

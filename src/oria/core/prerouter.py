@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any
 
 from oria.kernel.health import Availability, ModuleStatus
 from oria.kernel.models import Attachment, IncomingRequest, Response, SuggestedAction
+from oria.tools.registry import ToolGatingError
 
 if TYPE_CHECKING:
     from oria.app.entitlements.service import Entitlements
@@ -417,7 +418,7 @@ class PreRouter:
             params: dict[str, Any] = {}
             if req.context.league_id:
                 params["league_id"] = req.context.league_id
-            data = await self._tools.call("get_live_scores", params)
+            data = await self._tools.call("get_live_scores", params, user_id=req.user_id)
             if data:
                 return Response(
                     text="Voici les scores en direct.",
@@ -428,6 +429,14 @@ class PreRouter:
                 text="Aucun match en direct pour le moment.",
                 suggested_actions=[
                     SuggestedAction(label="Prochains matchs", payload={"text": "prochains matchs"}),
+                ],
+            )
+        except ToolGatingError as gating_err:
+            return Response(
+                text=gating_err.reason,
+                degraded=True,
+                suggested_actions=[
+                    SuggestedAction(label="Passer Premium", payload={"action": "upgrade"}),
                 ],
             )
         except Exception:
@@ -445,12 +454,20 @@ class PreRouter:
                 params["league_id"] = req.context.league_id
             if req.context.season:
                 params["season"] = req.context.season
-            data = await self._tools.call("get_odds", params)
+            data = await self._tools.call("get_odds", params, user_id=req.user_id)
             if data:
                 return Response(
                     text="Voici les cotes pré-match.",
                     attachments=[Attachment(kind="table", data={"odds": data})],
                 )
+        except ToolGatingError as gating_err:
+            return Response(
+                text=gating_err.reason,
+                degraded=True,
+                suggested_actions=[
+                    SuggestedAction(label="Passer Premium", payload={"action": "upgrade"}),
+                ],
+            )
         except Exception:
             logger.debug("prerouter odds failed", exc_info=True)
         return None

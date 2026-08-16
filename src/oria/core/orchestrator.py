@@ -7,6 +7,7 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from oria.kernel.health import Availability, ModuleStatus
+from oria.tools.registry import ToolGatingError
 
 if TYPE_CHECKING:
     from oria.kernel.models import IncomingRequest
@@ -126,8 +127,20 @@ class Orchestrator:
 
                     # Appeler l'outil
                     try:
-                        tool_result = await self._tools.call(fn_name, fn_args)
+                        tool_result = await self._tools.call(
+                            fn_name, fn_args, user_id=req.user_id,
+                        )
                         content = json.dumps(tool_result, default=str, ensure_ascii=False)
+                    except ToolGatingError as gating_err:
+                        logger.info(
+                            "tool %s gated for user %s (feature=%s)",
+                            fn_name, req.user_id, gating_err.feature,
+                        )
+                        content = json.dumps({
+                            "error": "feature_not_available",
+                            "feature": gating_err.feature,
+                            "message": gating_err.reason,
+                        })
                     except KeyError:
                         logger.warning("LLM called unknown tool: %s", fn_name)
                         content = json.dumps({"error": f"unknown tool: {fn_name}"})
