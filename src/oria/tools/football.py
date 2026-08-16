@@ -309,6 +309,7 @@ def register_football_tools(  # noqa: PLR0913
             },
         },
         get_odds,
+        feature_key="deep_analysis",
     )
 
     # ---- get_live_scores ----
@@ -331,6 +332,7 @@ def register_football_tools(  # noqa: PLR0913
             },
         },
         get_live_scores,
+        feature_key="live_realtime",
     )
 
     # ---- get_match_events ----
@@ -352,6 +354,7 @@ def register_football_tools(  # noqa: PLR0913
             "required": ["fixture_id"],
         },
         get_match_events,
+        feature_key="live_realtime",
     )
 
     # ---- get_match_statistics ----
