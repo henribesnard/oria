@@ -50,3 +50,4 @@ class Response(BaseModel):
     suggested_actions: list[SuggestedAction] = []
     degraded: bool = False
     freshness: str | None = None
+    route: str | None = None
