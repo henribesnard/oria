@@ -892,7 +892,7 @@ export function ContextSelector({
         <span className="text-[11.5px] text-text-disabled leading-snug">
           {showAllCountries
             ? 'Sélection dépendante · instantané depuis le cache'
-            : 'Arrête-toi à n'importe quel niveau.'}
+            : "Arrête-toi à n\u2019importe quel niveau."}
         </span>
         {showAllCountries ? (
           <button
