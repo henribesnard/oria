@@ -195,6 +195,25 @@ def map_players(raw: dict[str, Any]) -> list[dict[str, Any]]:
     return out
 
 
+def map_squad(raw: dict[str, Any]) -> list[dict[str, Any]]:
+    """Convertit /players/squads → effectif complet d'une équipe."""
+    items: list[dict[str, Any]] = raw.get("response", [])
+    if not items:
+        return []
+    players_list: list[dict[str, Any]] = items[0].get("players", [])
+    out: list[dict[str, Any]] = []
+    for p in players_list:
+        out.append({
+            "id": p.get("id"),
+            "name": p.get("name"),
+            "age": p.get("age"),
+            "number": p.get("number"),
+            "position": p.get("position"),
+            "photo": p.get("photo"),
+        })
+    return out
+
+
 def map_top_scorers(raw: dict[str, Any]) -> list[dict[str, Any]]:
     """Convertit /players/topscorers → classement buteurs."""
     return map_players(raw)

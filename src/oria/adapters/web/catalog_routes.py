@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+import re
+from datetime import datetime, timedelta
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 
 router = APIRouter(prefix="/catalog", tags=["catalog"])
 
@@ -42,6 +43,9 @@ _teams_repo: Any = None
 _players_repo: Any = None
 _fixtures_repo: Any = None
 _live_repo: Any = None
+_squad_repo: Any = None
+
+_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
 def init_catalog_routes(
@@ -52,14 +56,16 @@ def init_catalog_routes(
     players: object | None = None,
     fixtures: object | None = None,
     live: object | None = None,
+    squad: object | None = None,
 ) -> None:
-    global _leagues_repo, _standings_repo, _teams_repo, _players_repo, _fixtures_repo, _live_repo  # noqa: PLW0603
+    global _leagues_repo, _standings_repo, _teams_repo, _players_repo, _fixtures_repo, _live_repo, _squad_repo  # noqa: PLW0603
     _leagues_repo = leagues
     _standings_repo = standings
     _teams_repo = teams
     _players_repo = players
     _fixtures_repo = fixtures
     _live_repo = live
+    _squad_repo = squad
 
 
 @router.get("/leagues")
@@ -152,33 +158,80 @@ async def list_fixtures(
     next_count: int | None = None,
     last_count: int | None = None,
     date: str | None = None,
+    fixture_id: int | None = None,
+    date_from: str | None = None,
+    date_to: str | None = None,
+    round_: str | None = Query(None, alias="round"),
 ) -> list[dict[str, Any]]:
-    """Liste les matchs (prochains, passés ou par date)."""
+    """Liste les matchs (prochains, passés, par date, ou par ID)."""
     if _fixtures_repo is None:
         raise HTTPException(status_code=503, detail="catalog not available")
+
+    # fixture_id est exclusif : ignore tous les autres paramètres
+    if fixture_id:
+        key = f"id={fixture_id}"
+        data = await _fixtures_repo.get(key)
+        if data is None:
+            return []
+        items = data if isinstance(data, list) else [data]
+        return [_flatten_fixture(f) for f in items]
+
+    # Validation date_from / date_to
+    if date_from or date_to:
+        if not (date_from and date_to):
+            raise HTTPException(status_code=422, detail="date_from et date_to sont requis ensemble")
+        if not (_DATE_RE.match(date_from) and _DATE_RE.match(date_to)):
+            raise HTTPException(status_code=422, detail="Format de date invalide (YYYY-MM-DD attendu)")
+        try:
+            dt_from = datetime.strptime(date_from, "%Y-%m-%d")
+            dt_to = datetime.strptime(date_to, "%Y-%m-%d")
+        except ValueError:
+            raise HTTPException(status_code=422, detail="Date invalide")
+        if (dt_to - dt_from) > timedelta(days=60):
+            raise HTTPException(status_code=422, detail="Fenêtre de dates limitée à 60 jours")
+
     parts = []
     if league_id:
         parts.append(f"league={league_id}")
     if team_id:
         parts.append(f"team={team_id}")
-    if season:
-        parts.append(f"season={season}")
+    effective_season = season or (_current_season() if (date_from or date_to) else None)
+    if effective_season:
+        parts.append(f"season={effective_season}")
     if date:
         parts.append(f"date={date}")
+    if date_from:
+        parts.append(f"from={date_from}")
+    if date_to:
+        parts.append(f"to={date_to}")
+    if round_:
+        parts.append(f"round={round_}")
     if next_count:
         parts.append(f"next={next_count}")
     if last_count:
         parts.append(f"last={last_count}")
-    if not next_count and not last_count and not date:
+    if not next_count and not last_count and not date and not date_from:
         parts.append("next=10")
+    # Ordre déterministe pour clé de cache stable
+    parts.sort()
     key = "&".join(parts)
     data = await _fixtures_repo.get(key)
     if data is None:
         return []
     items = data if isinstance(data, list) else [data]
     flat = [_flatten_fixture(f) for f in items]
-    # Retourne tous les matchs (le frontend gère le filtrage)
     return flat
+
+
+@router.get("/squad")
+async def get_squad(team_id: int) -> list[dict[str, Any]]:
+    """Effectif complet d'une équipe (depuis /players/squads)."""
+    if _squad_repo is None:
+        raise HTTPException(status_code=503, detail="catalog not available")
+    data = await _squad_repo.get(f"team={team_id}")
+    if data is None:
+        return []
+    return data if isinstance(data, list) else [data]
 
 
 def _flatten_fixture(fx: dict[str, Any]) -> dict[str, Any]:

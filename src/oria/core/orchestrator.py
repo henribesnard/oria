@@ -6,6 +6,7 @@ import json
 import logging
 from typing import TYPE_CHECKING, Any
 
+from oria.core.context_scope import describe as describe_scope
 from oria.kernel.health import Availability, ModuleStatus
 
 if TYPE_CHECKING:
@@ -81,7 +82,7 @@ class Orchestrator:
         context_hint = self._build_context_hint(req)
         user_content = req.text
         if context_hint:
-            user_content = f"[Contexte : {context_hint}]\n{req.text}"
+            user_content = f"[{context_hint}]\n{req.text}"
 
         messages.append({"role": "user", "content": user_content})
 
@@ -154,16 +155,4 @@ class Orchestrator:
 
     @staticmethod
     def _build_context_hint(req: IncomingRequest) -> str:
-        parts = []
-        ctx = req.context
-        if ctx.league_id:
-            parts.append(f"league_id={ctx.league_id}")
-        if ctx.team_id:
-            parts.append(f"team_id={ctx.team_id}")
-        if ctx.player_id:
-            parts.append(f"player_id={ctx.player_id}")
-        if ctx.fixture_id:
-            parts.append(f"fixture_id={ctx.fixture_id}")
-        if ctx.season:
-            parts.append(f"season={ctx.season}")
-        return ", ".join(parts)
+        return describe_scope(req.context)

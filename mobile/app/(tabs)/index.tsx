@@ -5,21 +5,47 @@ import { OriaLogo } from '@/src/components/OriaLogo';
 import { MessageBubble } from '@/src/components/chat/MessageBubble';
 import { ChatComposer } from '@/src/components/chat/ChatComposer';
 import { TypingIndicator } from '@/src/components/chat/TypingIndicator';
-import { ContextPicker, type ContextLabel } from '@/src/components/chat/ContextPicker';
+import { ContextPicker } from '@/src/components/chat/ContextPicker';
 import { LiveTicker } from '@/src/components/chat/LiveTicker';
 import { PulseDot } from '@/src/components/ui/PulseDot';
 import { useChat, type Message } from '@/src/hooks/useChat';
-import type { ChatContext } from '@/src/api/chat';
+import {
+  clearLevel,
+  EMPTY_CONTEXT_STATE,
+  type ContextState,
+  type Level,
+} from '@/src/lib/contextRules';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
+
+interface ContextLabel {
+  key: string;
+  label: string;
+  logo?: string;
+}
 
 export default function ChatScreen() {
   const insets = useSafeAreaInsets();
   const { messages, sending, setContext, send, handleSuggestedAction } = useChat();
   const [draft, setDraft] = useState('');
   const [pickerVisible, setPickerVisible] = useState(false);
-  const [contextLabels, setContextLabels] = useState<ContextLabel[]>([]);
+  const [contextState, setContextState] = useState<ContextState>({ ...EMPTY_CONTEXT_STATE });
   const listRef = useRef<FlatList<Message>>(null);
+
+  // Derive labels from contextState for the composer
+  const contextLabels: ContextLabel[] = [];
+  if (contextState.labels.league) {
+    contextLabels.push({ key: 'league', label: contextState.labels.league.name, logo: contextState.labels.league.logo });
+  }
+  if (contextState.labels.fixture) {
+    contextLabels.push({ key: 'fixture', label: `${contextState.labels.fixture.home} \u2013 ${contextState.labels.fixture.away}` });
+  }
+  if (contextState.labels.team) {
+    contextLabels.push({ key: 'team', label: contextState.labels.team.name, logo: contextState.labels.team.logo });
+  }
+  if (contextState.labels.player) {
+    contextLabels.push({ key: 'player', label: contextState.labels.player.name });
+  }
 
   const handleSend = () => {
     if (!draft.trim()) return;
@@ -27,19 +53,16 @@ export default function ChatScreen() {
     setDraft('');
   };
 
-  const handleContextSelect = useCallback((ctx: ChatContext, labels: ContextLabel[]) => {
-    setContext(ctx);
-    setContextLabels(labels);
+  const handleContextSelect = useCallback((state: ContextState) => {
+    setContextState(state);
+    setContext(state.context);
   }, [setContext]);
 
   const handleRemoveContext = useCallback((key: string) => {
-    setContextLabels(prev => prev.filter(l => l.key !== key));
-    setContext(prev => {
-      const next = { ...prev };
-      if (key === 'league') delete next.league_id;
-      if (key === 'team') delete next.team_id;
-      if (key === 'fixture') delete next.fixture_id;
-      if (key === 'player') delete next.player_id;
+    const level = key as Exclude<Level, 'none'>;
+    setContextState(prev => {
+      const next = clearLevel(prev, level);
+      setContext(next.context);
       return next;
     });
   }, [setContext]);

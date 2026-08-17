@@ -3,6 +3,20 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from './useAuth';
 import { streamMessage } from '../api/chat';
 import type { Attachment, SuggestedAction, ChatContext } from '../api/chat';
+import {
+  selectLeague as _selectLeague,
+  selectFixture as _selectFixture,
+  selectTeam as _selectTeam,
+  selectPlayer as _selectPlayer,
+  clearLevel as _clearLevel,
+  currentSeason,
+  EMPTY_CONTEXT_STATE,
+  type ContextState,
+  type ContextLabels,
+  type Level,
+} from '../lib/contextRules';
+
+export type { ContextState, ContextLabels, Level };
 
 export interface Message {
   id: string;
@@ -14,36 +28,35 @@ export interface Message {
   streaming?: boolean;
   freshness?: string | null;
   /** Snapshot of context at the time this user message was sent */
-  contextSnapshot?: ChatContext;
-}
-
-export interface FixtureInfo {
-  home: string;
-  away: string;
-  homeLogo?: string;
-  awayLogo?: string;
+  contextSnapshot?: ContextState;
 }
 
 const CONTEXT_KEYS: (keyof ChatContext)[] = [
   'country', 'zone', 'league_id', 'season', 'fixture_id', 'team_id', 'player_id',
 ];
 
-function extractContext(raw: Record<string, unknown>): ChatContext {
+function extractContextState(raw: Record<string, unknown>): ContextState {
   const ctx: Record<string, unknown> = {};
   for (const k of CONTEXT_KEYS) {
     if (raw[k] !== undefined) ctx[k] = raw[k];
   }
-  return ctx as ChatContext;
-}
+  const context = ctx as ChatContext;
+  const labels: ContextLabels = {};
 
-function extractFixtureInfo(raw: Record<string, unknown>): FixtureInfo | null {
-  if (!raw._fixture_home) return null;
-  return {
-    home: raw._fixture_home as string,
-    away: raw._fixture_away as string,
-    homeLogo: raw._fixture_home_logo as string | undefined,
-    awayLogo: raw._fixture_away_logo as string | undefined,
-  };
+  // Reconstruct fixture labels from location.state _fixture_* keys
+  if (context.fixture_id && raw._fixture_home) {
+    labels.fixture = {
+      id: context.fixture_id,
+      home: raw._fixture_home as string,
+      away: (raw._fixture_away as string) ?? '',
+      homeId: raw._fixture_home_id as number | undefined,
+      awayId: raw._fixture_away_id as number | undefined,
+      homeLogo: raw._fixture_home_logo as string | undefined,
+      awayLogo: raw._fixture_away_logo as string | undefined,
+    };
+  }
+
+  return { context, labels };
 }
 
 export function useChat() {
@@ -52,9 +65,13 @@ export function useChat() {
   const rawState = (location.state ?? {}) as Record<string, unknown>;
   const [messages, setMessages] = useState<Message[]>([]);
   const [sending, setSending] = useState(false);
-  const [context, setContext] = useState<ChatContext>(() => extractContext(rawState));
-  const [fixtureInfo, setFixtureInfo] = useState<FixtureInfo | null>(() => extractFixtureInfo(rawState));
+  const [contextState, setContextState] = useState<ContextState>(
+    () => extractContextState(rawState),
+  );
   const abortRef = useRef<AbortController | null>(null);
+
+  const ctx = contextState.context;
+  const hasContext = Object.keys(ctx).length > 0;
 
   const send = useCallback((text: string) => {
     if (!text.trim() || !token || sending) return;
@@ -63,7 +80,7 @@ export function useChat() {
       id: crypto.randomUUID(),
       role: 'user',
       text: text.trim(),
-      contextSnapshot: Object.keys(context).length > 0 ? { ...context } : undefined,
+      contextSnapshot: hasContext ? { ...contextState } : undefined,
     };
 
     const assistantId = crypto.randomUUID();
@@ -79,7 +96,7 @@ export function useChat() {
 
     abortRef.current = streamMessage(
       text.trim(),
-      Object.keys(context).length > 0 ? context : undefined,
+      hasContext ? ctx : undefined,
       token,
       // onChunk
       (content) => {
@@ -120,23 +137,49 @@ export function useChat() {
         setSending(false);
       },
     );
-  }, [token, sending, context]);
+  }, [token, sending, ctx, hasContext, contextState]);
 
   const clear = useCallback(() => {
     abortRef.current?.abort();
     setMessages([]);
     setSending(false);
-    setContext({});
-    setFixtureInfo(null);
+    setContextState({ ...EMPTY_CONTEXT_STATE });
   }, []);
 
-  const clearFixture = useCallback(() => {
-    setFixtureInfo(null);
-    setContext(prev => {
-      const { fixture_id: _, ...rest } = prev;
-      return rest;
-    });
-  }, []);
+  const selectLeague = useCallback(
+    (league: { id: number; name: string; logo?: string; country?: string }) => {
+      setContextState(prev => _selectLeague(prev, league));
+    }, [],
+  );
+
+  const selectFixture = useCallback(
+    (fixture: {
+      id: number; home: string; away: string;
+      homeId?: number; awayId?: number;
+      homeLogo?: string; awayLogo?: string;
+      date?: string; status?: string; round?: string;
+    }) => {
+      setContextState(prev => _selectFixture(prev, fixture));
+    }, [],
+  );
+
+  const selectTeam = useCallback(
+    (team: { id: number; name: string; logo?: string }) => {
+      setContextState(prev => _selectTeam(prev, team));
+    }, [],
+  );
+
+  const selectPlayer = useCallback(
+    (player: { id: number; name: string; photo?: string; number?: number }) => {
+      setContextState(prev => _selectPlayer(prev, player));
+    }, [],
+  );
+
+  const clearContextLevel = useCallback(
+    (level: Exclude<Level, 'none'>) => {
+      setContextState(prev => _clearLevel(prev, level));
+    }, [],
+  );
 
   const handleSuggestedAction = useCallback((action: SuggestedAction) => {
     if (typeof action.payload.text === 'string') {
@@ -144,5 +187,18 @@ export function useChat() {
     }
   }, [send]);
 
-  return { messages, sending, context, setContext, send, clear, clearFixture, fixtureInfo, handleSuggestedAction };
+  return {
+    messages,
+    sending,
+    contextState,
+    setContextState,
+    selectLeague,
+    selectFixture,
+    selectTeam,
+    selectPlayer,
+    clearContextLevel,
+    send,
+    clear,
+    handleSuggestedAction,
+  };
 }

@@ -44,7 +44,11 @@ function TickerCard({ fixture }: { fixture: Fixture }) {
 /* ------------------------------------------------------------------ */
 
 export function Chat() {
-  const { messages, sending, context, setContext, send, handleSuggestedAction, fixtureInfo, clearFixture } = useChat();
+  const {
+    messages, sending, contextState,
+    selectLeague, selectFixture, selectTeam, selectPlayer, clearContextLevel,
+    send, handleSuggestedAction,
+  } = useChat();
   const bottomRef = useRef<HTMLDivElement>(null);
   const [contextOpen, setContextOpen] = useState(false);
   const [liveFixtures, setLiveFixtures] = useState<Fixture[]>([]);
@@ -104,7 +108,14 @@ export function Chat() {
       {/* Context selector */}
       <div className="border-b border-border bg-surface-alt/60 px-5 py-2.5">
         <div className="max-w-[760px] mx-auto">
-          <ContextSelector context={context} onChange={setContext} fixtureInfo={fixtureInfo} onClearFixture={clearFixture} />
+          <ContextSelector
+            contextState={contextState}
+            onSelectLeague={selectLeague}
+            onSelectFixture={selectFixture}
+            onSelectTeam={selectTeam}
+            onSelectPlayer={selectPlayer}
+            onClearLevel={clearContextLevel}
+          />
         </div>
       </div>
 

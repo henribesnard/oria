@@ -70,7 +70,7 @@ class PreRouter:
 
     async def _resolve_team_id(self, req: IncomingRequest) -> int | None:
         """Tente d'extraire un nom d'equipe du texte et de le resoudre en ID."""
-        if req.context.team_id or self._tools is None:
+        if req.context.team_id or req.context.fixture_id or self._tools is None:
             return req.context.team_id
         text = req.text.strip()
         m = re.search(
@@ -103,7 +103,7 @@ class PreRouter:
     async def try_route(self, req: IncomingRequest) -> Response | None:
         """Renvoie une Response si la requete matche un pattern, sinon None."""
         # Auto-resolution du nom d'equipe dans le texte
-        if not req.context.team_id:
+        if not req.context.team_id and not req.context.fixture_id:
             resolved = await self._resolve_team_id(req)
             if resolved:
                 ctx = req.context.model_copy(update={"team_id": resolved})
@@ -170,6 +170,25 @@ class PreRouter:
             and not _NOTIF_ANALYSIS_RE.search(text)
         ):
             return await self._handle_matches(req)
+
+        # Famille B : compositions / lineups (AVANT joueurs pour ne pas capturer "compo")
+        if re.search(
+            r"\b(compos?|compositions?|onze|titulaires?|lineups?)\b",
+            text, re.IGNORECASE,
+        ):
+            result = await self._handle_lineups(req)
+            if result:
+                return result
+
+        # Famille B : résumé de match
+        if re.search(
+            r"\b(r[eé]sum[eé]\s+(?:du\s+)?match|faits?\s+de\s+match|"
+            r"que\s+s[''']est[- ]il\s+pass[eé]|d[eé]roul[eé])\b",
+            text, re.IGNORECASE,
+        ):
+            result = await self._handle_match_summary(req)
+            if result:
+                return result
 
         # Famille B : blessures
         if re.search(r"\b(blessures?|injur|bless[eé]s?)\b", text, re.IGNORECASE):
@@ -239,11 +258,15 @@ class PreRouter:
         if self._tools is None:
             return None
         try:
-            params: dict[str, Any] = {"next": 1}
-            if req.context.team_id:
-                params["team_id"] = req.context.team_id
-            if req.context.league_id:
-                params["league_id"] = req.context.league_id
+            params: dict[str, Any] = {}
+            if req.context.fixture_id:
+                params["fixture_id"] = req.context.fixture_id
+            else:
+                params["next"] = 1
+                if req.context.team_id:
+                    params["team_id"] = req.context.team_id
+                if req.context.league_id:
+                    params["league_id"] = req.context.league_id
             data = await self._tools.call("get_fixtures", params)
             if data:
                 return Response(
@@ -258,11 +281,15 @@ class PreRouter:
         if self._tools is None:
             return None
         try:
-            params: dict[str, Any] = {"last": 1}
-            if req.context.team_id:
-                params["team_id"] = req.context.team_id
-            if req.context.league_id:
-                params["league_id"] = req.context.league_id
+            params: dict[str, Any] = {}
+            if req.context.fixture_id:
+                params["fixture_id"] = req.context.fixture_id
+            else:
+                params["last"] = 1
+                if req.context.team_id:
+                    params["team_id"] = req.context.team_id
+                if req.context.league_id:
+                    params["league_id"] = req.context.league_id
             data = await self._tools.call("get_fixtures", params)
             if data:
                 return Response(
@@ -294,11 +321,15 @@ class PreRouter:
         if self._tools is None:
             return None
         try:
-            params: dict[str, Any] = {"next": 5}
-            if req.context.team_id:
-                params["team_id"] = req.context.team_id
-            if req.context.league_id:
-                params["league_id"] = req.context.league_id
+            params: dict[str, Any] = {}
+            if req.context.fixture_id:
+                params["fixture_id"] = req.context.fixture_id
+            else:
+                params["next"] = 5
+                if req.context.team_id:
+                    params["team_id"] = req.context.team_id
+                if req.context.league_id:
+                    params["league_id"] = req.context.league_id
             data = await self._tools.call("get_fixtures", params)
             if data:
                 return Response(
@@ -314,12 +345,16 @@ class PreRouter:
             return None
         try:
             params: dict[str, Any] = {}
-            if req.context.team_id:
-                params["team_id"] = req.context.team_id
-            if req.context.league_id:
-                params["league_id"] = req.context.league_id
-            if req.context.season:
-                params["season"] = req.context.season
+            if req.context.fixture_id:
+                params["fixture_id"] = req.context.fixture_id
+            else:
+                if req.context.team_id:
+                    params["team_id"] = req.context.team_id
+                    params["next"] = 5
+                if req.context.league_id:
+                    params["league_id"] = req.context.league_id
+                if req.context.season:
+                    params["season"] = req.context.season
             data = await self._tools.call("get_fixtures", params)
             if data:
                 return Response(
@@ -355,25 +390,77 @@ class PreRouter:
             logger.debug("prerouter injuries failed", exc_info=True)
         return None
 
+    async def _handle_lineups(self, req: IncomingRequest) -> Response | None:
+        """Compositions : exige fixture_id, sinon renvoie None (orchestrateur)."""
+        if self._tools is None:
+            return None
+        if not req.context.fixture_id:
+            return None
+        try:
+            data = await self._tools.call(
+                "get_lineups", {"fixture_id": req.context.fixture_id},
+            )
+            if data:
+                return Response(
+                    text="Voici les compositions.",
+                    attachments=[Attachment(kind="table", data={"lineups": data})],
+                )
+        except Exception:
+            logger.debug("prerouter lineups failed", exc_info=True)
+        return None
+
+    async def _handle_match_summary(self, req: IncomingRequest) -> Response | None:
+        """Résumé de match : exige fixture_id, sinon renvoie None (orchestrateur)."""
+        if self._tools is None:
+            return None
+        if not req.context.fixture_id:
+            return None
+        try:
+            fid = req.context.fixture_id
+            events = await self._tools.call("get_match_events", {"fixture_id": fid})
+            stats = await self._tools.call("get_match_statistics", {"fixture_id": fid})
+            if events or stats:
+                return Response(
+                    text="Voici le résumé du match.",
+                    attachments=[
+                        Attachment(kind="table", data={"events": events or []}),
+                        Attachment(kind="table", data={"statistics": stats or []}),
+                    ],
+                )
+        except Exception:
+            logger.debug("prerouter match summary failed", exc_info=True)
+        return None
+
     async def _handle_players(self, req: IncomingRequest) -> Response | None:
         if self._tools is None:
             return None
         try:
-            params: dict[str, Any] = {}
-            if req.context.team_id:
-                params["team_id"] = req.context.team_id
-            if req.context.league_id:
-                params["league_id"] = req.context.league_id
-            if req.context.season:
-                params["season"] = req.context.season
             if req.context.player_id:
-                params["player_id"] = req.context.player_id
-            data = await self._tools.call("get_player_stats", params)
-            if data:
-                return Response(
-                    text="Voici les statistiques des joueurs.",
-                    attachments=[Attachment(kind="table", data={"players": data})],
+                # Joueur spécifique → stats individuelles
+                params: dict[str, Any] = {"player_id": req.context.player_id}
+                if req.context.league_id:
+                    params["league_id"] = req.context.league_id
+                if req.context.season:
+                    params["season"] = req.context.season
+                data = await self._tools.call("get_player_stats", params)
+                if data:
+                    return Response(
+                        text="Voici les statistiques du joueur.",
+                        attachments=[Attachment(kind="table", data={"players": data})],
+                    )
+            elif req.context.team_id:
+                # Équipe sans joueur spécifique → effectif complet
+                data = await self._tools.call(
+                    "get_squad", {"team_id": req.context.team_id},
                 )
+                if data:
+                    return Response(
+                        text="Voici l'effectif de l'équipe.",
+                        attachments=[Attachment(kind="table", data={"squad": data})],
+                    )
+            else:
+                # Pas de contexte suffisant → passer à l'orchestrateur
+                return None
         except Exception:
             logger.debug("prerouter players failed", exc_info=True)
         return None
@@ -440,11 +527,14 @@ class PreRouter:
         try:
             params: dict[str, Any] = {}
             if req.context.fixture_id:
+                # fixture_id exclusif : ne PAS envoyer league_id sinon l'API
+                # renvoie les cotes de toute la ligue.
                 params["fixture_id"] = req.context.fixture_id
-            if req.context.league_id:
-                params["league_id"] = req.context.league_id
-            if req.context.season:
-                params["season"] = req.context.season
+            else:
+                if req.context.league_id:
+                    params["league_id"] = req.context.league_id
+                if req.context.season:
+                    params["season"] = req.context.season
             data = await self._tools.call("get_odds", params)
             if data:
                 return Response(

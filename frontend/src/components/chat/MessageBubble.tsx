@@ -67,13 +67,35 @@ function extractFixtures(att: Attachment): Fixture[] {
 /*  Context chips for user messages                                    */
 /* ------------------------------------------------------------------ */
 
-function ContextChips({ context }: { context: NonNullable<Message['contextSnapshot']> }) {
-  const chips: string[] = [];
-  if (context.league_id) chips.push(`Ligue #${context.league_id}`);
-  if (context.team_id) chips.push(`\u00c9quipe #${context.team_id}`);
-  if (context.player_id) chips.push(`Joueur #${context.player_id}`);
-  if (context.fixture_id) chips.push(`Match #${context.fixture_id}`);
-  if (context.country) chips.push(context.country);
+function ContextChips({ snapshot }: { snapshot: NonNullable<Message['contextSnapshot']> }) {
+  const chips: { key: string; label: string; logo?: string }[] = [];
+
+  // Use labels if available, fallback to raw IDs
+  const labels = 'labels' in snapshot ? (snapshot as { labels?: Record<string, any> }).labels : undefined;
+
+  if (labels?.league) {
+    chips.push({ key: 'league', label: labels.league.name, logo: labels.league.logo });
+  } else if (snapshot.context?.league_id) {
+    chips.push({ key: 'league', label: `Ligue #${snapshot.context.league_id}` });
+  }
+
+  if (labels?.fixture) {
+    chips.push({ key: 'fixture', label: `${labels.fixture.home} \u2013 ${labels.fixture.away}` });
+  } else if (snapshot.context?.fixture_id) {
+    chips.push({ key: 'fixture', label: `Match #${snapshot.context.fixture_id}` });
+  }
+
+  if (labels?.team) {
+    chips.push({ key: 'team', label: labels.team.name, logo: labels.team.logo });
+  } else if (snapshot.context?.team_id) {
+    chips.push({ key: 'team', label: `\u00c9quipe #${snapshot.context.team_id}` });
+  }
+
+  if (labels?.player) {
+    chips.push({ key: 'player', label: labels.player.name });
+  } else if (snapshot.context?.player_id) {
+    chips.push({ key: 'player', label: `Joueur #${snapshot.context.player_id}` });
+  }
 
   if (chips.length === 0) return null;
 
@@ -81,10 +103,11 @@ function ContextChips({ context }: { context: NonNullable<Message['contextSnapsh
     <div className="flex flex-wrap gap-1.5 justify-end mb-1.5">
       {chips.map((chip) => (
         <span
-          key={chip}
-          className="px-2.5 py-1 rounded-full bg-purple-surface border border-purple-border text-[11px] font-semibold text-primary-hover"
+          key={chip.key}
+          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-purple-surface border border-purple-border text-[11px] font-semibold text-primary-hover"
         >
-          {chip}
+          {chip.logo && <img src={chip.logo} alt="" className="w-3.5 h-3.5 object-contain" />}
+          {chip.label}
         </span>
       ))}
     </div>
@@ -158,7 +181,7 @@ export function MessageBubble({ message, onAction }: Props) {
         <div>
           {/* Context chips above user messages */}
           {isUser && message.contextSnapshot && (
-            <ContextChips context={message.contextSnapshot} />
+            <ContextChips snapshot={message.contextSnapshot} />
           )}
 
           <div

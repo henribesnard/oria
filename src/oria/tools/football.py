@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from oria.domain.match_statistics import StatisticsRepository
     from oria.domain.odds import OddsRepository
     from oria.domain.players import PlayersRepository
+    from oria.domain.squad import SquadRepository
     from oria.domain.standings import StandingsRepository
     from oria.domain.team_statistics import TeamStatisticsRepository
     from oria.domain.teams import TeamsRepository
@@ -41,6 +42,7 @@ def register_football_tools(  # noqa: PLR0913
     team_statistics: TeamStatisticsRepository,
     top_scorers: TopScorersRepository,
     top_assists: TopAssistsRepository,
+    squad: SquadRepository,
 ) -> None:
     """Enregistre les outils football dans le registre."""
 
@@ -52,7 +54,11 @@ def register_football_tools(  # noqa: PLR0913
         date: str = "",
         next: int = 0,
         last: int = 0,
+        fixture_id: int = 0,
     ) -> Any:  # noqa: ANN401
+        # fixture_id est exclusif : ignore les autres paramètres
+        if fixture_id:
+            return await fixtures.get(f"id={fixture_id}")
         parts = []
         if league_id:
             parts.append(f"league={league_id}")
@@ -97,6 +103,10 @@ def register_football_tools(  # noqa: PLR0913
                 "last": {
                     "type": "integer",
                     "description": "Nombre de derniers matchs à retourner",
+                },
+                "fixture_id": {
+                    "type": "integer",
+                    "description": "ID du match (pour un match spécifique, exclusif des autres paramètres)",
                 },
             },
         },
@@ -500,4 +510,26 @@ def register_football_tools(  # noqa: PLR0913
             "required": ["league_id", "season"],
         },
         get_top_assists,
+    )
+
+    # ---- get_squad ----
+    async def get_squad(
+        team_id: int = 0,
+    ) -> Any:  # noqa: ANN401
+        return await squad.get(f"team={team_id}")
+
+    registry.register(
+        "get_squad",
+        "Récupère l'effectif complet d'une équipe (tous les joueurs).",
+        {
+            "type": "object",
+            "properties": {
+                "team_id": {
+                    "type": "integer",
+                    "description": "ID de l'équipe",
+                },
+            },
+            "required": ["team_id"],
+        },
+        get_squad,
     )

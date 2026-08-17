@@ -5,9 +5,13 @@ import {
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { listLeagues, listTeams, listPlayers, listFixtures } from '@/src/api/catalog';
+import { listLeagues, listTeams, getSquad, listFixtures } from '@/src/api/catalog';
 import type { League, Team, Player, Fixture } from '@/src/api/catalog';
-import type { ChatContext } from '@/src/api/chat';
+import {
+  selectLeague, selectFixture, selectTeam, selectPlayer,
+  snapWindow, currentSeason, EMPTY_CONTEXT_STATE,
+  type ContextState,
+} from '@/src/lib/contextRules';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 
@@ -25,13 +29,7 @@ interface PickerItem {
 interface Props {
   visible: boolean;
   onClose: () => void;
-  onSelect: (ctx: ChatContext, labels: ContextLabel[]) => void;
-}
-
-export interface ContextLabel {
-  key: string;
-  label: string;
-  logo?: string;
+  onSelect: (state: ContextState) => void;
 }
 
 export function ContextPicker({ visible, onClose, onSelect }: Props) {
@@ -44,6 +42,7 @@ export function ContextPicker({ visible, onClose, onSelect }: Props) {
 
   // Selection state
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
 
   // Breadcrumb path
   const breadcrumb: string[] = ['Ligue'];
@@ -77,7 +76,9 @@ export function ContextPicker({ visible, onClose, onSelect }: Props) {
           data: t,
         })));
       } else {
-        const data = await listFixtures({ leagueId, nextCount: 20 });
+        const season = currentSeason();
+        const { from, to } = snapWindow(undefined, 10, 10);
+        const data = await listFixtures({ leagueId, season, dateFrom: from, dateTo: to });
         setItems(data.map(f => ({
           id: f.id,
           title: `${f.home_team} — ${f.away_team}`,
@@ -93,11 +94,11 @@ export function ContextPicker({ visible, onClose, onSelect }: Props) {
   const loadPlayers = useCallback(async (teamId: number) => {
     setLoading(true);
     try {
-      const data = await listPlayers(teamId);
+      const data = await getSquad(teamId);
       setItems(data.map(p => ({
         id: p.id,
-        title: p.name,
-        subtitle: (p as Record<string, unknown>).position as string | undefined,
+        title: p.number != null ? `${p.number}. ${p.name}` : p.name,
+        subtitle: p.position,
         logo: p.photo,
         data: p,
       })));
@@ -110,6 +111,7 @@ export function ContextPicker({ visible, onClose, onSelect }: Props) {
     if (visible) {
       setStep('league');
       setSelectedLeague(null);
+      setSelectedTeam(null);
       setSearch('');
       loadLeagues();
     }
@@ -130,27 +132,57 @@ export function ContextPicker({ visible, onClose, onSelect }: Props) {
   };
 
   const handleSelectEntity = (item: PickerItem) => {
+    const league = selectedLeague!;
+    let state = selectLeague(EMPTY_CONTEXT_STATE, {
+      id: league.id, name: league.name, logo: league.logo, country: league.country,
+    });
+
     if (entityTab === 'team') {
       const team = item.data as Team;
-      const labels: ContextLabel[] = [
-        { key: 'league', label: selectedLeague!.name, logo: selectedLeague!.logo },
-        { key: 'team', label: team.name, logo: team.logo },
-      ];
-      onSelect({ league_id: selectedLeague!.id, team_id: team.id }, labels);
-      onClose();
+      state = selectTeam(state, { id: team.id, name: team.name, logo: team.logo });
+      setSelectedTeam(team);
+      // Move to player step
+      setStep('player');
+      setSearch('');
+      loadPlayers(team.id);
+      // Don't close yet — let user optionally pick a player
+      // But also immediately apply team context so user can close if they want
+      onSelect(state);
+      return;
     } else {
       const fixture = item.data as Fixture;
-      const labels: ContextLabel[] = [
-        { key: 'league', label: selectedLeague!.name, logo: selectedLeague!.logo },
-        { key: 'fixture', label: `${fixture.home_team} — ${fixture.away_team}` },
-      ];
-      onSelect({ league_id: selectedLeague!.id, fixture_id: fixture.id }, labels);
+      state = selectFixture(state, {
+        id: fixture.id, home: fixture.home_team, away: fixture.away_team,
+        homeId: fixture.home_id, awayId: fixture.away_id,
+        homeLogo: fixture.home_logo, awayLogo: fixture.away_logo,
+        date: fixture.date, status: fixture.status, round: fixture.round,
+      });
+      onSelect(state);
       onClose();
     }
   };
 
+  const handleSelectPlayerItem = (item: PickerItem) => {
+    const p = item.data as Player;
+    const league = selectedLeague!;
+    const team = selectedTeam!;
+    // Rebuild full state: league → team → player
+    let state = selectLeague(EMPTY_CONTEXT_STATE, {
+      id: league.id, name: league.name, logo: league.logo, country: league.country,
+    });
+    state = selectTeam(state, { id: team.id, name: team.name, logo: team.logo });
+    state = selectPlayer(state, { id: p.id, name: p.name, photo: p.photo, number: p.number });
+    onSelect(state);
+    onClose();
+  };
+
   const handleBack = () => {
-    if (step === 'entity' || step === 'player') {
+    if (step === 'player') {
+      setStep('entity');
+      setEntityTab('team');
+      setSearch('');
+      if (selectedLeague) loadEntities(selectedLeague.id, 'team');
+    } else if (step === 'entity') {
       setStep('league');
       setSelectedLeague(null);
       setSearch('');
@@ -167,6 +199,7 @@ export function ContextPicker({ visible, onClose, onSelect }: Props) {
       style={styles.optionRow}
       onPress={() => {
         if (step === 'league') handleSelectLeague(item.data as League);
+        else if (step === 'player') handleSelectPlayerItem(item);
         else handleSelectEntity(item);
       }}
     >

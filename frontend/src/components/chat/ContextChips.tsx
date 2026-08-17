@@ -1,38 +1,38 @@
-import type { ChatContext } from '../../api/chat';
+import type { ContextState, Level } from '../../lib/contextRules';
 
 interface Props {
-  context: ChatContext;
-  onClear: (key: keyof ChatContext) => void;
+  contextState: ContextState;
+  onClear: (level: Exclude<Level, 'none'>) => void;
 }
 
-const labels: Record<string, string> = {
-  country: 'Pays',
-  zone: 'Zone',
-  league_id: 'Ligue',
-  season: 'Saison',
-  fixture_id: 'Match',
-  team_id: 'Équipe',
-  player_id: 'Joueur',
-};
+export function ContextChips({ contextState, onClear }: Props) {
+  const { labels } = contextState;
+  const chips: { label: string; logo?: string; level: Exclude<Level, 'none'> }[] = [];
 
-export function ContextChips({ context, onClear }: Props) {
-  const entries = Object.entries(context).filter(([, v]) => v != null);
-  if (entries.length === 0) return null;
+  if (labels.league) chips.push({ label: labels.league.name, logo: labels.league.logo, level: 'league' });
+  if (labels.fixture) chips.push({ label: `${labels.fixture.home} \u2013 ${labels.fixture.away}`, level: 'fixture' });
+  if (labels.team) chips.push({ label: labels.team.name, logo: labels.team.logo, level: 'team' });
+  if (labels.player) chips.push({ label: labels.player.name, level: 'player' });
+
+  if (chips.length === 0) return null;
 
   return (
     <div className="flex flex-wrap gap-2 px-7 pt-3">
       <div className="max-w-[680px] mx-auto flex flex-wrap gap-2 w-full">
-        {entries.map(([key, value]) => (
+        {chips.map(chip => (
           <span
-            key={key}
+            key={chip.level}
             className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-purple-surface text-primary text-xs font-semibold"
           >
-            {labels[key] ?? key}: {String(value)}
+            {chip.logo && (
+              <img src={chip.logo} alt="" className="w-3.5 h-3.5 object-contain" />
+            )}
+            {chip.label}
             <button
-              onClick={() => onClear(key as keyof ChatContext)}
+              onClick={() => onClear(chip.level)}
               className="text-primary-muted hover:text-primary transition-colors"
             >
-              ×
+              &times;
             </button>
           </span>
         ))}

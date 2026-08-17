@@ -31,6 +31,7 @@ from oria.domain.match_events import EventsRepository
 from oria.domain.match_statistics import StatisticsRepository
 from oria.domain.odds import OddsRepository
 from oria.domain.players import PlayersRepository
+from oria.domain.squad import SquadRepository
 from oria.domain.standings import StandingsRepository
 from oria.domain.team_statistics import TeamStatisticsRepository
 from oria.domain.teams import TeamsRepository
@@ -140,6 +141,7 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     team_statistics = TeamStatisticsRepository(cache=cache, client=apifootball)
     top_scorers = TopScorersRepository(cache=cache, client=apifootball)
     top_assists = TopAssistsRepository(cache=cache, client=apifootball)
+    squad = SquadRepository(cache=cache, client=apifootball)
 
     container.add(leagues)
     container.add(fixtures)
@@ -156,6 +158,7 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     container.add(team_statistics)
     container.add(top_scorers)
     container.add(top_assists)
+    container.add(squad)
 
     # --- Tools ---
     tool_registry = ToolRegistry()
@@ -175,6 +178,7 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
         team_statistics=team_statistics,
         top_scorers=top_scorers,
         top_assists=top_assists,
+        squad=squad,
     )
     register_app_service_tools(
         tool_registry,
@@ -264,6 +268,7 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     container._players = players  # type: ignore[attr-defined]
     container._fixtures = fixtures  # type: ignore[attr-defined]
     container._live = live  # type: ignore[attr-defined]
+    container._squad = squad  # type: ignore[attr-defined]
     container._apifootball = apifootball  # type: ignore[attr-defined]
 
     return container, pipeline
@@ -320,6 +325,7 @@ def create_app() -> "FastAPI":
             players_repo=container._players,  # type: ignore[attr-defined]
             fixtures_repo=container._fixtures,  # type: ignore[attr-defined]
             live_repo=container._live,  # type: ignore[attr-defined]
+            squad_repo=container._squad,  # type: ignore[attr-defined]
             admin_token=settings.admin_token,
             admin_service=container._admin_service,  # type: ignore[attr-defined]
             apifootball=container._apifootball,  # type: ignore[attr-defined]
