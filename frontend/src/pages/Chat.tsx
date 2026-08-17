@@ -51,6 +51,7 @@ export function Chat() {
   } = useChat();
   const bottomRef = useRef<HTMLDivElement>(null);
   const [contextOpen, setContextOpen] = useState(false);
+  const [forcedLevel, setForcedLevel] = useState<number | null>(null);
   const [liveFixtures, setLiveFixtures] = useState<Fixture[]>([]);
 
   // Auto-scroll to bottom on new messages
@@ -71,6 +72,22 @@ export function Chat() {
     return () => { cancelled = true; clearInterval(interval); };
   }, []);
 
+  // Handlers for panel coordination
+  const handleOpenAtLevel = (level: number) => {
+    setForcedLevel(level);
+    setContextOpen(true);
+  };
+
+  const handleClosePanel = () => {
+    setContextOpen(false);
+    setForcedLevel(null);
+  };
+
+  const handleConfirm = () => {
+    setContextOpen(false);
+    setForcedLevel(null);
+  };
+
   return (
     <div className="flex flex-col h-dvh">
       {/* Header */}
@@ -81,11 +98,11 @@ export function Chat() {
           </div>
           <div className="flex flex-col gap-px min-w-0">
             <span className="font-serif text-[27px] leading-none tracking-[.2px]">Oria</span>
-            <span className="text-xs text-text-muted tracking-[.3px]">L'oracle du sport</span>
+            <span className="text-xs text-text-muted tracking-[.3px]">L&apos;oracle du sport</span>
           </div>
           <div className="ml-auto flex items-center gap-[7px] px-3 py-1.5 border border-border-light bg-white rounded-full text-xs text-text-secondary font-semibold whitespace-nowrap">
             <span className="w-[7px] h-[7px] rounded-full bg-primary shrink-0" />
-            Football · <span className="text-text-muted font-medium">bientôt plus</span>
+            Football &middot; <span className="text-text-muted font-medium">bient&ocirc;t plus</span>
           </div>
         </div>
       </header>
@@ -105,20 +122,6 @@ export function Chat() {
         </div>
       )}
 
-      {/* Context selector */}
-      <div className="border-b border-border bg-surface-alt/60 px-5 py-2.5">
-        <div className="max-w-[760px] mx-auto">
-          <ContextSelector
-            contextState={contextState}
-            onSelectLeague={selectLeague}
-            onSelectFixture={selectFixture}
-            onSelectTeam={selectTeam}
-            onSelectPlayer={selectPlayer}
-            onClearLevel={clearContextLevel}
-          />
-        </div>
-      </div>
-
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto px-7 py-8">
         <div className="max-w-[760px] mx-auto">
@@ -128,10 +131,10 @@ export function Chat() {
                 <OriaLogo size={30} />
               </div>
               <h2 className="text-lg font-bold text-text-strong mb-2">
-                Salut, comment puis-je t'aider ?
+                Salut, comment puis-je t&apos;aider ?
               </h2>
               <p className="text-sm text-text-muted max-w-[360px]">
-                Pose-moi une question sur un joueur, un match ou une équipe.
+                Pose-moi une question sur un joueur, un match ou une &eacute;quipe.
               </p>
             </div>
           ) : (
@@ -149,13 +152,41 @@ export function Chat() {
         </div>
       </div>
 
-      {/* Composer */}
-      <ChatComposer
-        onSend={send}
-        disabled={sending}
-        onToggleContext={() => setContextOpen(!contextOpen)}
-        contextOpen={contextOpen}
-      />
+      {/* Overlay when panel is open */}
+      {contextOpen && (
+        <div
+          onClick={handleClosePanel}
+          className="fixed inset-0 z-30"
+          style={{ background: 'rgba(25,21,38,.06)' }}
+        />
+      )}
+
+      {/* Footer: panel + composer */}
+      <footer className="flex-none relative z-40 px-5 pt-2 pb-5">
+        <div className="max-w-[760px] mx-auto relative">
+          <ContextSelector
+            contextState={contextState}
+            onSelectLeague={selectLeague}
+            onSelectFixture={selectFixture}
+            onSelectTeam={selectTeam}
+            onSelectPlayer={selectPlayer}
+            onClearLevel={clearContextLevel}
+            open={contextOpen}
+            onClose={handleClosePanel}
+            onConfirm={handleConfirm}
+            initialForcedLevel={forcedLevel}
+          />
+          <ChatComposer
+            onSend={send}
+            disabled={sending}
+            contextState={contextState}
+            onClearLevel={clearContextLevel}
+            onToggleContext={() => setContextOpen(o => !o)}
+            contextOpen={contextOpen}
+            onOpenAtLevel={handleOpenAtLevel}
+          />
+        </div>
+      </footer>
     </div>
   );
 }

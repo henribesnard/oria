@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useMemo, Fragment } from 'react';
 import { listLeagues, listTeams, listFixtures, getSquad } from '../../api/catalog';
 import type { League, Team, Fixture, Player } from '../../api/catalog';
 import {
@@ -25,6 +25,10 @@ interface Props {
   onSelectTeam: (t: { id: number; name: string; logo?: string }) => void;
   onSelectPlayer: (p: { id: number; name: string; photo?: string; number?: number }) => void;
   onClearLevel: (level: Exclude<Level, 'none'>) => void;
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  initialForcedLevel?: number | null;
 }
 
 /* ------------------------------------------------------------------ */
@@ -32,6 +36,7 @@ interface Props {
 /* ------------------------------------------------------------------ */
 
 type StatusFilter = 'all' | 'upcoming' | 'live' | 'finished';
+type PeriodFilter = 'all' | 'today' | '7days';
 
 function matchStatus(status: string | undefined): StatusFilter {
   if (!status) return 'upcoming';
@@ -49,60 +54,18 @@ function fmtDate(iso: string): string {
   } catch { return iso; }
 }
 
+function fmtTime(iso: string): string {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  } catch { return ''; }
+}
+
 /* ------------------------------------------------------------------ */
-/*  Country chips                                                      */
+/*  Country data                                                       */
 /* ------------------------------------------------------------------ */
 
 const MAJOR_COUNTRIES = ['France', 'England', 'Spain', 'Germany', 'Italy', 'Portugal', 'Netherlands'];
-
-function CountryBar({
-  countries,
-  flags,
-  selected,
-  onSelect,
-}: {
-  countries: string[];
-  flags: Map<string, string>;
-  selected: string | null;
-  onSelect: (c: string | null) => void;
-}) {
-  const sorted = useMemo(() => {
-    const major = countries.filter(c => MAJOR_COUNTRIES.includes(c));
-    const rest = countries.filter(c => !MAJOR_COUNTRIES.includes(c)).sort();
-    return [...major, ...rest];
-  }, [countries]);
-
-  return (
-    <div className="flex gap-1.5 overflow-x-auto pb-1.5 px-3" style={{ scrollbarWidth: 'none' }}>
-      <button
-        onClick={() => onSelect(null)}
-        className={`shrink-0 px-2.5 py-1 rounded-full text-[11px] font-semibold transition-colors ${
-          selected === null
-            ? 'bg-primary text-white'
-            : 'bg-surface-alt text-text-muted hover:bg-surface-hover'
-        }`}
-      >
-        Tous
-      </button>
-      {sorted.map(c => (
-        <button
-          key={c}
-          onClick={() => onSelect(c === selected ? null : c)}
-          className={`shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold transition-colors ${
-            c === selected
-              ? 'bg-primary text-white'
-              : 'bg-surface-alt text-text-muted hover:bg-surface-hover'
-          }`}
-        >
-          {flags.get(c) && (
-            <img src={flags.get(c)} alt="" className="w-3.5 h-3.5 rounded-sm object-cover" />
-          )}
-          {c}
-        </button>
-      ))}
-    </div>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /*  Position labels                                                    */
@@ -112,11 +75,80 @@ const POSITION_ORDER: Record<string, number> = {
   Goalkeeper: 0, Defender: 1, Midfielder: 2, Attacker: 3,
 };
 const POSITION_FR: Record<string, string> = {
-  Goalkeeper: 'Gardiens', Defender: 'Défenseurs', Midfielder: 'Milieux', Attacker: 'Attaquants',
+  Goalkeeper: 'Gardiens', Defender: 'D\u00e9fenseurs', Midfielder: 'Milieux', Attacker: 'Attaquants',
 };
 
 /* ------------------------------------------------------------------ */
-/*  ContextSelector (ContextPicker)                                    */
+/*  Tiles                                                              */
+/* ------------------------------------------------------------------ */
+
+function LogoTile({ src, size = 32, rounded = 9 }: { src?: string; size?: number; rounded?: number }) {
+  return (
+    <span
+      className="relative bg-white border border-[#EEEDF6] overflow-hidden flex items-center justify-center shrink-0"
+      style={{ width: size, height: size, borderRadius: rounded }}
+    >
+      {src ? (
+        <img src={src} alt="" className="w-[70%] h-[70%] object-contain" />
+      ) : (
+        <span className="text-text-faint text-xs">\u26BD</span>
+      )}
+    </span>
+  );
+}
+
+function PlayerTile({ src, size = 32 }: { src?: string; size?: number }) {
+  return (
+    <span
+      className="relative bg-surface-muted border border-border-inner overflow-hidden flex items-center justify-center shrink-0 rounded-full"
+      style={{ width: size, height: size }}
+    >
+      {src ? (
+        <img src={src} alt="" className="w-full h-full object-cover" />
+      ) : (
+        <svg width={size * 0.55} height={size * 0.55} viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="8" r="4" fill="#C9C3EC" />
+          <path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" fill="#C9C3EC" />
+        </svg>
+      )}
+    </span>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Search bar                                                         */
+/* ------------------------------------------------------------------ */
+
+function SearchBar({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {
+  return (
+    <div className="flex-none px-4 pt-3 pb-1">
+      <div className="flex items-center gap-2 px-3 py-2.5 rounded-[11px] bg-surface-light border border-border">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="shrink-0">
+          <circle cx="11" cy="11" r="7" stroke="#B4AFCA" strokeWidth="2" />
+          <path d="M20 20l-3.2-3.2" stroke="#B4AFCA" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+        <input
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          placeholder={placeholder}
+          autoFocus
+          className="flex-1 bg-transparent text-sm text-text placeholder:text-text-faint focus:outline-none min-w-0"
+        />
+        {value && (
+          <button
+            onClick={() => onChange('')}
+            className="w-[18px] h-[18px] rounded-full bg-border text-text-muted text-[11px] flex items-center justify-center shrink-0 hover:bg-border-light"
+          >
+            &times;
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  ContextSelector (floating panel)                                   */
 /* ------------------------------------------------------------------ */
 
 export function ContextSelector({
@@ -126,10 +158,12 @@ export function ContextSelector({
   onSelectTeam,
   onSelectPlayer,
   onClearLevel,
+  open,
+  onClose,
+  onConfirm,
+  initialForcedLevel,
 }: Props) {
-  const [open, setOpen] = useState(false);
   const [forcedLevel, setForcedLevel] = useState<number | null>(null);
-  const ref = useRef<HTMLDivElement>(null);
 
   // Data caches
   const [leagues, setLeagues] = useState<League[]>([]);
@@ -145,10 +179,28 @@ export function ContextSelector({
   const [countryFilter, setCountryFilter] = useState<string | null>(null);
   const [leagueSearch, setLeagueSearch] = useState('');
   const [teamSearch, setTeamSearch] = useState('');
+  const [playerSearch, setPlayerSearch] = useState('');
   const [tab, setTab] = useState<'fixtures' | 'teams'>('fixtures');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [periodFilter, setPeriodFilter] = useState<PeriodFilter>('all');
+  const [showAllCountries, setShowAllCountries] = useState(false);
 
   const { context, labels } = contextState;
+
+  // Sync forcedLevel from parent
+  useEffect(() => {
+    if (open && initialForcedLevel != null) {
+      setForcedLevel(initialForcedLevel);
+    }
+  }, [open, initialForcedLevel]);
+
+  // Reset when closing
+  useEffect(() => {
+    if (!open) {
+      setShowAllCountries(false);
+      setPlayerSearch('');
+    }
+  }, [open]);
 
   // Auto-determine which panel level to show
   const panelLevel = forcedLevel ?? (() => {
@@ -158,19 +210,8 @@ export function ContextSelector({
     return 2;
   })();
 
-  // Close on outside click
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-        setForcedLevel(null);
-      }
-    }
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, []);
+  // ---- Data loading ----
 
-  // Load leagues on first open
   useEffect(() => {
     if (!open || leagues.length > 0) return;
     let cancelled = false;
@@ -182,7 +223,6 @@ export function ContextSelector({
     return () => { cancelled = true; };
   }, [open, leagues.length]);
 
-  // Load teams when league selected
   useEffect(() => {
     if (!context.league_id) { setTeams([]); return; }
     let cancelled = false;
@@ -194,7 +234,6 @@ export function ContextSelector({
     return () => { cancelled = true; };
   }, [context.league_id, context.season]);
 
-  // Load fixtures when league selected
   useEffect(() => {
     if (!context.league_id) { setFixtures([]); return; }
     let cancelled = false;
@@ -208,7 +247,6 @@ export function ContextSelector({
     return () => { cancelled = true; };
   }, [context.league_id, context.season]);
 
-  // Load squad when team selected
   useEffect(() => {
     if (!context.team_id) { setSquad([]); return; }
     let cancelled = false;
@@ -220,7 +258,8 @@ export function ContextSelector({
     return () => { cancelled = true; };
   }, [context.team_id]);
 
-  // Derived data
+  // ---- Derived data ----
+
   const countries = useMemo(() => {
     return [...new Set(leagues.map(l => l.country).filter(Boolean))];
   }, [leagues]);
@@ -228,6 +267,22 @@ export function ContextSelector({
   const countryFlags = useMemo(() => {
     const map = new Map<string, string>();
     leagues.forEach(l => { if (l.country_flag) map.set(l.country, l.country_flag); });
+    return map;
+  }, [leagues]);
+
+  const sortedCountries = useMemo(() => {
+    const major = countries.filter(c => MAJOR_COUNTRIES.includes(c));
+    const rest = countries.filter(c => !MAJOR_COUNTRIES.includes(c)).sort();
+    return [...major, ...rest];
+  }, [countries]);
+
+  const leaguesByCountry = useMemo(() => {
+    const map = new Map<string, League[]>();
+    for (const l of leagues) {
+      const c = l.country || 'Autre';
+      if (!map.has(c)) map.set(c, []);
+      map.get(c)!.push(l);
+    }
     return map;
   }, [leagues]);
 
@@ -249,8 +304,20 @@ export function ContextSelector({
     if (statusFilter !== 'all') {
       items = items.filter(f => matchStatus(f.status) === statusFilter);
     }
+    if (periodFilter === 'today') {
+      const today = new Date().toISOString().slice(0, 10);
+      items = items.filter(f => f.date?.slice(0, 10) === today);
+    } else if (periodFilter === '7days') {
+      const now = new Date();
+      const weekLater = new Date(now);
+      weekLater.setDate(weekLater.getDate() + 7);
+      items = items.filter(f => {
+        const d = new Date(f.date);
+        return d >= now && d <= weekLater;
+      });
+    }
     return items.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [fixtures, context.team_id, statusFilter]);
+  }, [fixtures, context.team_id, statusFilter, periodFilter]);
 
   const filteredTeams = useMemo(() => {
     if (!teamSearch) return teams;
@@ -259,8 +326,13 @@ export function ContextSelector({
   }, [teams, teamSearch]);
 
   const groupedSquad = useMemo(() => {
+    let items = squad;
+    if (playerSearch) {
+      const s = playerSearch.toLowerCase();
+      items = items.filter(p => p.name.toLowerCase().includes(s));
+    }
     const groups: Record<string, Player[]> = {};
-    for (const p of squad) {
+    for (const p of items) {
       const pos = p.position ?? 'Unknown';
       if (!groups[pos]) groups[pos] = [];
       groups[pos].push(p);
@@ -268,9 +340,8 @@ export function ContextSelector({
     return Object.entries(groups).sort(
       ([a], [b]) => (POSITION_ORDER[a] ?? 9) - (POSITION_ORDER[b] ?? 9),
     );
-  }, [squad]);
+  }, [squad, playerSearch]);
 
-  // Group fixtures by day
   const fixturesByDay = useMemo(() => {
     const groups: [string, Fixture[]][] = [];
     let lastDay = '';
@@ -285,106 +356,329 @@ export function ContextSelector({
     return groups;
   }, [filteredFixtures]);
 
-  /* ---------------------------------------------------------------- */
-  /*  Breadcrumb                                                       */
-  /* ---------------------------------------------------------------- */
+  // ---- Search value derived from level ----
 
-  function Breadcrumb() {
-    const crumbs: { label: string; logo?: string; onClick?: () => void; level: Exclude<Level, 'none'> }[] = [];
+  const searchValue = panelLevel === 1 ? leagueSearch
+    : panelLevel === 2 && tab === 'teams' ? teamSearch
+    : panelLevel === 3 ? playerSearch
+    : '';
 
-    if (labels.league) {
-      crumbs.push({
-        label: labels.league.name, logo: labels.league.logo,
-        onClick: () => { setForcedLevel(1); },
-        level: 'league',
-      });
-    }
-    if (labels.fixture) {
-      crumbs.push({
-        label: `${labels.fixture.home} – ${labels.fixture.away}`,
-        onClick: () => { setForcedLevel(2); setTab('fixtures'); },
-        level: 'fixture',
-      });
-    }
-    if (labels.team) {
-      crumbs.push({
-        label: labels.team.name, logo: labels.team.logo,
-        onClick: () => { setForcedLevel(2); setTab('teams'); },
-        level: 'team',
-      });
-    }
-    if (labels.player) {
-      crumbs.push({
-        label: labels.player.name,
-        onClick: () => { setForcedLevel(3); },
-        level: 'player',
-      });
-    }
+  const searchPlaceholder = panelLevel === 1 ? 'Rechercher une ligue ou un pays\u2026'
+    : panelLevel === 2 && tab === 'fixtures' ? 'Rechercher une affiche\u2026'
+    : panelLevel === 2 && tab === 'teams' ? 'Rechercher une \u00e9quipe\u2026'
+    : panelLevel === 3 ? 'Rechercher un joueur\u2026'
+    : 'Rechercher\u2026';
 
-    if (crumbs.length === 0) return null;
+  const handleSearchChange = (v: string) => {
+    if (panelLevel === 1) setLeagueSearch(v);
+    else if (panelLevel === 2 && tab === 'teams') setTeamSearch(v);
+    else if (panelLevel === 3) setPlayerSearch(v);
+  };
 
-    return (
-      <div className="flex items-center gap-1 px-3 pt-2.5 pb-1.5 text-[11px] font-semibold text-text-muted overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-        <button
-          onClick={() => { setForcedLevel(1); }}
-          className="shrink-0 hover:text-primary transition-colors"
-        >
-          Ligue
-        </button>
-        {crumbs.map((c, i) => (
-          <span key={i} className="flex items-center gap-1 shrink-0">
-            <span className="text-text-faint">&rsaquo;</span>
-            <button
-              onClick={c.onClick}
-              className="hover:text-primary transition-colors inline-flex items-center gap-1"
-            >
-              {c.logo && <img src={c.logo} alt="" className="w-3.5 h-3.5 object-contain" />}
-              <span className="max-w-[120px] truncate">{c.label}</span>
-            </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); onClearLevel(c.level); setForcedLevel(null); }}
-              className="text-text-faint hover:text-primary transition-colors"
-            >
-              &times;
-            </button>
-          </span>
-        ))}
-      </div>
-    );
+  const showSearch = panelLevel === 1 || (panelLevel === 2 && tab === 'teams') || panelLevel === 3;
+
+  // ---- Breadcrumb data ----
+
+  const crumbs: { label: string; logo?: string; onClick: () => void; level: Exclude<Level, 'none'> }[] = [];
+  if (labels.league) {
+    crumbs.push({
+      label: labels.league.name, logo: labels.league.logo,
+      onClick: () => { setForcedLevel(1); setShowAllCountries(false); },
+      level: 'league',
+    });
+  }
+  if (labels.fixture) {
+    crumbs.push({
+      label: `${labels.fixture.home} \u2013 ${labels.fixture.away}`,
+      onClick: () => { setForcedLevel(2); setTab('fixtures'); },
+      level: 'fixture',
+    });
+  }
+  if (labels.team) {
+    crumbs.push({
+      label: labels.team.name, logo: labels.team.logo,
+      onClick: () => { setForcedLevel(2); setTab('teams'); },
+      level: 'team',
+    });
+  }
+  if (labels.player) {
+    crumbs.push({
+      label: labels.player.name,
+      onClick: () => { setForcedLevel(3); },
+      level: 'player',
+    });
   }
 
-  /* ---------------------------------------------------------------- */
-  /*  Panel content                                                    */
-  /* ---------------------------------------------------------------- */
+  // ---- Panel title ----
 
-  function PanelContent() {
-    // Level 1: Leagues
-    if (panelLevel === 1) {
-      return (
-        <div className="flex flex-col">
-          <CountryBar
-            countries={countries}
-            flags={countryFlags}
-            selected={countryFilter}
-            onSelect={setCountryFilter}
-          />
-          {leagues.length > 6 && (
-            <div className="px-3 pt-1 pb-1">
-              <input
-                type="text"
-                value={leagueSearch}
-                onChange={e => setLeagueSearch(e.target.value)}
-                placeholder="Rechercher une ligue..."
-                autoFocus
-                className="w-full px-3 py-2 rounded-lg border border-border-light bg-surface-alt text-xs placeholder:text-text-faint focus:outline-none focus:border-primary-soft"
-              />
-            </div>
+  const panelTitle = showAllCountries ? 'Pays ou zone'
+    : panelLevel === 1 ? 'Choisis une comp\u00e9tition'
+    : panelLevel === 2 ? 'Affine : affiche ou \u00e9quipe'
+    : 'Choisis un joueur';
+
+  // ---- Escape key handler ----
+
+  useEffect(() => {
+    if (!open) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+    }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [open, onClose]);
+
+  // ---- Render ----
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="absolute left-0 right-0 bg-white border border-border-light overflow-hidden flex flex-col"
+      style={{
+        bottom: 'calc(100% + 10px)',
+        borderRadius: 18,
+        boxShadow: '0 24px 60px -14px rgba(38,32,74,.32)',
+        maxHeight: 'min(66vh, 520px)',
+        animation: 'oria-panel-in .18s ease both',
+        zIndex: 50,
+      }}
+    >
+      {/* ---- Header ---- */}
+      <div className="flex-none px-4 pt-3.5 pb-3 border-b border-border-inner">
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-[13px] font-bold text-text-strong">{panelTitle}</span>
+          <button
+            onClick={onClose}
+            aria-label="Fermer"
+            className="w-[26px] h-[26px] rounded-lg bg-surface-muted text-text-muted flex items-center justify-center text-[15px] hover:bg-purple-surface hover:text-primary-hover transition-colors"
+          >
+            &times;
+          </button>
+        </div>
+        {crumbs.length > 0 && (
+          <div className="flex items-center flex-wrap gap-[5px] mt-2.5">
+            {crumbs.map((c, i) => (
+              <Fragment key={c.level}>
+                <span
+                  className="inline-flex items-center gap-[3px] py-[3px] pl-[9px] pr-1 rounded-full"
+                  style={{ background: '#EEEDFA', border: '1px solid #DED9FA' }}
+                >
+                  {c.logo && (
+                    <img src={c.logo} alt="" className="w-3.5 h-3.5 object-contain shrink-0" />
+                  )}
+                  <button
+                    onClick={c.onClick}
+                    className="text-[11.5px] font-bold whitespace-nowrap"
+                    style={{ color: '#4A3FC0' }}
+                  >
+                    {c.label}
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onClearLevel(c.level); setForcedLevel(null); }}
+                    className="w-[15px] h-[15px] rounded-full text-[11px] flex items-center justify-center hover:bg-purple-border transition-colors"
+                    style={{ color: '#4A3FC0' }}
+                  >
+                    &times;
+                  </button>
+                </span>
+                {i < crumbs.length - 1 && (
+                  <span className="text-xs" style={{ color: '#C6C1DC' }}>&rsaquo;</span>
+                )}
+              </Fragment>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ---- Search ---- */}
+      {showSearch && !showAllCountries && (
+        <SearchBar
+          value={searchValue}
+          onChange={handleSearchChange}
+          placeholder={searchPlaceholder}
+        />
+      )}
+
+      {/* ---- Country chips (Level 1 only) ---- */}
+      {panelLevel === 1 && !showAllCountries && (
+        <div className="flex-none flex items-center gap-1.5 overflow-x-auto px-4 pt-2 pb-1" style={{ scrollbarWidth: 'none' }}>
+          <button
+            onClick={() => setCountryFilter(null)}
+            className={`shrink-0 px-3 py-1.5 rounded-full text-[11.5px] font-semibold border transition-colors ${
+              countryFilter === null
+                ? 'bg-purple-surface border-purple-hover text-primary-hover'
+                : 'bg-white border-border text-text-muted hover:bg-surface-hover'
+            }`}
+          >
+            Tous
+          </button>
+          {sortedCountries.slice(0, 5).map(c => (
+            <button
+              key={c}
+              onClick={() => setCountryFilter(c === countryFilter ? null : c)}
+              className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11.5px] font-semibold border transition-colors ${
+                c === countryFilter
+                  ? 'bg-purple-surface border-purple-hover text-primary-hover'
+                  : 'bg-white border-border text-text-muted hover:bg-surface-hover'
+              }`}
+            >
+              {countryFlags.get(c) && (
+                <img src={countryFlags.get(c)} alt="" className="w-4 h-3 rounded-[2px] object-cover" />
+              )}
+              {c}
+            </button>
+          ))}
+          {sortedCountries.length > 5 && (
+            <button
+              onClick={() => setShowAllCountries(true)}
+              className="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[11.5px] font-semibold border border-dashed transition-colors hover:bg-surface-hover"
+              style={{ borderColor: '#C9C3EC', color: '#5B4FD6' }}
+            >
+              Tous les pays &rsaquo;
+            </button>
           )}
-          <div className="overflow-y-auto max-h-[320px] p-1.5">
+        </div>
+      )}
+
+      {/* ---- Countries search (sub-view) ---- */}
+      {panelLevel === 1 && showAllCountries && (
+        <SearchBar
+          value={leagueSearch}
+          onChange={setLeagueSearch}
+          placeholder="Rechercher un pays\u2026"
+        />
+      )}
+
+      {/* ---- Segmented tabs (Level 2 only) ---- */}
+      {panelLevel === 2 && (
+        <div className="flex-none px-4 pt-3 pb-1 space-y-2">
+          <div className="flex gap-0.5 rounded-[11px] p-[3px]" style={{ background: '#EFEDF7' }}>
+            <button
+              onClick={() => setTab('fixtures')}
+              className={`flex-1 py-2 rounded-[9px] text-[13px] font-semibold transition-all ${
+                tab === 'fixtures'
+                  ? 'bg-white text-text-strong shadow-sm'
+                  : 'text-text-muted hover:text-text-secondary'
+              }`}
+            >
+              Une affiche
+            </button>
+            <button
+              onClick={() => setTab('teams')}
+              className={`flex-1 py-2 rounded-[9px] text-[13px] font-semibold transition-all ${
+                tab === 'teams'
+                  ? 'bg-white text-text-strong shadow-sm'
+                  : 'text-text-muted hover:text-text-secondary'
+              }`}
+            >
+              Une &eacute;quipe
+            </button>
+          </div>
+
+          {tab === 'fixtures' && (
+            <>
+              {/* Status chips */}
+              <div className="flex items-center gap-1.5">
+                {(['all', 'upcoming', 'live', 'finished'] as StatusFilter[]).map(s => (
+                  <button
+                    key={s}
+                    onClick={() => setStatusFilter(s)}
+                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors ${
+                      statusFilter === s
+                        ? 'bg-purple-surface border-purple-hover text-primary-hover'
+                        : 'bg-white border-border text-text-muted hover:bg-surface-hover'
+                    }`}
+                  >
+                    {s === 'live' && (
+                      <span className="w-[5px] h-[5px] rounded-full bg-warning animate-[oria-pulse_1.5s_infinite]" />
+                    )}
+                    {s === 'all' ? 'Tous' : s === 'upcoming' ? '\u00c0 venir' : s === 'live' ? 'En direct' : 'Termin\u00e9s'}
+                  </button>
+                ))}
+              </div>
+              {/* Period chips */}
+              <div className="flex items-center gap-1.5">
+                {(['all', 'today', '7days'] as PeriodFilter[]).map(p => (
+                  <button
+                    key={p}
+                    onClick={() => setPeriodFilter(p)}
+                    className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors ${
+                      periodFilter === p
+                        ? 'bg-purple-surface border-purple-hover text-primary-hover'
+                        : 'bg-white border-border text-text-muted hover:bg-surface-hover'
+                    }`}
+                  >
+                    {p === 'all' ? 'Tout' : p === 'today' ? "Aujourd\u2019hui" : '7 jours'}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* ---- Search for teams tab ---- */}
+      {panelLevel === 2 && tab === 'teams' && (
+        <SearchBar
+          value={teamSearch}
+          onChange={setTeamSearch}
+          placeholder="Rechercher une \u00e9quipe\u2026"
+        />
+      )}
+
+      {/* ---- Body (scrollable) ---- */}
+      <div className="oria-thin flex-1 overflow-y-auto min-h-[100px]">
+        {/* Countries sub-view */}
+        {panelLevel === 1 && showAllCountries && (
+          <div className="py-1 px-2.5">
+            {(leagueSearch
+              ? sortedCountries.filter(c => c.toLowerCase().includes(leagueSearch.toLowerCase()))
+              : sortedCountries
+            ).map(c => (
+              <button
+                key={c}
+                onClick={() => {
+                  setCountryFilter(c);
+                  setShowAllCountries(false);
+                  setLeagueSearch('');
+                }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-[11px] hover:bg-surface-hover transition-colors"
+              >
+                {countryFlags.get(c) ? (
+                  <img src={countryFlags.get(c)} alt="" className="w-5 h-4 rounded-[3px] object-cover shrink-0" />
+                ) : (
+                  <span className="w-5 h-4 rounded-[3px] bg-surface-muted flex items-center justify-center shrink-0 text-[10px] font-bold text-text-disabled">
+                    {c.charAt(0)}
+                  </span>
+                )}
+                <span className="flex-1 text-[13px] font-semibold text-text-strong text-left">{c}</span>
+                <span className="text-[11px] text-text-disabled">
+                  {leaguesByCountry.get(c)?.map(l => l.name).join(', ')}
+                </span>
+                <span className="text-text-faint text-[15px] shrink-0">&rsaquo;</span>
+              </button>
+            ))}
+            {leagueSearch && sortedCountries.filter(c => c.toLowerCase().includes(leagueSearch.toLowerCase())).length === 0 && (
+              <div className="py-6 text-center">
+                <p className="text-[13px] text-text-muted">Aucun pays trouv\u00e9</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Leagues list */}
+        {panelLevel === 1 && !showAllCountries && (
+          <div className="py-1 px-2.5">
             {loadingLeagues ? (
-              <div className="px-3 py-4 text-xs text-text-muted text-center">Chargement...</div>
+              <div className="py-8 text-center">
+                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+                <p className="text-[12px] text-text-muted mt-2">Chargement\u2026</p>
+              </div>
             ) : filteredLeagues.length === 0 ? (
-              <div className="px-3 py-4 text-xs text-text-muted text-center">Aucune ligue</div>
+              <div className="py-6 text-center">
+                <p className="text-[13px] font-semibold text-text-secondary">Aucune ligue</p>
+                <p className="text-[12px] text-text-disabled mt-1">Essaie un autre filtre ou pays.</p>
+              </div>
             ) : (
               filteredLeagues.map(l => (
                 <button
@@ -393,270 +687,229 @@ export function ContextSelector({
                     onSelectLeague({ id: l.id, name: l.name, logo: l.logo, country: l.country });
                     setForcedLevel(2);
                   }}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left text-[12.5px] font-semibold hover:bg-surface-hover transition-colors ${
-                    context.league_id === l.id ? 'text-primary' : 'text-text-strong'
+                  className={`w-full flex items-center gap-[11px] rounded-[11px] hover:bg-surface-hover transition-colors ${
+                    context.league_id === l.id ? 'bg-purple-surface' : ''
                   }`}
+                  style={{ padding: '9px 12px' }}
                 >
-                  {l.logo && <img src={l.logo} alt="" className="w-[18px] h-[18px] object-contain shrink-0" />}
-                  <span className="flex-1 truncate">{l.name}</span>
-                  <span className="text-[11px] text-text-muted font-normal">{l.country}</span>
-                  {context.league_id === l.id && <span className="text-primary font-bold">&#10003;</span>}
+                  <LogoTile src={l.logo} />
+                  <div className="flex-1 min-w-0 text-left">
+                    <div className="text-[13px] font-semibold text-text-strong truncate">{l.name}</div>
+                    <div className="text-[11px] text-text-muted">{l.country}</div>
+                  </div>
+                  <span className="text-text-faint text-[15px] shrink-0">&rsaquo;</span>
                 </button>
               ))
             )}
           </div>
-        </div>
-      );
-    }
+        )}
 
-    // Level 2: Tabs (Fixtures | Teams)
-    if (panelLevel === 2) {
-      return (
-        <div className="flex flex-col">
-          {/* Tabs */}
-          <div className="flex border-b border-border-light px-3">
-            <button
-              onClick={() => setTab('fixtures')}
-              className={`flex-1 py-2 text-xs font-semibold text-center border-b-2 transition-colors ${
-                tab === 'fixtures'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-text-muted hover:text-text-strong'
-              }`}
-            >
-              Affiches
-            </button>
-            <button
-              onClick={() => setTab('teams')}
-              className={`flex-1 py-2 text-xs font-semibold text-center border-b-2 transition-colors ${
-                tab === 'teams'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-text-muted hover:text-text-strong'
-              }`}
-            >
-              Équipes
-            </button>
-          </div>
-
-          {tab === 'fixtures' ? (
-            <div className="flex flex-col">
-              {/* Status chips */}
-              <div className="flex gap-1.5 px-3 pt-2 pb-1">
-                {(['all', 'upcoming', 'live', 'finished'] as StatusFilter[]).map(s => (
-                  <button
-                    key={s}
-                    onClick={() => setStatusFilter(s)}
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-semibold transition-colors ${
-                      statusFilter === s
-                        ? 'bg-primary text-white'
-                        : 'bg-surface-alt text-text-muted hover:bg-surface-hover'
-                    }`}
-                  >
-                    {s === 'all' ? 'Tous' : s === 'upcoming' ? 'À venir' : s === 'live' ? 'En cours' : 'Terminés'}
-                  </button>
-                ))}
+        {/* Fixtures list */}
+        {panelLevel === 2 && tab === 'fixtures' && (
+          <div className="py-1 px-2.5">
+            {loadingFixtures ? (
+              <div className="py-8 text-center">
+                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+                <p className="text-[12px] text-text-muted mt-2">Chargement\u2026</p>
               </div>
-
-              <div className="overflow-y-auto max-h-[300px] p-1.5">
-                {loadingFixtures ? (
-                  <div className="px-3 py-4 text-xs text-text-muted text-center">Chargement...</div>
-                ) : fixturesByDay.length === 0 ? (
-                  <div className="px-3 py-4 text-xs text-text-muted text-center">Aucun match dans cette période</div>
-                ) : (
-                  fixturesByDay.map(([day, dayFixtures]) => (
-                    <div key={day}>
-                      <div className="px-3 py-1.5 text-[10px] font-bold text-text-faint uppercase tracking-wider">
-                        {fmtDate(day)}
-                      </div>
-                      {dayFixtures.map(f => {
-                        const isLive = matchStatus(f.status) === 'live';
-                        const isDone = matchStatus(f.status) === 'finished';
-                        return (
-                          <button
-                            key={f.id}
-                            onClick={() => {
-                              onSelectFixture({
-                                id: f.id, home: f.home_team, away: f.away_team,
-                                homeId: f.home_id, awayId: f.away_id,
-                                homeLogo: f.home_logo, awayLogo: f.away_logo,
-                                date: f.date, status: f.status, round: f.round,
-                              });
-                              setForcedLevel(null);
-                              setOpen(false);
-                            }}
-                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-[12px] hover:bg-surface-hover transition-colors ${
-                              context.fixture_id === f.id ? 'bg-purple-surface' : ''
-                            }`}
-                          >
-                            {isLive && <span className="w-[5px] h-[5px] rounded-full bg-warning animate-[oria-pulse_1.5s_infinite] shrink-0" />}
-                            {f.home_logo && <img src={f.home_logo} alt="" className="w-4 h-4 object-contain shrink-0" />}
-                            <span className="font-semibold text-text-strong truncate">{f.home_team}</span>
-                            {(isDone || isLive) ? (
-                              <span className="font-mono font-bold text-text-strong shrink-0">
-                                {f.score_home ?? 0} - {f.score_away ?? 0}
+            ) : fixturesByDay.length === 0 ? (
+              <div className="py-6 px-4 text-center">
+                <div className="w-[38px] h-[38px] rounded-[11px] bg-surface-muted flex items-center justify-center mx-auto mb-2.5 text-lg">
+                  &#9917;
+                </div>
+                <p className="text-[13px] font-semibold text-text-secondary">Aucun match dans cette p\u00e9riode</p>
+                <p className="text-[12px] text-text-disabled mt-1">\u00c9largis le filtre ou change de p\u00e9riode.</p>
+              </div>
+            ) : (
+              fixturesByDay.map(([day, dayFixtures]) => (
+                <div key={day}>
+                  <p className="text-[10.5px] font-extrabold tracking-[.7px] uppercase text-text-disabled mx-2.5 mt-2 mb-1">
+                    {fmtDate(day)}
+                  </p>
+                  {dayFixtures.map(f => {
+                    const isLive = matchStatus(f.status) === 'live';
+                    const isDone = matchStatus(f.status) === 'finished';
+                    const hasScore = isDone || isLive;
+                    return (
+                      <button
+                        key={f.id}
+                        onClick={() => {
+                          onSelectFixture({
+                            id: f.id, home: f.home_team, away: f.away_team,
+                            homeId: f.home_id, awayId: f.away_id,
+                            homeLogo: f.home_logo, awayLogo: f.away_logo,
+                            date: f.date, status: f.status, round: f.round,
+                          });
+                          setForcedLevel(null);
+                          onClose();
+                        }}
+                        className={`w-full flex flex-col gap-1.5 px-3 py-2.5 rounded-xl hover:bg-surface-hover transition-colors ${
+                          context.fixture_id === f.id ? 'bg-purple-surface' : ''
+                        }`}
+                      >
+                        <div className="w-full flex items-center gap-2.5">
+                          {/* Home */}
+                          <span className="flex-1 flex items-center gap-2 justify-end min-w-0">
+                            <span className="text-[13px] font-semibold text-text-strong text-right truncate">
+                              {f.home_team}
+                            </span>
+                            <LogoTile src={f.home_logo} size={22} rounded={6} />
+                          </span>
+                          {/* Score */}
+                          <span className="flex-none min-w-[52px] text-center">
+                            {hasScore ? (
+                              <span className="font-mono text-[15px] font-bold text-text-strong">
+                                {f.score_home ?? 0}&thinsp;&ndash;&thinsp;{f.score_away ?? 0}
                               </span>
                             ) : (
-                              <span className="text-text-faint shrink-0">&ndash;</span>
+                              <span className="text-[12px] text-text-muted">{fmtTime(f.date)}</span>
                             )}
-                            <span className="font-semibold text-text-strong truncate">{f.away_team}</span>
-                            {f.away_logo && <img src={f.away_logo} alt="" className="w-4 h-4 object-contain shrink-0" />}
-                            {f.round && (
-                              <span className="ml-auto text-[10px] text-text-faint truncate max-w-[80px]">
+                          </span>
+                          {/* Away */}
+                          <span className="flex-1 flex items-center gap-2 min-w-0">
+                            <LogoTile src={f.away_logo} size={22} rounded={6} />
+                            <span className="text-[13px] font-semibold text-text-strong truncate">
+                              {f.away_team}
+                            </span>
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-center gap-2 text-[11px] text-text-muted">
+                          {f.round && (
+                            <>
+                              <span className="font-bold text-text-disabled">
                                 {f.round.replace('Regular Season - ', 'J')}
                               </span>
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col">
-              <div className="px-3 pt-2 pb-1">
-                <input
-                  type="text"
-                  value={teamSearch}
-                  onChange={e => setTeamSearch(e.target.value)}
-                  placeholder="Rechercher une équipe..."
-                  autoFocus
-                  className="w-full px-3 py-2 rounded-lg border border-border-light bg-surface-alt text-xs placeholder:text-text-faint focus:outline-none focus:border-primary-soft"
-                />
-              </div>
-              <div className="overflow-y-auto max-h-[300px] p-1.5">
-                {loadingTeams ? (
-                  <div className="px-3 py-4 text-xs text-text-muted text-center">Chargement...</div>
-                ) : filteredTeams.length === 0 ? (
-                  <div className="px-3 py-4 text-xs text-text-muted text-center">Aucune équipe</div>
-                ) : (
-                  filteredTeams.map(t => (
-                    <button
-                      key={t.id}
-                      onClick={() => {
-                        onSelectTeam({ id: t.id, name: t.name, logo: t.logo });
-                        setForcedLevel(3);
-                      }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left text-[12.5px] font-semibold hover:bg-surface-hover transition-colors ${
-                        context.team_id === t.id ? 'text-primary' : 'text-text-strong'
-                      }`}
-                    >
-                      {t.logo && <img src={t.logo} alt="" className="w-[18px] h-[18px] object-contain shrink-0" />}
-                      <span className="flex-1 truncate">{t.name}</span>
-                      {context.team_id === t.id && <span className="text-primary font-bold">&#10003;</span>}
-                    </button>
-                  ))
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    // Level 3: Players
-    if (panelLevel === 3 && context.team_id) {
-      return (
-        <div className="overflow-y-auto max-h-[360px] p-1.5">
-          {loadingSquad ? (
-            <div className="px-3 py-4 text-xs text-text-muted text-center">Chargement...</div>
-          ) : groupedSquad.length === 0 ? (
-            <div className="px-3 py-4 text-xs text-text-muted text-center">Aucun joueur</div>
-          ) : (
-            groupedSquad.map(([position, players]) => (
-              <div key={position}>
-                <div className="px-3 py-1.5 text-[10px] font-bold text-text-faint uppercase tracking-wider">
-                  {POSITION_FR[position] ?? position}
+                              <span>&middot;</span>
+                            </>
+                          )}
+                          {isLive && (
+                            <>
+                              <span className="inline-flex items-center gap-1">
+                                <span className="w-[5px] h-[5px] rounded-full bg-warning animate-[oria-pulse_1.5s_infinite]" />
+                                <span className="font-bold" style={{ color: '#C4691F' }}>
+                                  {f.elapsed}&apos;
+                                </span>
+                              </span>
+                              <span>&middot;</span>
+                            </>
+                          )}
+                          <span>{fmtDate(f.date)}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
-                {players.map(p => (
-                  <button
-                    key={p.id}
-                    onClick={() => {
-                      onSelectPlayer({ id: p.id, name: p.name, photo: p.photo, number: p.number });
-                      setOpen(false);
-                      setForcedLevel(null);
-                    }}
-                    className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left text-[12.5px] font-semibold hover:bg-surface-hover transition-colors ${
-                      context.player_id === p.id ? 'text-primary' : 'text-text-strong'
-                    }`}
-                  >
-                    {p.number != null && (
-                      <span className="w-6 text-center text-[11px] text-text-muted font-mono shrink-0">{p.number}</span>
-                    )}
-                    {p.photo && <img src={p.photo} alt="" className="w-6 h-6 rounded-full object-cover shrink-0" />}
-                    <span className="flex-1 truncate">{p.name}</span>
-                    {context.player_id === p.id && <span className="text-primary font-bold">&#10003;</span>}
-                  </button>
-                ))}
+              ))
+            )}
+          </div>
+        )}
+
+        {/* Teams list */}
+        {panelLevel === 2 && tab === 'teams' && (
+          <div className="py-1 px-2.5">
+            {loadingTeams ? (
+              <div className="py-8 text-center">
+                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+                <p className="text-[12px] text-text-muted mt-2">Chargement\u2026</p>
               </div>
-            ))
-          )}
-        </div>
-      );
-    }
+            ) : filteredTeams.length === 0 ? (
+              <div className="py-6 text-center">
+                <p className="text-[13px] font-semibold text-text-secondary">Aucune \u00e9quipe</p>
+              </div>
+            ) : (
+              filteredTeams.map(t => (
+                <button
+                  key={t.id}
+                  onClick={() => {
+                    onSelectTeam({ id: t.id, name: t.name, logo: t.logo });
+                    setForcedLevel(3);
+                  }}
+                  className={`w-full flex items-center gap-[11px] rounded-[11px] hover:bg-surface-hover transition-colors ${
+                    context.team_id === t.id ? 'bg-purple-surface' : ''
+                  }`}
+                  style={{ padding: '9px 12px' }}
+                >
+                  <LogoTile src={t.logo} />
+                  <span className="flex-1 text-[13px] font-semibold text-text-strong text-left truncate">{t.name}</span>
+                  <span className="text-text-faint text-[15px] shrink-0">&rsaquo;</span>
+                </button>
+              ))
+            )}
+          </div>
+        )}
 
-    return null;
-  }
-
-  /* ---------------------------------------------------------------- */
-  /*  Chip display                                                     */
-  /* ---------------------------------------------------------------- */
-
-  const chipParts: { label: string; logo?: string; level: Exclude<Level, 'none'> }[] = [];
-  if (labels.league) chipParts.push({ label: labels.league.name, logo: labels.league.logo, level: 'league' });
-  if (labels.fixture) chipParts.push({ label: `${labels.fixture.home} \u2013 ${labels.fixture.away}`, level: 'fixture' });
-  if (labels.team) chipParts.push({ label: labels.team.name, logo: labels.team.logo, level: 'team' });
-  if (labels.player) chipParts.push({ label: labels.player.name, level: 'player' });
-
-  return (
-    <div ref={ref} className="relative">
-      <div className="flex items-center gap-2 flex-wrap">
-        <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">Contexte</span>
-
-        {chipParts.map(chip => (
-          <span
-            key={chip.level}
-            className="inline-flex items-center gap-1.5 px-3 py-[7px] rounded-xl border text-[12.5px] font-semibold cursor-pointer transition-colors"
-            style={{ borderColor: '#C9C3EC', background: '#EEEDFA', color: '#4A3FC0' }}
-            onClick={() => {
-              setOpen(true);
-              if (chip.level === 'league') setForcedLevel(1);
-              else if (chip.level === 'fixture' || chip.level === 'team') setForcedLevel(2);
-              else if (chip.level === 'player') setForcedLevel(3);
-            }}
-          >
-            {chip.logo && <img src={chip.logo} alt="" className="w-4 h-4 object-contain" />}
-            <span className="max-w-[160px] truncate">{chip.label}</span>
-            <span
-              onClick={e => { e.stopPropagation(); onClearLevel(chip.level); }}
-              className="text-primary-muted hover:text-primary cursor-pointer ml-0.5"
-            >
-              &times;
-            </span>
-          </span>
-        ))}
-
-        <button
-          onClick={() => { setOpen(!open); setForcedLevel(null); }}
-          className="inline-flex items-center gap-1.5 px-3 py-[7px] rounded-xl border border-border-light text-[12.5px] font-semibold text-text-muted hover:bg-surface-hover transition-colors"
-        >
-          {chipParts.length === 0 ? 'Sélectionner...' : '+'}
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .15s' }}>
-            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
+        {/* Players list */}
+        {panelLevel === 3 && context.team_id && (
+          <div className="py-1 px-2.5">
+            {loadingSquad ? (
+              <div className="py-8 text-center">
+                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+                <p className="text-[12px] text-text-muted mt-2">Chargement\u2026</p>
+              </div>
+            ) : groupedSquad.length === 0 ? (
+              <div className="py-6 px-4 text-center">
+                <p className="text-[13px] font-semibold text-text-secondary">Effectif indisponible</p>
+                <p className="text-[12px] text-text-disabled mt-1">Pose ta question au niveau \u00e9quipe.</p>
+              </div>
+            ) : (
+              groupedSquad.map(([position, players]) => (
+                <div key={position}>
+                  <p className="text-[10.5px] font-extrabold tracking-[.7px] uppercase text-text-disabled mx-2.5 mt-2.5 mb-1">
+                    {POSITION_FR[position] ?? position}
+                  </p>
+                  {players.map(p => (
+                    <button
+                      key={p.id}
+                      onClick={() => {
+                        onSelectPlayer({ id: p.id, name: p.name, photo: p.photo, number: p.number });
+                        onClose();
+                        setForcedLevel(null);
+                      }}
+                      className={`w-full flex items-center gap-[11px] rounded-[11px] hover:bg-surface-hover transition-colors ${
+                        context.player_id === p.id ? 'bg-purple-surface' : ''
+                      }`}
+                      style={{ padding: '9px 12px' }}
+                    >
+                      {p.number != null && (
+                        <span className="w-6 text-center font-mono text-xs font-bold text-text-disabled shrink-0">
+                          {p.number}
+                        </span>
+                      )}
+                      <PlayerTile src={p.photo} />
+                      <span className="flex-1 text-[13px] font-semibold text-text-strong text-left truncate">{p.name}</span>
+                      <span className="text-text-faint text-[15px] shrink-0">&rsaquo;</span>
+                    </button>
+                  ))}
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Popover panel */}
-      {open && (
-        <div
-          className="absolute top-full left-0 mt-1.5 z-30 w-[420px] max-h-[60vh] bg-white border border-border rounded-xl shadow-lg overflow-hidden flex flex-col"
-          style={{ boxShadow: '0 14px 36px -10px rgba(38,32,74,.24)' }}
-        >
-          <Breadcrumb />
-          <PanelContent />
-        </div>
-      )}
+      {/* ---- Footer ---- */}
+      <div className="flex-none flex items-center justify-between gap-3 px-4 py-3 border-t border-border-inner bg-surface-alt">
+        <span className="text-[11.5px] text-text-disabled leading-snug">
+          {showAllCountries
+            ? 'S\u00e9lection d\u00e9pendante \u00b7 instantan\u00e9 depuis le cache'
+            : 'Arr\u00eate-toi \u00e0 n\u2019importe quel niveau.'}
+        </span>
+        {showAllCountries ? (
+          <button
+            onClick={() => { setShowAllCountries(false); setLeagueSearch(''); }}
+            className="px-[18px] py-2 rounded-[10px] bg-primary hover:bg-primary-hover text-white text-[13px] font-bold transition-colors shrink-0"
+          >
+            Termin\u00e9
+          </button>
+        ) : (
+          <button
+            onClick={onConfirm}
+            className="px-[18px] py-2 rounded-[10px] bg-primary hover:bg-primary-hover text-white text-[13px] font-bold transition-colors shrink-0"
+          >
+            Poser ma question
+          </button>
+        )}
+      </div>
     </div>
   );
 }
