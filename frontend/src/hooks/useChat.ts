@@ -9,7 +9,6 @@ import {
   selectTeam as _selectTeam,
   selectPlayer as _selectPlayer,
   clearLevel as _clearLevel,
-  currentSeason,
   EMPTY_CONTEXT_STATE,
   type ContextState,
   type ContextLabels,

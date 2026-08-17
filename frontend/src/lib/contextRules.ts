@@ -109,7 +109,7 @@ interface LeagueInput {
   country?: string;
 }
 
-export function selectLeague(s: ContextState, league: LeagueInput): ContextState {
+export function selectLeague(_s: ContextState, league: LeagueInput): ContextState {
   return {
     context: {
       league_id: league.id,

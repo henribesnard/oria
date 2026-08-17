@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { listLeagues, listTeams, listFixtures, getSquad } from '../../api/catalog';
 import type { League, Team, Fixture, Player } from '../../api/catalog';
 import {
-  deepestLevel,
   snapWindow,
   currentSeason,
   LIVE, FINISHED, UPCOMING,
