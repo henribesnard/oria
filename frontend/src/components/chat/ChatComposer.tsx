@@ -65,7 +65,7 @@ export function ChatComposer({
   const { labels } = contextState;
   const chipParts: { label: string; logo?: string; level: Exclude<Level, 'none'>; panelLevel: number }[] = [];
   if (labels.league) chipParts.push({ label: labels.league.name, logo: labels.league.logo, level: 'league', panelLevel: 1 });
-  if (labels.fixture) chipParts.push({ label: `${labels.fixture.home} \u2013 ${labels.fixture.away}`, level: 'fixture', panelLevel: 2 });
+  if (labels.fixture) chipParts.push({ label: `${labels.fixture.home} – ${labels.fixture.away}`, level: 'fixture', panelLevel: 2 });
   if (labels.team) chipParts.push({ label: labels.team.name, logo: labels.team.logo, level: 'team', panelLevel: 2 });
   if (labels.player) chipParts.push({ label: labels.player.name, level: 'player', panelLevel: 3 });
   const hasContext = chipParts.length > 0;
@@ -129,7 +129,7 @@ export function ChatComposer({
             }}
           >
             <span className="text-base font-medium leading-none">
-              {hasContext ? '\u21C5' : '\uFF0B'}
+              {hasContext ? '⇅' : '＋'}
             </span>
             Contexte
           </button>
@@ -139,7 +139,7 @@ export function ChatComposer({
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Pose ta question \u00e0 Oria\u2026"
+            placeholder="Pose ta question à Oria…"
             disabled={disabled}
             rows={1}
             className="flex-1 bg-transparent text-[15px] text-text placeholder:text-text-faint focus:outline-none disabled:opacity-50 resize-none leading-relaxed py-2.5 px-1 min-w-0"

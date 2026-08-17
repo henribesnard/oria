@@ -80,7 +80,7 @@ function ContextChips({ snapshot }: { snapshot: NonNullable<Message['contextSnap
   }
 
   if (labels?.fixture) {
-    chips.push({ key: 'fixture', label: `${labels.fixture.home} \u2013 ${labels.fixture.away}` });
+    chips.push({ key: 'fixture', label: `${labels.fixture.home} – ${labels.fixture.away}` });
   } else if (snapshot.context?.fixture_id) {
     chips.push({ key: 'fixture', label: `Match #${snapshot.context.fixture_id}` });
   }
@@ -88,7 +88,7 @@ function ContextChips({ snapshot }: { snapshot: NonNullable<Message['contextSnap
   if (labels?.team) {
     chips.push({ key: 'team', label: labels.team.name, logo: labels.team.logo });
   } else if (snapshot.context?.team_id) {
-    chips.push({ key: 'team', label: `\u00c9quipe #${snapshot.context.team_id}` });
+    chips.push({ key: 'team', label: `Équipe #${snapshot.context.team_id}` });
   }
 
   if (labels?.player) {

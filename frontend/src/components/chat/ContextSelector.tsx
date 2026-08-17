@@ -75,7 +75,7 @@ const POSITION_ORDER: Record<string, number> = {
   Goalkeeper: 0, Defender: 1, Midfielder: 2, Attacker: 3,
 };
 const POSITION_FR: Record<string, string> = {
-  Goalkeeper: 'Gardiens', Defender: 'D\u00e9fenseurs', Midfielder: 'Milieux', Attacker: 'Attaquants',
+  Goalkeeper: 'Gardiens', Defender: 'Défenseurs', Midfielder: 'Milieux', Attacker: 'Attaquants',
 };
 
 /* ------------------------------------------------------------------ */
@@ -91,7 +91,7 @@ function LogoTile({ src, size = 32, rounded = 9 }: { src?: string; size?: number
       {src ? (
         <img src={src} alt="" className="w-[70%] h-[70%] object-contain" />
       ) : (
-        <span className="text-text-faint text-xs">\u26BD</span>
+        <span className="text-text-faint text-xs">⚽</span>
       )}
     </span>
   );
@@ -363,11 +363,11 @@ export function ContextSelector({
     : panelLevel === 3 ? playerSearch
     : '';
 
-  const searchPlaceholder = panelLevel === 1 ? 'Rechercher une ligue ou un pays\u2026'
-    : panelLevel === 2 && tab === 'fixtures' ? 'Rechercher une affiche\u2026'
-    : panelLevel === 2 && tab === 'teams' ? 'Rechercher une \u00e9quipe\u2026'
-    : panelLevel === 3 ? 'Rechercher un joueur\u2026'
-    : 'Rechercher\u2026';
+  const searchPlaceholder = panelLevel === 1 ? 'Rechercher une ligue ou un pays…'
+    : panelLevel === 2 && tab === 'fixtures' ? 'Rechercher une affiche…'
+    : panelLevel === 2 && tab === 'teams' ? 'Rechercher une équipe…'
+    : panelLevel === 3 ? 'Rechercher un joueur…'
+    : 'Rechercher…';
 
   const handleSearchChange = (v: string) => {
     if (panelLevel === 1) setLeagueSearch(v);
@@ -389,7 +389,7 @@ export function ContextSelector({
   }
   if (labels.fixture) {
     crumbs.push({
-      label: `${labels.fixture.home} \u2013 ${labels.fixture.away}`,
+      label: `${labels.fixture.home} – ${labels.fixture.away}`,
       onClick: () => { setForcedLevel(2); setTab('fixtures'); },
       level: 'fixture',
     });
@@ -412,8 +412,8 @@ export function ContextSelector({
   // ---- Panel title ----
 
   const panelTitle = showAllCountries ? 'Pays ou zone'
-    : panelLevel === 1 ? 'Choisis une comp\u00e9tition'
-    : panelLevel === 2 ? 'Affine : affiche ou \u00e9quipe'
+    : panelLevel === 1 ? 'Choisis une compétition'
+    : panelLevel === 2 ? 'Affine : affiche ou équipe'
     : 'Choisis un joueur';
 
   // ---- Escape key handler ----
@@ -545,7 +545,7 @@ export function ContextSelector({
         <SearchBar
           value={leagueSearch}
           onChange={setLeagueSearch}
-          placeholder="Rechercher un pays\u2026"
+          placeholder="Rechercher un pays…"
         />
       )}
 
@@ -592,7 +592,7 @@ export function ContextSelector({
                     {s === 'live' && (
                       <span className="w-[5px] h-[5px] rounded-full bg-warning animate-[oria-pulse_1.5s_infinite]" />
                     )}
-                    {s === 'all' ? 'Tous' : s === 'upcoming' ? '\u00c0 venir' : s === 'live' ? 'En direct' : 'Termin\u00e9s'}
+                    {s === 'all' ? 'Tous' : s === 'upcoming' ? 'À venir' : s === 'live' ? 'En direct' : 'Terminés'}
                   </button>
                 ))}
               </div>
@@ -608,7 +608,7 @@ export function ContextSelector({
                         : 'bg-white border-border text-text-muted hover:bg-surface-hover'
                     }`}
                   >
-                    {p === 'all' ? 'Tout' : p === 'today' ? "Aujourd\u2019hui" : '7 jours'}
+                    {p === 'all' ? 'Tout' : p === 'today' ? "Aujourd'hui" : '7 jours'}
                   </button>
                 ))}
               </div>
@@ -622,7 +622,7 @@ export function ContextSelector({
         <SearchBar
           value={teamSearch}
           onChange={setTeamSearch}
-          placeholder="Rechercher une \u00e9quipe\u2026"
+          placeholder="Rechercher une équipe…"
         />
       )}
 
@@ -660,7 +660,7 @@ export function ContextSelector({
             ))}
             {leagueSearch && sortedCountries.filter(c => c.toLowerCase().includes(leagueSearch.toLowerCase())).length === 0 && (
               <div className="py-6 text-center">
-                <p className="text-[13px] text-text-muted">Aucun pays trouv\u00e9</p>
+                <p className="text-[13px] text-text-muted">Aucun pays trouvé</p>
               </div>
             )}
           </div>
@@ -672,7 +672,7 @@ export function ContextSelector({
             {loadingLeagues ? (
               <div className="py-8 text-center">
                 <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-                <p className="text-[12px] text-text-muted mt-2">Chargement\u2026</p>
+                <p className="text-[12px] text-text-muted mt-2">Chargement…</p>
               </div>
             ) : filteredLeagues.length === 0 ? (
               <div className="py-6 text-center">
@@ -710,15 +710,15 @@ export function ContextSelector({
             {loadingFixtures ? (
               <div className="py-8 text-center">
                 <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-                <p className="text-[12px] text-text-muted mt-2">Chargement\u2026</p>
+                <p className="text-[12px] text-text-muted mt-2">Chargement…</p>
               </div>
             ) : fixturesByDay.length === 0 ? (
               <div className="py-6 px-4 text-center">
                 <div className="w-[38px] h-[38px] rounded-[11px] bg-surface-muted flex items-center justify-center mx-auto mb-2.5 text-lg">
                   &#9917;
                 </div>
-                <p className="text-[13px] font-semibold text-text-secondary">Aucun match dans cette p\u00e9riode</p>
-                <p className="text-[12px] text-text-disabled mt-1">\u00c9largis le filtre ou change de p\u00e9riode.</p>
+                <p className="text-[13px] font-semibold text-text-secondary">Aucun match dans cette période</p>
+                <p className="text-[12px] text-text-disabled mt-1">Élargis le filtre ou change de période.</p>
               </div>
             ) : (
               fixturesByDay.map(([day, dayFixtures]) => (
@@ -810,11 +810,11 @@ export function ContextSelector({
             {loadingTeams ? (
               <div className="py-8 text-center">
                 <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-                <p className="text-[12px] text-text-muted mt-2">Chargement\u2026</p>
+                <p className="text-[12px] text-text-muted mt-2">Chargement…</p>
               </div>
             ) : filteredTeams.length === 0 ? (
               <div className="py-6 text-center">
-                <p className="text-[13px] font-semibold text-text-secondary">Aucune \u00e9quipe</p>
+                <p className="text-[13px] font-semibold text-text-secondary">Aucune équipe</p>
               </div>
             ) : (
               filteredTeams.map(t => (
@@ -844,12 +844,12 @@ export function ContextSelector({
             {loadingSquad ? (
               <div className="py-8 text-center">
                 <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-                <p className="text-[12px] text-text-muted mt-2">Chargement\u2026</p>
+                <p className="text-[12px] text-text-muted mt-2">Chargement…</p>
               </div>
             ) : groupedSquad.length === 0 ? (
               <div className="py-6 px-4 text-center">
                 <p className="text-[13px] font-semibold text-text-secondary">Effectif indisponible</p>
-                <p className="text-[12px] text-text-disabled mt-1">Pose ta question au niveau \u00e9quipe.</p>
+                <p className="text-[12px] text-text-disabled mt-1">Pose ta question au niveau équipe.</p>
               </div>
             ) : (
               groupedSquad.map(([position, players]) => (
@@ -891,15 +891,15 @@ export function ContextSelector({
       <div className="flex-none flex items-center justify-between gap-3 px-4 py-3 border-t border-border-inner bg-surface-alt">
         <span className="text-[11.5px] text-text-disabled leading-snug">
           {showAllCountries
-            ? 'S\u00e9lection d\u00e9pendante \u00b7 instantan\u00e9 depuis le cache'
-            : 'Arr\u00eate-toi \u00e0 n\u2019importe quel niveau.'}
+            ? 'Sélection dépendante · instantané depuis le cache'
+            : 'Arrête-toi à n'importe quel niveau.'}
         </span>
         {showAllCountries ? (
           <button
             onClick={() => { setShowAllCountries(false); setLeagueSearch(''); }}
             className="px-[18px] py-2 rounded-[10px] bg-primary hover:bg-primary-hover text-white text-[13px] font-bold transition-colors shrink-0"
           >
-            Termin\u00e9
+            Terminé
           </button>
         ) : (
           <button

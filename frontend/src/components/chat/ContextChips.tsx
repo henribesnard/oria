@@ -10,7 +10,7 @@ export function ContextChips({ contextState, onClear }: Props) {
   const chips: { label: string; logo?: string; level: Exclude<Level, 'none'> }[] = [];
 
   if (labels.league) chips.push({ label: labels.league.name, logo: labels.league.logo, level: 'league' });
-  if (labels.fixture) chips.push({ label: `${labels.fixture.home} \u2013 ${labels.fixture.away}`, level: 'fixture' });
+  if (labels.fixture) chips.push({ label: `${labels.fixture.home} – ${labels.fixture.away}`, level: 'fixture' });
   if (labels.team) chips.push({ label: labels.team.name, logo: labels.team.logo, level: 'team' });
   if (labels.player) chips.push({ label: labels.player.name, level: 'player' });
 
