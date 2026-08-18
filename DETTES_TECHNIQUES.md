@@ -72,19 +72,11 @@ pas reellement pour filtrer les destinataires.
 
 ---
 
-## P2 — Streaming LLM reel (Lot 5.6)
+## ~~P2 — Streaming LLM reel (Lot 5.6)~~ TRAITE
 
-Le streaming SSE ne fait pas de vrai streaming LLM : `_stream_orchestrator()` appelle
-`orchestrator.run()` en bloc puis renvoie un seul evenement `done`.
-
-**Fichiers concernes :**
-- `src/oria/core/streaming.py:126-143` (appel non-streaming)
-- `src/oria/providers/llm/deepseek.py:81-103` (`complete_stream()` existe mais n'est pas integre)
-
-**A faire :**
-- Ajouter `Orchestrator.run_stream()` ou brancher `DeepSeekProvider.complete_stream()`
-- Emettre des evenements `chunk` progressifs puis `done`
-- Conserver le fallback non-streaming si function-calling necessite l'aggregation
+> Resolu dans le commit `feat(streaming): vrai streaming LLM avec chunks progressifs`.
+> `Orchestrator.run_stream()` stream la reponse finale via `complete_stream()`,
+> les rounds function-calling restent non-streaming.
 
 ---
 
