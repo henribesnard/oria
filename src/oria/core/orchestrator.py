@@ -10,6 +10,8 @@ from oria.core.context_scope import describe as describe_scope
 from oria.kernel.health import Availability, ModuleStatus
 
 if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
+
     from oria.kernel.models import IncomingRequest
     from oria.providers.llm.deepseek import DeepSeekProvider
     from oria.tools.registry import ToolRegistry
@@ -160,6 +162,121 @@ class Orchestrator:
         # Limite de rounds atteinte
         logger.warning("orchestrator reached max tool rounds (%d)", _MAX_TOOL_ROUNDS)
         return None
+
+    async def run_stream(
+        self,
+        req: IncomingRequest,
+        *,
+        conversation_history: list[dict[str, str]] | None = None,
+        model: str | None = None,
+    ) -> AsyncIterator[str]:
+        """Streaming : boucle function-calling puis stream la reponse finale.
+
+        Les rounds d'outils restent non-streaming (besoin de la reponse complete
+        pour parser les tool_calls). Seule la reponse finale est streamee.
+        Yield des fragments de texte brut.
+        """
+        if self._llm is None:
+            return
+
+        messages: list[dict[str, Any]] = [{"role": "system", "content": _SYSTEM_PROMPT}]
+
+        if conversation_history:
+            messages.extend(conversation_history)
+
+        context_hint = self._build_context_hint(req)
+        user_content = req.text
+        if context_hint:
+            user_content = f"[{context_hint}]\n{req.text}"
+
+        messages.append({"role": "user", "content": user_content})
+
+        tool_schemas = self._tools.schemas() if self._tools else None
+
+        # --- Phase 1 : boucles function-calling (non-streaming) ---
+        for round_idx in range(_MAX_TOOL_ROUNDS):
+            try:
+                result = await self._llm.complete(
+                    messages, tools=tool_schemas, model=model,
+                )
+            except Exception:
+                logger.warning(
+                    "orchestrator stream LLM call failed (round %d)",
+                    round_idx, exc_info=True,
+                )
+                return
+
+            choices = result.get("choices", [])
+            if not choices:
+                return
+
+            message = choices[0].get("message", {})
+            finish_reason = choices[0].get("finish_reason", "stop")
+            tool_calls = message.get("tool_calls")
+
+            if tool_calls and self._tools and finish_reason == "tool_calls":
+                messages.append(message)
+                await self._execute_tool_calls(messages, tool_calls)
+                continue
+
+            # Pas de tool_calls : on passe en streaming pour la reponse finale
+            break
+        else:
+            # Limite de rounds atteinte — on stream quand meme la derniere reponse
+            logger.warning("orchestrator stream reached max tool rounds (%d)", _MAX_TOOL_ROUNDS)
+            return
+
+        # --- Phase 2 : stream la reponse finale ---
+        try:
+            stream = await self._llm.complete_stream(messages, model=model)
+            async for chunk in stream:
+                delta = chunk.choices[0].delta if chunk.choices else None
+                if delta is not None and delta.content:
+                    yield delta.content
+        except Exception:
+            logger.warning("orchestrator stream final call failed", exc_info=True)
+
+    async def _execute_tool_calls(
+        self,
+        messages: list[dict[str, Any]],
+        tool_calls: list[dict[str, Any]],
+    ) -> None:
+        """Execute les appels d'outils et ajoute les resultats aux messages."""
+        for tc in tool_calls:
+            fn_name = tc.get("function", {}).get("name", "")
+            fn_args_raw = tc.get("function", {}).get("arguments", "{}")
+            tc_id = tc.get("id", "")
+
+            try:
+                fn_args = (
+                    json.loads(fn_args_raw)
+                    if isinstance(fn_args_raw, str)
+                    else fn_args_raw
+                )
+            except json.JSONDecodeError:
+                logger.warning("LLM returned invalid JSON for tool %s", fn_name)
+                messages.append({
+                    "role": "tool", "tool_call_id": tc_id,
+                    "content": json.dumps({"error": "invalid arguments"}),
+                })
+                continue
+
+            if self._tools is None:
+                content = json.dumps({"error": "no tools available"})
+            else:
+                try:
+                    tool_result = await self._tools.call(fn_name, fn_args)
+                    content = json.dumps(tool_result, default=str, ensure_ascii=False)
+                except KeyError:
+                    logger.warning("LLM called unknown tool: %s", fn_name)
+                    content = json.dumps({"error": f"unknown tool: {fn_name}"})
+                except Exception:
+                    logger.warning("tool %s failed", fn_name, exc_info=True)
+                    content = json.dumps({"error": f"tool {fn_name} failed"})
+
+            messages.append({
+                "role": "tool", "tool_call_id": tc_id, "content": content,
+            })
 
     @staticmethod
     def _build_context_hint(req: IncomingRequest) -> str:

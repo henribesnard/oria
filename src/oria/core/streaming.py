@@ -118,15 +118,33 @@ async def _stream_process(
                 await _persist_stream_turn(req, result.text, entitlements, conversations)
                 return
 
-    # Orchestrator streaming
+    # Orchestrator streaming (chunks progressifs puis done)
     if orchestrator is not None and orchestrator.is_llm_ready():
-        full_text = await _stream_orchestrator(
-            req, orchestrator, conversation_history,
-        )
-        if full_text:
+        full_text = ""
+        streamed = False
+        try:
+            async for chunk in orchestrator.run_stream(
+                req, conversation_history=conversation_history,
+            ):
+                full_text += chunk
+                yield _sse_event({"type": "chunk", "content": chunk})
+                streamed = True
+        except Exception:
+            logger.warning("stream orchestrator failed", exc_info=True)
+
+        if streamed and full_text:
             yield _sse_event({"type": "done", "text": full_text})
             await _persist_stream_turn(req, full_text, entitlements, conversations)
             return
+        if not streamed:
+            # Fallback non-streaming si le stream n'a rien produit
+            fallback_text = await _stream_orchestrator(
+                req, orchestrator, conversation_history,
+            )
+            if fallback_text:
+                yield _sse_event({"type": "done", "text": fallback_text})
+                await _persist_stream_turn(req, fallback_text, entitlements, conversations)
+                return
 
     # Fallback
     fallback_resp = await synthesis.fallback("aucun module disponible")
