@@ -249,6 +249,7 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
         identity=identity_service,
         auth=auth_service,
         bootstrap_token=settings.admin_bootstrap_token,
+        jwt_secret=settings.jwt_secret,
     )
     container.add(admin_service)
     container._admin_service = admin_service  # type: ignore[attr-defined]

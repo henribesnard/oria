@@ -6,7 +6,9 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from oria.app.admin.service import AdminService
 from oria.app.auth.service import AuthService
+from oria.app.identity.models import UserRole
 from oria.app.identity.service import IdentityService
 from oria.config import Settings
 from oria.providers.mail import MailProvider
@@ -100,3 +102,80 @@ class TestSessionPersistence:
 
         with pytest.raises(Exception):
             await service.login_email("err@example.com", "Pass1234!")
+
+
+class TestBootstrapAdmin:
+    """P0: bootstrap_admin fonctionne (double bug corrige)."""
+
+    async def test_bootstrap_creates_admin(
+        self, auth_db: Database, auth_settings: Settings,
+    ) -> None:
+        """POST /admin/bootstrap avec token valide cree un admin."""
+        identity = IdentityService(db=auth_db)
+        await identity.start()
+        mail = MailProvider(smtp_host="", smtp_port=0, mail_from="t@t.com")
+        auth = AuthService(
+            db=auth_db, identity=identity, mail=mail, settings=auth_settings,
+        )
+        await auth.start()
+
+        admin_svc = AdminService(
+            identity=identity,
+            auth=auth,
+            bootstrap_token="secret-boot-token",
+            jwt_secret=auth_settings.jwt_secret,
+        )
+
+        user = await admin_svc.bootstrap_admin(
+            "secret-boot-token", "admin@oria.gg", "AdminP4ss!",
+        )
+        assert user is not None
+        assert user.role == UserRole.ADMIN
+
+    async def test_bootstrap_invalid_token(
+        self, auth_db: Database, auth_settings: Settings,
+    ) -> None:
+        """Token invalide -> None (403 cote route)."""
+        identity = IdentityService(db=auth_db)
+        await identity.start()
+        mail = MailProvider(smtp_host="", smtp_port=0, mail_from="t@t.com")
+        auth = AuthService(
+            db=auth_db, identity=identity, mail=mail, settings=auth_settings,
+        )
+        await auth.start()
+
+        admin_svc = AdminService(
+            identity=identity,
+            auth=auth,
+            bootstrap_token="secret-boot-token",
+            jwt_secret=auth_settings.jwt_secret,
+        )
+
+        user = await admin_svc.bootstrap_admin(
+            "wrong-token", "admin@oria.gg", "AdminP4ss!",
+        )
+        assert user is None
+
+    async def test_bootstrap_empty_config(
+        self, auth_db: Database, auth_settings: Settings,
+    ) -> None:
+        """Token vide cote config -> None (403)."""
+        identity = IdentityService(db=auth_db)
+        await identity.start()
+        mail = MailProvider(smtp_host="", smtp_port=0, mail_from="t@t.com")
+        auth = AuthService(
+            db=auth_db, identity=identity, mail=mail, settings=auth_settings,
+        )
+        await auth.start()
+
+        admin_svc = AdminService(
+            identity=identity,
+            auth=auth,
+            bootstrap_token="",
+            jwt_secret=auth_settings.jwt_secret,
+        )
+
+        user = await admin_svc.bootstrap_admin(
+            "anything", "admin@oria.gg", "AdminP4ss!",
+        )
+        assert user is None

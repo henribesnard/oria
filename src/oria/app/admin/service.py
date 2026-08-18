@@ -28,10 +28,12 @@ class AdminService:
         identity: IdentityService,
         auth: AuthService,
         bootstrap_token: str = "",
+        jwt_secret: str = "",
     ) -> None:
         self._identity = identity
         self._auth = auth
         self._bootstrap_token = bootstrap_token
+        self._jwt_secret = jwt_secret
 
     async def start(self) -> None:
         logger.info("admin service ready")
@@ -65,8 +67,10 @@ class AdminService:
         # Trouver le user_id depuis le token
         from oria.app.auth.security import decode_access_token
 
-        payload = decode_access_token(tokens.access_token, self._auth._settings.jwt_secret)
-        user_id = payload.get("sub", "")
+        payload = decode_access_token(
+            tokens.access_token, secret=self._jwt_secret,
+        )
+        user_id = str(payload.get("sub", ""))
         if not user_id:
             return None
 
