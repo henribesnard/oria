@@ -25,10 +25,13 @@ from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel
 
 from oria.adapters.web.dependencies import get_current_user
+from oria.adapters.web.dto import AdminUserResponse
 
 if TYPE_CHECKING:
     from oria.app.admin.service import AdminService
+    from oria.app.auth.service import AuthService
     from oria.app.entitlements.service import Entitlements
+    from oria.app.identity.models import User
     from oria.kernel.health import HealthRegistry
     from oria.monitoring.collector import Collector
     from oria.providers.apifootball.client import ApiFootballClient
@@ -43,6 +46,7 @@ _collector: Collector | None = None
 _apifootball: ApiFootballClient | None = None
 _admin_service: AdminService | None = None
 _entitlements_service: Entitlements | None = None
+_auth_service: AuthService | None = None
 
 
 def init_admin_routes(
@@ -54,10 +58,12 @@ def init_admin_routes(
     apifootball: ApiFootballClient | None = None,
     admin_service: AdminService | None = None,
     entitlements_service: Entitlements | None = None,
+    auth_service: AuthService | None = None,
 ) -> None:
     """Câble les dépendances admin depuis le conteneur."""
     global _admin_token, _jwt_secret, _health_registry  # noqa: PLW0603
     global _collector, _apifootball, _admin_service, _entitlements_service  # noqa: PLW0603
+    global _auth_service  # noqa: PLW0603
     _admin_token = admin_token
     _jwt_secret = jwt_secret
     _health_registry = health_registry
@@ -65,6 +71,7 @@ def init_admin_routes(
     _apifootball = apifootball
     _admin_service = admin_service
     _entitlements_service = entitlements_service
+    _auth_service = auth_service
 
 
 def _check_token(authorization: str | None) -> None:
@@ -246,6 +253,23 @@ async def admin_update_entitlements(
 # ---------------------------------------------------------------------------
 
 
+async def _build_admin_user_response(account: User) -> AdminUserResponse:
+    """Construit un AdminUserResponse à partir du modèle interne + email lookup."""
+    email: str | None = None
+    if _auth_service is not None:
+        email = await _auth_service.get_email_by_user_id(account.id)
+    return AdminUserResponse(
+        user_id=account.id,
+        email=email,
+        role=account.role,
+        display_name=account.display_name,
+        status=account.status,
+        locale=account.locale,
+        timezone=account.timezone,
+        created_at=account.created_at,
+    )
+
+
 @router.get("/users")
 async def admin_list_users(
     offset: int = 0,
@@ -258,8 +282,12 @@ async def admin_list_users(
         raise HTTPException(status_code=503, detail="admin service not available")
     users = await _admin_service.list_users(offset=offset, limit=limit)
     count = await _admin_service.user_count()
+    user_dtos = []
+    for u in users:
+        dto = await _build_admin_user_response(u)
+        user_dtos.append(dto.model_dump())
     return {
-        "users": [u.model_dump() for u in users],
+        "users": user_dtos,
         "total": count,
         "offset": offset,
         "limit": limit,
@@ -278,7 +306,7 @@ async def admin_get_user(
     target = await _admin_service.get_user(user_id)
     if target is None:
         raise HTTPException(status_code=404, detail="user not found")
-    return target.model_dump()
+    return (await _build_admin_user_response(target)).model_dump()
 
 
 class UserUpdateRequest(BaseModel):
@@ -303,7 +331,7 @@ async def admin_update_user(
     updated = await _admin_service.update_user(user_id, **fields)
     if updated is None:
         raise HTTPException(status_code=404, detail="user not found")
-    return updated.model_dump()
+    return (await _build_admin_user_response(updated)).model_dump()
 
 
 class BootstrapRequest(BaseModel):
@@ -322,4 +350,5 @@ async def admin_bootstrap(req: BootstrapRequest) -> dict[str, Any]:
     )
     if admin_user is None:
         raise HTTPException(status_code=403, detail="invalid bootstrap token")
-    return {"status": "admin_created", "user": admin_user.model_dump()}
+    user_dto = await _build_admin_user_response(admin_user)
+    return {"status": "admin_created", "user": user_dto.model_dump()}

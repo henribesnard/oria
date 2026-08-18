@@ -206,6 +206,15 @@ class AuthService:
         if session is not None:
             await self._repo.revoke_session(session.id)
 
+    # -- email lookup --
+
+    async def get_email_by_user_id(self, user_id: str) -> str | None:
+        """Renvoie l'email associé à un user_id, ou None."""
+        cred = await self._repo.get_credential_by_user(user_id)
+        if cred is None:
+            return None
+        return cred.email
+
     # -- internals --
 
     async def _create_token_pair(

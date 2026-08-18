@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from oria.core.orchestrator import Orchestrator
 from oria.core.pipeline import Pipeline
 from oria.core.prerouter import PreRouter

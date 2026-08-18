@@ -8,6 +8,7 @@ from fastapi import FastAPI
 
 if TYPE_CHECKING:
     from oria.app.admin.service import AdminService
+    from oria.app.auth.service import AuthService
     from oria.app.entitlements.service import Entitlements
     from oria.monitoring.collector import Collector
     from oria.providers.apifootball.client import ApiFootballClient
@@ -126,7 +127,7 @@ def init_web(
     if auth_service is not None:
         init_auth_routes(auth_service)
     if identity_service is not None:
-        init_account_routes(identity_service)
+        init_account_routes(identity_service, auth_service)
     if billing_service is not None:
         init_billing_routes(billing_service, entitlements_service)
     if follow_service is not None:
@@ -141,4 +142,5 @@ def init_web(
         apifootball=cast("ApiFootballClient | None", apifootball),
         admin_service=cast("AdminService | None", admin_service),
         entitlements_service=cast("Entitlements | None", entitlements_service),
+        auth_service=cast("AuthService | None", auth_service),
     )

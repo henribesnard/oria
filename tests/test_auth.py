@@ -5,7 +5,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
+from fastapi.testclient import TestClient
 
+from oria.adapters.web.account_routes import init_account_routes
+from oria.adapters.web.app import app
+from oria.adapters.web.dependencies import init_dependencies
 from oria.app.admin.service import AdminService
 from oria.app.auth.service import AuthService
 from oria.app.identity.models import UserRole
@@ -100,7 +104,7 @@ class TestSessionPersistence:
         # Fermer la base pour provoquer une erreur SQL sur create_session
         await auth_db.stop()
 
-        with pytest.raises(Exception):
+        with pytest.raises((RuntimeError, OSError, ValueError)):
             await service.login_email("err@example.com", "Pass1234!")
 
 
@@ -179,3 +183,45 @@ class TestBootstrapAdmin:
             "anything", "admin@oria.gg", "AdminP4ss!",
         )
         assert user is None
+
+
+class TestMeEndpointContract:
+    """P0: GET /me retourne user_id et email alignes avec le frontend."""
+
+    async def test_me_returns_user_id_and_email(
+        self, auth_db: Database, auth_settings: Settings,
+    ) -> None:
+        """GET /me doit retourner user_id (pas id) et email."""
+        identity = IdentityService(db=auth_db)
+        await identity.start()
+        mail = MailProvider(smtp_host="", smtp_port=0, mail_from="t@t.com")
+        auth = AuthService(
+            db=auth_db, identity=identity, mail=mail, settings=auth_settings,
+        )
+        await auth.start()
+
+        # Wire up the web layer
+        init_dependencies(
+            jwt_secret=auth_settings.jwt_secret,
+            auth_service=auth,
+            identity_service=identity,
+        )
+        init_account_routes(identity, auth)
+
+        # Register a user to get a valid access token
+        pair = await auth.register_email("me@example.com", "Pass1234!")
+
+        client = TestClient(app)
+        resp = client.get(
+            "/me",
+            headers={"Authorization": f"Bearer {pair.access_token}"},
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+
+        # Contract: frontend expects user_id and email
+        assert "user_id" in data
+        assert "email" in data
+        assert data["email"] == "me@example.com"
+        # Must NOT have bare 'id' key (old model leak)
+        assert "id" not in data

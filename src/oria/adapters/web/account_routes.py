@@ -2,22 +2,49 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from oria.adapters.web.dependencies import get_current_user
+from oria.adapters.web.dto import MeResponse
+
+if TYPE_CHECKING:
+    from oria.app.auth.service import AuthService
+    from oria.app.identity.models import User
 
 router = APIRouter(prefix="/me", tags=["account"])
 
 # Injecté au démarrage
 _identity_service: Any = None
+_auth_service: AuthService | None = None
 
 
-def init_account_routes(identity_service: object) -> None:
-    global _identity_service  # noqa: PLW0603
+def init_account_routes(
+    identity_service: object,
+    auth_service: object | None = None,
+) -> None:
+    global _identity_service, _auth_service  # noqa: PLW0603
     _identity_service = identity_service
+    _auth_service = auth_service  # type: ignore[assignment]
+
+
+async def _build_me_response(account: User) -> MeResponse:
+    """Construit un MeResponse à partir du modèle interne + email lookup."""
+    email: str | None = None
+    if _auth_service is not None:
+        email = await _auth_service.get_email_by_user_id(account.id)
+    return MeResponse(
+        user_id=account.id,
+        email=email,
+        role=account.role,
+        display_name=account.display_name,
+        status=account.status,
+        locale=account.locale,
+        timezone=account.timezone,
+        created_at=account.created_at,
+    )
 
 
 class UpdateProfileRequest(BaseModel):
@@ -38,8 +65,7 @@ async def get_profile(user: dict[str, str] = Depends(get_current_user)) -> dict[
     account = await _identity_service.get(user["user_id"])
     if account is None:
         raise HTTPException(status_code=404, detail="account not found")
-    result: dict[str, Any] = account.model_dump()
-    return result
+    return (await _build_me_response(account)).model_dump()
 
 
 @router.patch("")
@@ -53,8 +79,7 @@ async def update_profile(
     account = await _identity_service.update_profile(user["user_id"], **fields)
     if account is None:
         raise HTTPException(status_code=404, detail="account not found")
-    result: dict[str, Any] = account.model_dump()
-    return result
+    return (await _build_me_response(account)).model_dump()
 
 
 @router.delete("")
