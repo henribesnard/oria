@@ -64,12 +64,7 @@ class DeepSeekProvider:
         use_model = model or self._model_fast
 
         if self._client is None:
-            # Mode stub — retourne une réponse simulée
-            return {
-                "choices": [
-                    {"message": {"role": "assistant", "content": "(stub LLM response)"}}
-                ],
-            }
+            raise RuntimeError("LLM client not initialized")
 
         kwargs: dict[str, Any] = {
             "model": use_model,
@@ -94,7 +89,7 @@ class DeepSeekProvider:
         use_model = model or self._model_fast
 
         if self._client is None:
-            return
+            raise RuntimeError("LLM client not initialized")
 
         kwargs: dict[str, Any] = {
             "model": use_model,

@@ -118,7 +118,7 @@ async def _stream_process(
                 return
 
     # Orchestrator streaming
-    if orchestrator is not None and orchestrator._llm is not None:
+    if orchestrator is not None and orchestrator.is_llm_ready():
         full_text = await _stream_orchestrator(
             req, orchestrator, conversation_history,
         )

@@ -77,13 +77,17 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
 
     # --- Modules optionnels : providers ---
     llm: DeepSeekProvider | None = None
-    if settings.enable_llm:
+    if settings.enable_llm and settings.deepseek_api_key:
         llm = DeepSeekProvider(
             api_key=settings.deepseek_api_key,
             model_fast=settings.llm_model_fast,
             model_deep=settings.llm_model_deep,
         )
         container.add(llm)
+    elif settings.enable_llm:
+        logger.warning(
+            "ENABLE_LLM=true but DEEPSEEK_API_KEY is empty — LLM disabled"
+        )
 
     apifootball: ApiFootballClient | None = None
     if settings.apifootball_key:

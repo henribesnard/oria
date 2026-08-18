@@ -61,6 +61,10 @@ class Orchestrator:
         avail = Availability.UP if self._llm is not None else Availability.DOWN
         return ModuleStatus(name=self.name, availability=avail)
 
+    def is_llm_ready(self) -> bool:
+        """Indique si le LLM est disponible (methode publique, pas d'acces _llm externe)."""
+        return self._llm is not None
+
     async def run(
         self,
         req: IncomingRequest,
