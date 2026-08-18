@@ -17,7 +17,6 @@ import json
 import time
 from pathlib import Path
 from typing import Any
-from unittest.mock import AsyncMock
 
 import httpx
 import pytest
@@ -27,9 +26,9 @@ from oria.config import Settings
 from oria.core.pipeline import Pipeline
 from oria.core.prerouter import PreRouter
 from oria.core.synthesis import Synthesis
-from oria.kernel.errors import CircuitOpenError, QuotaExhaustedError
+from oria.kernel.errors import CircuitOpenError
 from oria.kernel.models import Context, IncomingRequest
-from oria.kernel.resilience import CircuitBreaker, get_breaker, _breakers
+from oria.kernel.resilience import CircuitBreaker
 from oria.providers.apifootball.client import ApiFootballClient
 from oria.providers.apifootball.governor import Governor
 from oria.providers.apifootball.mapper import map_fixtures
@@ -82,7 +81,7 @@ class _Timer:
     def __init__(self) -> None:
         self.elapsed_ms: float = 0.0
 
-    def __enter__(self) -> "_Timer":
+    def __enter__(self) -> _Timer:
         self._start = time.perf_counter()
         return self
 

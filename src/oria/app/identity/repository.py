@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import time
 import uuid
 from typing import TYPE_CHECKING
@@ -97,15 +98,11 @@ class IdentityRepository:
             "follows", "notification_settings",
             "conversations", "active_context",
         ):
-            try:
+            with contextlib.suppress(Exception):  # noqa: BLE001
                 await self._db.conn.execute(f"DELETE FROM {table} WHERE user_id = ?", (user_id,))  # noqa: S608
-            except Exception:  # noqa: BLE001
-                pass  # Table n'existe pas encore
         # Purger l'ancienne table users (userstore)
-        try:
+        with contextlib.suppress(Exception):  # noqa: BLE001
             await self._db.conn.execute("DELETE FROM users WHERE user_id = ?", (user_id,))
-        except Exception:  # noqa: BLE001
-            pass
         await self._db.conn.commit()
 
     async def list_users(

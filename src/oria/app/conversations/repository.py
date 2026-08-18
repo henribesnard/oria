@@ -72,8 +72,10 @@ class ConversationRepository:
         now = time.time()
         ctx_json = ctx.model_dump_json()
         await self._db.conn.execute(
-            "INSERT INTO active_context (user_id, context, updated_at) VALUES (?, ?, ?) "
-            "ON CONFLICT(user_id) DO UPDATE SET context=excluded.context, updated_at=excluded.updated_at",
+            "INSERT INTO active_context (user_id, context, updated_at) "
+            "VALUES (?, ?, ?) "
+            "ON CONFLICT(user_id) DO UPDATE SET "
+            "context=excluded.context, updated_at=excluded.updated_at",
             (user_id, ctx_json, now),
         )
         await self._db.conn.commit()

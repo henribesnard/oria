@@ -5,11 +5,11 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from oria.app.identity.models import User, UserRole
 from oria.app.identity.repository import IdentityRepository
 from oria.kernel.health import Availability, ModuleStatus
 
 if TYPE_CHECKING:
+    from oria.app.identity.models import User, UserRole
     from oria.storage.db import Database
 
 logger = logging.getLogger(__name__)

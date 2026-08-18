@@ -65,7 +65,11 @@ class DeepSeekProvider:
 
         if self._client is None:
             # Mode stub — retourne une réponse simulée
-            return {"choices": [{"message": {"role": "assistant", "content": "(stub LLM response)"}}]}
+            return {
+                "choices": [
+                    {"message": {"role": "assistant", "content": "(stub LLM response)"}}
+                ],
+            }
 
         kwargs: dict[str, Any] = {
             "model": use_model,

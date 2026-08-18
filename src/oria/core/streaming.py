@@ -4,25 +4,27 @@ from __future__ import annotations
 
 import json
 import logging
-from typing import TYPE_CHECKING, Any, AsyncIterator
+from typing import TYPE_CHECKING, Any
 
 from oria.app.entitlements.models import DecisionKind
+from oria.core.prerouter import _ACK_RE, _GREETING_RE, _HELP_RE
 from oria.core.safety import (
     GAMBLING_HELP_RESPONSE,
     INJECTION_RESPONSE,
     detect_gambling_distress,
     detect_injection,
 )
-from oria.core.prerouter import _GREETING_RE, _ACK_RE, _HELP_RE
-from oria.kernel.models import IncomingRequest
 from oria.kernel.resilience import guard
 
 if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
+
     from oria.app.conversations.service import ConversationService
     from oria.app.entitlements.service import Entitlements
     from oria.core.orchestrator import Orchestrator
     from oria.core.prerouter import PreRouter
     from oria.core.synthesis import Synthesis
+    from oria.kernel.models import IncomingRequest
 
 logger = logging.getLogger(__name__)
 

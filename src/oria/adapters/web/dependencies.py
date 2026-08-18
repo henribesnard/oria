@@ -48,8 +48,8 @@ async def get_current_user(
 
     try:
         payload = jwt.decode(token, _jwt_secret, algorithms=["HS256"])
-    except jwt.PyJWTError:
-        raise HTTPException(status_code=401, detail="invalid token")
+    except jwt.PyJWTError as exc:
+        raise HTTPException(status_code=401, detail="invalid token") from exc
 
     user_id = payload.get("sub")
     role = payload.get("role", "user")

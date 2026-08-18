@@ -90,7 +90,10 @@ class Entitlements:
                 if tier == Tier.FREE:
                     return Decision(
                         kind=DecisionKind.UPGRADE_REQUIRED,
-                        reason=f"Quota atteint ({limits.chat_message} messages/jour). Passe en Premium pour continuer.",
+                        reason=(
+                            f"Quota atteint ({limits.chat_message} messages/jour). "
+                            "Passe en Premium pour continuer."
+                        ),
                         feature=feature,
                     )
                 return Decision(

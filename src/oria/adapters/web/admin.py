@@ -56,7 +56,8 @@ def init_admin_routes(
     entitlements_service: Entitlements | None = None,
 ) -> None:
     """Câble les dépendances admin depuis le conteneur."""
-    global _admin_token, _jwt_secret, _health_registry, _collector, _apifootball, _admin_service, _entitlements_service  # noqa: PLW0603
+    global _admin_token, _jwt_secret, _health_registry  # noqa: PLW0603
+    global _collector, _apifootball, _admin_service, _entitlements_service  # noqa: PLW0603
     _admin_token = admin_token
     _jwt_secret = jwt_secret
     _health_registry = health_registry

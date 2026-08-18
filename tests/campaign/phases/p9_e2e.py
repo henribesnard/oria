@@ -9,15 +9,17 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
 from oria.kernel.models import Context
-from tests.campaign.harness import Latencies, Probe
-from tests.campaign.recorder import Recorder
 from tests.campaign.report import CampaignMetrics, PhaseResult
 from tests.campaign.workloads import build_canonical
+
+if TYPE_CHECKING:
+    from tests.campaign.harness import Latencies, Probe
+    from tests.campaign.recorder import Recorder
 
 logger = logging.getLogger("p9")
 

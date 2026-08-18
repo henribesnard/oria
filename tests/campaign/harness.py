@@ -6,11 +6,13 @@ import logging
 import math
 import time
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from oria.core.pipeline import Pipeline
 from oria.kernel.models import Context, IncomingRequest, Response
-from tests.campaign.recorder import Recorder
+
+if TYPE_CHECKING:
+    from oria.core.pipeline import Pipeline
+    from tests.campaign.recorder import Recorder
 
 logger = logging.getLogger(__name__)
 

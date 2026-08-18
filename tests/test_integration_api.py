@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import os
 import time
-from typing import Any
 
 import pytest
 
@@ -92,7 +91,7 @@ class _Timer:
     def __init__(self) -> None:
         self.elapsed_ms: float = 0.0
 
-    def __enter__(self) -> "_Timer":
+    def __enter__(self) -> _Timer:
         self._start = time.perf_counter()
         return self
 
@@ -345,10 +344,10 @@ class TestIntegrationGovernor:
     ) -> None:
         """Le negative cache s'active quand l'API retourne 0 résultat."""
         # Ligue inexistante
-        raw = await client.fetch("/fixtures", {"league": "99999", "season": str(SEASON)})
+        await client.fetch("/fixtures", {"league": "99999", "season": str(SEASON)})
         calls_after_first = client.governor.calls_today
         # 2ème appel : doit être servi par le negative cache
-        raw2 = await client.fetch("/fixtures", {"league": "99999", "season": str(SEASON)})
+        await client.fetch("/fixtures", {"league": "99999", "season": str(SEASON)})
         assert client.governor.calls_today == calls_after_first  # pas d'appel supplémentaire
 
 
@@ -380,7 +379,7 @@ class TestIntegrationLatence:
         avg = sum(latencies) / len(latencies)
         assert avg < 2000, (
             f"Latence moyenne {avg:.0f} ms — seuil 2000 ms\n"
-            f"Détail : {[f'{l:.0f}ms' for l in latencies]}"
+            f"Détail : {[f'{lat_val:.0f}ms' for lat_val in latencies]}"
         )
 
         # Aucun appel ne doit dépasser 5 secondes

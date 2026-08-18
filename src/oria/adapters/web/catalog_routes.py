@@ -58,7 +58,8 @@ def init_catalog_routes(
     live: object | None = None,
     squad: object | None = None,
 ) -> None:
-    global _leagues_repo, _standings_repo, _teams_repo, _players_repo, _fixtures_repo, _live_repo, _squad_repo  # noqa: PLW0603
+    global _leagues_repo, _standings_repo, _teams_repo  # noqa: PLW0603
+    global _players_repo, _fixtures_repo, _live_repo, _squad_repo  # noqa: PLW0603
     _leagues_repo = leagues
     _standings_repo = standings
     _teams_repo = teams
@@ -179,14 +180,20 @@ async def list_fixtures(
     # Validation date_from / date_to
     if date_from or date_to:
         if not (date_from and date_to):
-            raise HTTPException(status_code=422, detail="date_from et date_to sont requis ensemble")
+            raise HTTPException(
+                status_code=422,
+                detail="date_from et date_to sont requis ensemble",
+            )
         if not (_DATE_RE.match(date_from) and _DATE_RE.match(date_to)):
-            raise HTTPException(status_code=422, detail="Format de date invalide (YYYY-MM-DD attendu)")
+            raise HTTPException(
+                status_code=422,
+                detail="Format de date invalide (YYYY-MM-DD attendu)",
+            )
         try:
             dt_from = datetime.strptime(date_from, "%Y-%m-%d")
             dt_to = datetime.strptime(date_to, "%Y-%m-%d")
-        except ValueError:
-            raise HTTPException(status_code=422, detail="Date invalide")
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail="Date invalide") from exc
         if (dt_to - dt_from) > timedelta(days=60):
             raise HTTPException(status_code=422, detail="Fenêtre de dates limitée à 60 jours")
 

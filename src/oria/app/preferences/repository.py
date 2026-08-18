@@ -26,7 +26,8 @@ class PreferencesRepository:
         follow_id = uuid.uuid4().hex
         try:
             await self._db.conn.execute(
-                "INSERT INTO follows (id, user_id, entity_type, entity_id, entity_name, logo_url, created_at) "
+                "INSERT INTO follows "
+                "(id, user_id, entity_type, entity_id, entity_name, logo_url, created_at) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?)",
                 (follow_id, user_id, entity_type, entity_id, entity_name, logo_url, now),
             )

@@ -86,4 +86,4 @@ async def link_identity(
         await _identity_service.link(user["user_id"], req.provider, req.external_id)
         return {"status": "linked"}
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e

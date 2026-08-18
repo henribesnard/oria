@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
+from typing import TYPE_CHECKING
 
-from oria.kernel.models import Context
+if TYPE_CHECKING:
+    from oria.kernel.models import Context
 
 
-class Scope(str, Enum):
+class Scope(StrEnum):
     NONE = "none"
     LEAGUE = "league"
     TEAM = "team"

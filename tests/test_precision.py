@@ -15,7 +15,6 @@ import time
 from pathlib import Path
 from typing import Any
 
-import httpx
 import pytest
 import respx
 
@@ -31,10 +30,9 @@ from oria.providers.apifootball.mapper import (
     map_players,
     map_standings,
     map_statistics,
-    map_team_statistics,
     map_teams,
 )
-from oria.storage.cache import Cache, CacheEntry, VOLATILITY_TTL
+from oria.storage.cache import VOLATILITY_TTL, Cache, CacheEntry
 from oria.storage.db import Database
 
 # ---------------------------------------------------------------------------
@@ -379,7 +377,7 @@ class TestGovernorPrecision:
 
     def test_budget_decremente_un_par_un(self) -> None:
         gov = Governor(daily_budget=7500, rate_per_min=300)
-        for i in range(10):
+        for _i in range(10):
             gov.record_call()
         assert gov.calls_today == 10
         assert gov.remaining_budget == 7490

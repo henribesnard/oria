@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from oria.app.preferences.service import FollowService
     from oria.domain.live import LiveRepository
     from oria.kernel.events import EventBus
-    from oria.liveengine.poller import MatchPoller
 
 logger = logging.getLogger(__name__)
 

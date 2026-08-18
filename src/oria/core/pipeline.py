@@ -6,13 +6,13 @@ import logging
 from typing import TYPE_CHECKING
 
 from oria.app.entitlements.models import DecisionKind
+from oria.core.prerouter import _ACK_RE, _GREETING_RE, _HELP_RE
 from oria.core.safety import (
     GAMBLING_HELP_RESPONSE,
     INJECTION_RESPONSE,
     detect_gambling_distress,
     detect_injection,
 )
-from oria.core.prerouter import _GREETING_RE, _ACK_RE, _HELP_RE
 from oria.kernel.health import Availability, ModuleStatus
 from oria.kernel.models import IncomingRequest, Response
 from oria.kernel.resilience import guard

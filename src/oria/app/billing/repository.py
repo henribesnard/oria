@@ -7,7 +7,6 @@ import uuid
 from typing import TYPE_CHECKING
 
 from oria.app.billing.models import (
-    BillingEvent,
     Subscription,
     SubscriptionStatus,
     Tier,

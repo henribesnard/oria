@@ -5,7 +5,10 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
-from typing import Any, AsyncIterator
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +25,11 @@ class SSEOutboundPort:
         if user_id not in self._connections:
             self._connections[user_id] = []
         self._connections[user_id].append(queue)
-        logger.debug("SSE subscriber added for user %s (total: %d)", user_id, len(self._connections[user_id]))
+        logger.debug(
+            "SSE subscriber added for user %s (total: %d)",
+            user_id,
+            len(self._connections[user_id]),
+        )
         return queue
 
     def unsubscribe(self, user_id: str, queue: asyncio.Queue[str]) -> None:
@@ -68,7 +75,7 @@ class SSEOutboundPort:
                 try:
                     event = await asyncio.wait_for(queue.get(), timeout=30)
                     yield event
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     # Heartbeat pour maintenir la connexion
                     yield ": heartbeat\n\n"
         finally:

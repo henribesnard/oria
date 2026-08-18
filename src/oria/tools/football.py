@@ -106,7 +106,10 @@ def register_football_tools(  # noqa: PLR0913
                 },
                 "fixture_id": {
                     "type": "integer",
-                    "description": "ID du match (pour un match spécifique, exclusif des autres paramètres)",
+                    "description": (
+                        "ID du match (pour un match spécifique, "
+                        "exclusif des autres paramètres)"
+                    ),
                 },
             },
         },

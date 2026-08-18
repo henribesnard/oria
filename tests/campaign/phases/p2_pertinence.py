@@ -12,15 +12,17 @@ Lancer : uv run pytest tests/campaign/phases/p2_pertinence.py -m integration -s
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
 from oria.kernel.models import Context
 from oria.providers.apifootball.mapper import map_fixtures, map_standings, map_top_scorers
 from tests.campaign.harness import Probe, reconcile_quota
-from tests.campaign.recorder import Recorder
 from tests.campaign.report import CampaignMetrics, PhaseResult
+
+if TYPE_CHECKING:
+    from tests.campaign.recorder import Recorder
 
 logger = logging.getLogger("p2")
 

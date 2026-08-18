@@ -116,7 +116,11 @@ class Orchestrator:
 
                     # Parser les arguments (le LLM peut halluciner)
                     try:
-                        fn_args = json.loads(fn_args_raw) if isinstance(fn_args_raw, str) else fn_args_raw
+                        fn_args = (
+                            json.loads(fn_args_raw)
+                            if isinstance(fn_args_raw, str)
+                            else fn_args_raw
+                        )
                     except json.JSONDecodeError:
                         logger.warning("LLM returned invalid JSON for tool %s", fn_name)
                         messages.append({

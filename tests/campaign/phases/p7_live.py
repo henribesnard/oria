@@ -8,13 +8,15 @@ Lancer : uv run pytest tests/campaign/phases/p7_live.py -m integration -m live -
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
 from oria.liveengine.engine import _MAX_CONCURRENT_POLLERS
-from tests.campaign.recorder import Recorder
 from tests.campaign.report import CampaignMetrics, PhaseResult
+
+if TYPE_CHECKING:
+    from tests.campaign.recorder import Recorder
 
 logger = logging.getLogger("p7")
 

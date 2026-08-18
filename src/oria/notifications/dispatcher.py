@@ -94,7 +94,7 @@ class NotificationDispatcher:
             return
 
         # Filter by follows — user must follow the relevant league/team
-        league_id = getattr(event, "league_id", 0)
+        getattr(event, "league_id", 0)
 
         for settings in subscribers:
             user_id = settings.user_id

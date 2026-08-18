@@ -117,8 +117,14 @@ class PreRouter:
                 text="Salut ! Je suis Oria, ton assistant football. "
                 "Comment puis-je t'aider ?",
                 suggested_actions=[
-                    SuggestedAction(label="Classement Ligue 1", payload={"text": "classement ligue 1"}),
-                    SuggestedAction(label="Prochain match PSG", payload={"text": "prochain match du PSG"}),
+                    SuggestedAction(
+                        label="Classement Ligue 1",
+                        payload={"text": "classement ligue 1"},
+                    ),
+                    SuggestedAction(
+                        label="Prochain match PSG",
+                        payload={"text": "prochain match du PSG"},
+                    ),
                 ],
             )
 
@@ -210,7 +216,8 @@ class PreRouter:
             return await self._handle_team_info(req)
 
         # Famille C : scores en direct
-        if re.search(r"\b(en\s+direct|live|en\s+cours|score.+en\s+ce\s+moment)\b", text, re.IGNORECASE):
+        _live_pat = r"\b(en\s+direct|live|en\s+cours|score.+en\s+ce\s+moment)\b"
+        if re.search(_live_pat, text, re.IGNORECASE):
             return await self._handle_live(req)
 
         # Famille B : cotes
@@ -236,11 +243,26 @@ class PreRouter:
                 return Response(
                     text="De quel championnat veux-tu le classement ?",
                     suggested_actions=[
-                        SuggestedAction(label="Ligue 1", payload={"text": "classement ligue 1"}),
-                        SuggestedAction(label="Premier League", payload={"text": "classement Premier League"}),
-                        SuggestedAction(label="La Liga", payload={"text": "classement La Liga"}),
-                        SuggestedAction(label="Serie A", payload={"text": "classement Serie A"}),
-                        SuggestedAction(label="Bundesliga", payload={"text": "classement Bundesliga"}),
+                        SuggestedAction(
+                            label="Ligue 1",
+                            payload={"text": "classement ligue 1"},
+                        ),
+                        SuggestedAction(
+                            label="Premier League",
+                            payload={"text": "classement Premier League"},
+                        ),
+                        SuggestedAction(
+                            label="La Liga",
+                            payload={"text": "classement La Liga"},
+                        ),
+                        SuggestedAction(
+                            label="Serie A",
+                            payload={"text": "classement Serie A"},
+                        ),
+                        SuggestedAction(
+                            label="Bundesliga",
+                            payload={"text": "classement Bundesliga"},
+                        ),
                     ],
                 )
 
@@ -514,7 +536,10 @@ class PreRouter:
             return Response(
                 text="Aucun match en direct pour le moment.",
                 suggested_actions=[
-                    SuggestedAction(label="Prochains matchs", payload={"text": "prochains matchs"}),
+                    SuggestedAction(
+                        label="Prochains matchs",
+                        payload={"text": "prochains matchs"},
+                    ),
                 ],
             )
         except Exception:

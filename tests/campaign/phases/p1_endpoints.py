@@ -13,7 +13,7 @@ Lancer : uv run pytest tests/campaign/phases/p1_endpoints.py -m integration -s
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
@@ -31,8 +31,10 @@ from oria.providers.apifootball.mapper import (
     map_top_scorers,
 )
 from tests.campaign.harness import Latencies, reconcile_quota
-from tests.campaign.recorder import Recorder
 from tests.campaign.report import CampaignMetrics, PhaseResult
+
+if TYPE_CHECKING:
+    from tests.campaign.recorder import Recorder
 
 logger = logging.getLogger("p1")
 
@@ -70,7 +72,10 @@ class TestP1Endpoints:
         # Si la saison courante n'a pas encore de matchs joués, fallback season-1
         if raw.get("results", 0) == 0:
             logger.info("Aucun fixture last=5 pour saison %d, fallback %d", season, season - 1)
-            raw = await client.fetch("/fixtures", {"league": LIGUE_1, "season": season - 1, "last": 5})
+            raw = await client.fetch(
+                "/fixtures",
+                {"league": LIGUE_1, "season": season - 1, "last": 5},
+            )
 
         assert raw.get("results", 0) > 0, "Aucun résultat même avec fallback saison-1"
         mapped = map_fixtures(raw)

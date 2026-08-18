@@ -8,9 +8,9 @@ from typing import TYPE_CHECKING
 from oria.app.conversations.models import ConversationWindow, Turn
 from oria.app.conversations.repository import ConversationRepository
 from oria.kernel.health import Availability, ModuleStatus
-from oria.kernel.models import Context
 
 if TYPE_CHECKING:
+    from oria.kernel.models import Context
     from oria.storage.db import Database
 
 logger = logging.getLogger(__name__)

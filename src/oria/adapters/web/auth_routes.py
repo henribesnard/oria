@@ -53,7 +53,7 @@ async def register(req: RegisterRequest, request: Request) -> dict[str, Any]:
         result: dict[str, Any] = pair.model_dump()
         return result
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @router.post("/login")
@@ -69,7 +69,7 @@ async def login(req: LoginRequest, request: Request) -> dict[str, Any]:
         result: dict[str, Any] = pair.model_dump()
         return result
     except ValueError as e:
-        raise HTTPException(status_code=401, detail=str(e))
+        raise HTTPException(status_code=401, detail=str(e)) from e
 
 
 @router.post("/refresh")
@@ -81,7 +81,7 @@ async def refresh(req: RefreshRequest) -> dict[str, Any]:
         result: dict[str, Any] = pair.model_dump()
         return result
     except ValueError as e:
-        raise HTTPException(status_code=401, detail=str(e))
+        raise HTTPException(status_code=401, detail=str(e)) from e
 
 
 @router.post("/logout")
@@ -100,7 +100,7 @@ async def verify_email(token: str) -> dict[str, str]:
         await _auth_service.verify_email(token)
         return {"status": "verified"}
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @router.post("/reset")
@@ -120,7 +120,7 @@ async def confirm_reset(req: ResetConfirm) -> dict[str, str]:
         await _auth_service.reset_password(req.token, req.new_password)
         return {"status": "password_reset"}
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @router.get("/oauth/{provider}")
@@ -132,4 +132,4 @@ async def oauth_callback(provider: str, code: str) -> dict[str, Any]:
         result: dict[str, Any] = pair.model_dump()
         return result
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e

@@ -14,6 +14,7 @@ Budget estime : ~80-120 appels API (sur 7500/jour)
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import json
 import logging
 import time
@@ -409,14 +410,10 @@ async def campaign_env() -> tuple[Pipeline, ApiFootballClient, CampaignReport]:
     report.total_api_calls = client.governor.calls_today
 
     # Shutdown (ignore event loop closing errors on Windows)
-    try:
+    with contextlib.suppress(RuntimeError):
         await client.stop()
-    except RuntimeError:
-        pass
-    try:
+    with contextlib.suppress(RuntimeError):
         await db.stop()
-    except RuntimeError:
-        pass
 
 
 # ---------------------------------------------------------------------------
@@ -685,7 +682,11 @@ def _build_report(report: CampaignReport) -> str:
     lines.append("RESUME GLOBAL")
     lines.append("-" * 40)
     lines.append(f"  Questions testees      : {total}")
-    lines.append(f"  Succes                 : {successes} ({successes/total*100:.0f}%)" if total else "")
+    if total:
+        pct = successes / total * 100
+        lines.append(f"  Succes                 : {successes} ({pct:.0f}%)")
+    else:
+        lines.append("")
     lines.append(f"  Echecs                 : {failures}")
     lines.append(f"  Route prerouter        : {prerouter_count}")
     lines.append(f"  Route fallback         : {fallback_count}")

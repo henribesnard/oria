@@ -88,7 +88,11 @@ class IngestionScheduler:
                     await self._standings.get(f"league={league_id}", allow_stale=False)
                     logger.debug("ingested standings for league %d", league_id)
                 except Exception:
-                    logger.warning("standings ingestion failed for league %d", league_id, exc_info=True)
+                    logger.warning(
+                        "standings ingestion failed for league %d",
+                        league_id,
+                        exc_info=True,
+                    )
             self._last_standings = now
 
         # Fixtures refresh
@@ -98,7 +102,11 @@ class IngestionScheduler:
                     await self._fixtures.get(f"league={league_id}&next=10", allow_stale=False)
                     logger.debug("ingested fixtures for league %d", league_id)
                 except Exception:
-                    logger.warning("fixtures ingestion failed for league %d", league_id, exc_info=True)
+                    logger.warning(
+                        "fixtures ingestion failed for league %d",
+                        league_id,
+                        exc_info=True,
+                    )
             self._last_fixtures = now
 
         # Lineups (closer to match time, more frequent)
@@ -108,5 +116,9 @@ class IngestionScheduler:
                     await self._lineups.get(f"league={league_id}", allow_stale=False)
                     logger.debug("ingested lineups for league %d", league_id)
                 except Exception:
-                    logger.warning("lineups ingestion failed for league %d", league_id, exc_info=True)
+                    logger.warning(
+                        "lineups ingestion failed for league %d",
+                        league_id,
+                        exc_info=True,
+                    )
             self._last_lineups = now

@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import contextlib
 import logging
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
@@ -33,6 +32,9 @@ from tests.campaign.harness import Latencies, Probe
 from tests.campaign.recorder import Recorder, install_recorder
 from tests.campaign.report import CampaignMetrics, create_run_dir
 from tests.campaign.seasons import resolve_current_season
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(name)s | %(message)s")
 logger = logging.getLogger("campaign")

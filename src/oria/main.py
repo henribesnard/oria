@@ -6,6 +6,7 @@ import asyncio
 import contextlib
 import logging
 from functools import partial
+from typing import TYPE_CHECKING
 
 from oria.app.admin.service import AdminService
 from oria.app.auth.service import AuthService
@@ -52,6 +53,11 @@ from oria.storage.userstore import UserStore
 from oria.tools.app_services import register_app_service_tools
 from oria.tools.football import register_football_tools
 from oria.tools.registry import ToolRegistry
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
+
+    from fastapi import FastAPI
 
 logger = logging.getLogger(__name__)
 
@@ -290,10 +296,8 @@ async def run_console(settings: Settings) -> None:
         await container.stop_all()
 
 
-def create_app() -> "FastAPI":
+def create_app() -> FastAPI:
     """Crée l'application FastAPI câblée — utilisée par uvicorn."""
-    from collections.abc import AsyncIterator
-
     from fastapi.middleware.cors import CORSMiddleware
 
     from oria.adapters.web.app import create_fastapi_app, init_web
@@ -304,7 +308,7 @@ def create_app() -> "FastAPI":
     container, pipeline = build_container(settings)
 
     @contextlib.asynccontextmanager
-    async def lifespan(_app: "FastAPI") -> AsyncIterator[None]:
+    async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         await container.start_all()
         init_web(
             health=container.health,
@@ -348,12 +352,6 @@ def create_app() -> "FastAPI":
     )
 
     return app
-
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from fastapi import FastAPI
 
 
 def main() -> None:

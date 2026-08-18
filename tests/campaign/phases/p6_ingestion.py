@@ -10,16 +10,18 @@ Lancer : uv run pytest tests/campaign/phases/p6_ingestion.py -m integration -s
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from oria.ingestion.scheduler import IngestionScheduler
 from oria.kernel.models import Context
-from tests.campaign.harness import Probe
-from tests.campaign.recorder import Recorder
 from tests.campaign.report import CampaignMetrics, PhaseResult
+
+if TYPE_CHECKING:
+    from tests.campaign.harness import Probe
+    from tests.campaign.recorder import Recorder
 
 logger = logging.getLogger("p6")
 

@@ -14,14 +14,16 @@ import contextlib
 import logging
 import random
 import time
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
 from oria.kernel.models import Context
 from tests.campaign.harness import Latencies, Probe, reconcile_quota
-from tests.campaign.recorder import Recorder
 from tests.campaign.report import CampaignMetrics, PhaseResult
+
+if TYPE_CHECKING:
+    from tests.campaign.recorder import Recorder
 
 logger = logging.getLogger("p10")
 

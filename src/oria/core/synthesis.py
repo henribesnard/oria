@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
 
 from oria.kernel.health import Availability, ModuleStatus
 from oria.kernel.models import Attachment, Response, SuggestedAction
