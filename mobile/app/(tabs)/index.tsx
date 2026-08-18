@@ -12,17 +12,12 @@ import { useChat, type Message } from '@/src/hooks/useChat';
 import {
   clearLevel,
   EMPTY_CONTEXT_STATE,
+  type ContextLabel,
   type ContextState,
   type Level,
 } from '@/src/lib/contextRules';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
-
-interface ContextLabel {
-  key: string;
-  label: string;
-  logo?: string;
-}
 
 export default function ChatScreen() {
   const insets = useSafeAreaInsets();

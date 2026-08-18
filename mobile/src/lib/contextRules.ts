@@ -34,6 +34,12 @@ export interface ContextState {
   labels: ContextLabels;
 }
 
+export interface ContextLabel {
+  key: string;
+  label: string;
+  logo?: string;
+}
+
 export type Level = 'none' | 'league' | 'fixture' | 'team' | 'player';
 
 // ---------------------------------------------------------------------------

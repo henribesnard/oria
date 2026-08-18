@@ -2,7 +2,7 @@ import { View, Text, TextInput, Pressable, Image, ScrollView, StyleSheet, Platfo
 import Svg, { Path } from 'react-native-svg';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
-import type { ContextLabel } from './ContextPicker';
+import type { ContextLabel } from '@/src/lib/contextRules';
 
 interface Props {
   value: string;
