@@ -170,6 +170,14 @@ class PreRouter:
         if re.search(r"\b(calendrier|programme|schedule)\b", text, re.IGNORECASE):
             return await self._handle_schedule(req)
 
+        # Famille A : statistiques du match (AVANT matchs génériques)
+        if re.search(
+            r"\bstats?\s+(?:du|de|d['']\s*)\s*match\b", text, re.IGNORECASE,
+        ):
+            result = await self._handle_match_statistics(req)
+            if result:
+                return result
+
         # Famille A : matchs (génériques)  [S2 : exclusion notif/analyse]
         if (
             re.search(r"\b(matchs?|fixtures?|rencontres?)\b", text, re.IGNORECASE)
@@ -200,8 +208,14 @@ class PreRouter:
         if re.search(r"\b(blessures?|injur|bless[eé]s?)\b", text, re.IGNORECASE):
             return await self._handle_injuries(req)
 
-        # Famille B : joueurs / stats
-        if re.search(r"\b(joueurs?|players?|effectif|stats?\b)", text, re.IGNORECASE):
+        # Famille B : "stats des joueurs" → orchestrateur (stats individuelles)
+        if re.search(r"\bstats?\b", text, re.IGNORECASE) and re.search(
+            r"\b(joueurs?|players?)\b", text, re.IGNORECASE,
+        ):
+            return None
+
+        # Famille B : joueurs / effectif (sans "stats")
+        if re.search(r"\b(joueurs?|players?|effectif)\b", text, re.IGNORECASE):
             return await self._handle_players(req)
 
         # Famille B : comparaison → orchestrateur (ne pas capturer en team_info)
@@ -219,6 +233,15 @@ class PreRouter:
         _live_pat = r"\b(en\s+direct|live|en\s+cours|score.+en\s+ce\s+moment)\b"
         if re.search(_live_pat, text, re.IGNORECASE):
             return await self._handle_live(req)
+
+        # Famille B : historique / h2h
+        if re.search(
+            r"\b(historique|h2h|face\s+[àa]\s+face|confrontations?\s+direct)",
+            text, re.IGNORECASE,
+        ):
+            result = await self._handle_h2h(req)
+            if result:
+                return result
 
         # Famille B : cotes
         if re.search(r"\b(cotes?|odds?|pronostics?)\b", text, re.IGNORECASE):
@@ -453,6 +476,57 @@ class PreRouter:
             logger.debug("prerouter match summary failed", exc_info=True)
         return None
 
+    async def _handle_match_statistics(self, req: IncomingRequest) -> Response | None:
+        """Statistiques de match (possession, tirs...) : exige fixture_id."""
+        if self._tools is None:
+            return None
+        if not req.context.fixture_id:
+            return None
+        try:
+            data = await self._tools.call(
+                "get_match_statistics",
+                {"fixture_id": req.context.fixture_id},
+            )
+            if data:
+                return Response(
+                    text="Voici les statistiques du match.",
+                    attachments=[Attachment(kind="table", data={"statistics": data})],
+                )
+        except Exception:
+            logger.debug("prerouter match statistics failed", exc_info=True)
+        return None
+
+    async def _resolve_team_from_text(self, text: str) -> int | None:
+        """Extrait un nom d'equipe du texte et tente de le resoudre en ID."""
+        if self._tools is None:
+            return None
+        m = re.search(
+            r"(?:de\s+l['']\s*|de\s+la\s+|du\s+|de\s+|d['']\s*)"
+            r"([A-Za-z\u00C0-\u024F][A-Za-z\u00C0-\u024F\s''\-]{1,25})",
+            text,
+            re.IGNORECASE,
+        )
+        if not m:
+            return None
+        candidate = m.group(1).strip().rstrip("?!.,;: ")
+        skip = {
+            "la", "le", "les", "un", "une", "des", "ce", "cette", "mon",
+            "football", "foot", "ligue", "saison", "match", "equipe", "joueur",
+        }
+        if candidate.lower() in skip or len(candidate) < 2:
+            return None
+        try:
+            data = await self._tools.call("get_team_info", {"search": candidate})
+            if data and isinstance(data, list) and len(data) > 0:
+                team = data[0]
+                tid = team.get("id") or team.get("team", {}).get("id")
+                if tid:
+                    logger.info("resolved team from text '%s' -> team_id=%s", candidate, tid)
+                    return int(tid)
+        except Exception:
+            logger.debug("team text resolution failed for '%s'", candidate, exc_info=True)
+        return None
+
     async def _handle_players(self, req: IncomingRequest) -> Response | None:
         if self._tools is None:
             return None
@@ -470,19 +544,24 @@ class PreRouter:
                         text="Voici les statistiques du joueur.",
                         attachments=[Attachment(kind="table", data={"players": data})],
                     )
-            elif req.context.team_id:
-                # Équipe sans joueur spécifique → effectif complet
+            else:
+                # Tenter de résoudre le nom d'équipe mentionné dans le texte.
+                # Cela corrige le cas "away" où le contexte porte le team_id
+                # de l'équipe domicile mais le texte nomme l'équipe extérieure.
+                team_id = await self._resolve_team_from_text(req.text)
+                if not team_id:
+                    team_id = req.context.team_id
+                if not team_id:
+                    # Pas de contexte suffisant → passer à l'orchestrateur
+                    return None
                 data = await self._tools.call(
-                    "get_squad", {"team_id": req.context.team_id},
+                    "get_squad", {"team_id": team_id},
                 )
                 if data:
                     return Response(
                         text="Voici l'effectif de l'équipe.",
                         attachments=[Attachment(kind="table", data={"squad": data})],
                     )
-            else:
-                # Pas de contexte suffisant → passer à l'orchestrateur
-                return None
         except Exception:
             logger.debug("prerouter players failed", exc_info=True)
         return None
@@ -502,6 +581,35 @@ class PreRouter:
                 )
         except Exception:
             logger.debug("prerouter team info failed", exc_info=True)
+        return None
+
+    async def _handle_h2h(self, req: IncomingRequest) -> Response | None:
+        """Confrontations directes : résout les 2 team_ids via fixture_id."""
+        if self._tools is None:
+            return None
+        if not req.context.fixture_id:
+            return None
+        try:
+            fixture_data = await self._tools.call(
+                "get_fixtures", {"fixture_id": req.context.fixture_id},
+            )
+            if not fixture_data or not isinstance(fixture_data, list):
+                return None
+            match = fixture_data[0]
+            home_id = match.get("home", {}).get("id")
+            away_id = match.get("away", {}).get("id")
+            if not home_id or not away_id:
+                return None
+            data = await self._tools.call(
+                "get_h2h", {"team_id_1": home_id, "team_id_2": away_id},
+            )
+            if data:
+                return Response(
+                    text="Voici les confrontations directes.",
+                    attachments=[Attachment(kind="table", data={"h2h": data})],
+                )
+        except Exception:
+            logger.debug("prerouter h2h failed", exc_info=True)
         return None
 
     async def _handle_live(self, req: IncomingRequest) -> Response | None:
