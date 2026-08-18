@@ -94,9 +94,10 @@ async def _stream_process(
         async with guard("stream_context", on_error=lambda: None):
             persisted = await conversations.get_context(req.user_id)
             ctx = req.context
-            merged = persisted.model_copy(
-                update={k: v for k, v in ctx.model_dump().items() if v is not None},
-            )
+            incoming_fields = {k: v for k, v in ctx.model_dump().items() if v is not None}
+            merged = persisted.model_copy(update=incoming_fields)
+            if incoming_fields:
+                await conversations.set_context(req.user_id, merged)
             req = req.model_copy(update={"context": merged})
 
             turns = await conversations.recent(req.user_id)

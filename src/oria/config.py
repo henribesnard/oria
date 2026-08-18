@@ -60,7 +60,7 @@ class Settings(BaseSettings):
     admin_bootstrap_token: str = ""
 
     # --- Quotas freemium ---
-    free_daily_messages: int = 999_999
+    free_daily_messages: int = 20
     premium_daily_messages: int = 999_999
     free_alerts: int = 1
     premium_alerts: int = 9999

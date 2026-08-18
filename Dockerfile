@@ -7,16 +7,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Installer les dépendances Python
+# Installer les dépendances Python (cache layer)
 COPY pyproject.toml ./
-RUN pip install --no-cache-dir . 2>/dev/null || true
-
-# Copier les sources
 COPY src/ src/
 COPY migrations/ migrations/
 
-# Installer le package en mode editable
-RUN pip install --no-cache-dir -e .
+RUN pip install --no-cache-dir .
 
 # Répertoire pour la base SQLite
 RUN mkdir -p /data

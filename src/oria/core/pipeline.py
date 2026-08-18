@@ -138,10 +138,12 @@ class Pipeline:
             return req
         persisted = await self._conversations.get_context(req.user_id)
         ctx = req.context
+        incoming_fields = {k: v for k, v in ctx.model_dump().items() if v is not None}
         # Le contexte de la requête a priorité sur le persistant
-        merged = persisted.model_copy(
-            update={k: v for k, v in ctx.model_dump().items() if v is not None},
-        )
+        merged = persisted.model_copy(update=incoming_fields)
+        # Persister le contexte fusionné si l'incoming en contenait
+        if incoming_fields:
+            await self._conversations.set_context(req.user_id, merged)
         return req.model_copy(update={"context": merged})
 
     async def _get_conversation_history(
