@@ -98,8 +98,8 @@ class AuthService:
             body=f"Clique sur ce lien pour vérifier ton email : /auth/verify?token={verify_token}",
         )
 
-        # Émettre les tokens
-        return self._create_token_pair(user.id, user.role)
+        # Emettre les tokens
+        return await self._create_token_pair(user.id, user.role)
 
     # -- login --
 
@@ -125,7 +125,7 @@ class AuthService:
             msg = "account not found"
             raise ValueError(msg)
 
-        return self._create_token_pair(
+        return await self._create_token_pair(
             user.id, user.role, ip=ip, user_agent=user_agent,
         )
 
@@ -175,7 +175,7 @@ class AuthService:
         # Stub : le code EST l'external_id
         external_id = code
         user = await self._identity.resolve_or_create(provider, external_id)
-        return self._create_token_pair(user.id, user.role)
+        return await self._create_token_pair(user.id, user.role)
 
     # -- refresh --
 
@@ -197,7 +197,7 @@ class AuthService:
             msg = "account not found"
             raise ValueError(msg)
 
-        return self._create_token_pair(user.id, user.role)
+        return await self._create_token_pair(user.id, user.role)
 
     # -- logout --
 
@@ -208,7 +208,7 @@ class AuthService:
 
     # -- internals --
 
-    def _create_token_pair(
+    async def _create_token_pair(
         self,
         user_id: str,
         role: str,
@@ -221,24 +221,13 @@ class AuthService:
         )
         refresh = generate_token()
 
-        # Créer la session de façon synchrone n'est pas possible,
-        # on utilise un pattern fire-and-forget via une coroutine interne
-        import asyncio
-
-        async def _save_session() -> None:
-            await self._repo.create_session(
-                user_id=user_id,
-                refresh_token_hash=hash_token(refresh),
-                ip=ip,
-                user_agent=user_agent,
-                ttl_days=self._refresh_ttl,
-            )
-
-        try:
-            loop = asyncio.get_running_loop()
-            loop.create_task(_save_session())
-        except RuntimeError:
-            pass
+        await self._repo.create_session(
+            user_id=user_id,
+            refresh_token_hash=hash_token(refresh),
+            ip=ip,
+            user_agent=user_agent,
+            ttl_days=self._refresh_ttl,
+        )
 
         return TokenPair(
             access_token=access,
