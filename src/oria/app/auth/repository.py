@@ -167,4 +167,5 @@ class AuthRepository:
             (now, row[0]),
         )
         await self._db.conn.commit()
-        return row[1]
+        user_id: str | None = row[1]
+        return user_id

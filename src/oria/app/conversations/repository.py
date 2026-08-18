@@ -42,7 +42,7 @@ class ConversationRepository:
         )
         rows = await cursor.fetchall()
         turns = []
-        for r in reversed(rows):  # Remettre dans l'ordre chronologique
+        for r in reversed(list(rows)):  # Remettre dans l'ordre chronologique
             meta = json.loads(r[4]) if r[4] else {}
             turns.append(Turn(
                 id=r[0], user_id=r[1], role=r[2],

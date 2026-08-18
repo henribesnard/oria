@@ -53,7 +53,8 @@ async def follow(
         user["user_id"], req.entity_type, req.entity_id, req.entity_name,
         logo_url=req.logo_url,
     )
-    return f.model_dump()
+    result: dict[str, Any] = f.model_dump()
+    return result
 
 
 @router.delete("")

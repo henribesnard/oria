@@ -34,7 +34,8 @@ async def get_subscription(
     if _billing_service is None:
         raise HTTPException(status_code=503, detail="billing not available")
     sub = await _billing_service.get_subscription(user["user_id"])
-    return sub.model_dump()
+    result: dict[str, Any] = sub.model_dump()
+    return result
 
 
 @router.post("/checkout")
@@ -78,4 +79,5 @@ async def get_usage(
     if _entitlements_service is None:
         raise HTTPException(status_code=503, detail="entitlements not available")
     snapshot = await _entitlements_service.usage(user["user_id"])
-    return snapshot.model_dump()
+    result: dict[str, Any] = snapshot.model_dump()
+    return result

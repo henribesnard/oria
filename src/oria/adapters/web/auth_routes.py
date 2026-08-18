@@ -50,7 +50,8 @@ async def register(req: RegisterRequest, request: Request) -> dict[str, Any]:
         pair = await _auth_service.register_email(
             req.email, req.password, locale=req.locale,
         )
-        return pair.model_dump()
+        result: dict[str, Any] = pair.model_dump()
+        return result
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -65,7 +66,8 @@ async def login(req: LoginRequest, request: Request) -> dict[str, Any]:
         pair = await _auth_service.login_email(
             req.email, req.password, ip=ip, user_agent=user_agent,
         )
-        return pair.model_dump()
+        result: dict[str, Any] = pair.model_dump()
+        return result
     except ValueError as e:
         raise HTTPException(status_code=401, detail=str(e))
 
@@ -76,7 +78,8 @@ async def refresh(req: RefreshRequest) -> dict[str, Any]:
         raise HTTPException(status_code=503, detail="auth not available")
     try:
         pair = await _auth_service.refresh(req.refresh_token)
-        return pair.model_dump()
+        result: dict[str, Any] = pair.model_dump()
+        return result
     except ValueError as e:
         raise HTTPException(status_code=401, detail=str(e))
 
@@ -126,6 +129,7 @@ async def oauth_callback(provider: str, code: str) -> dict[str, Any]:
         raise HTTPException(status_code=503, detail="auth not available")
     try:
         pair = await _auth_service.oauth_callback(provider, code)
-        return pair.model_dump()
+        result: dict[str, Any] = pair.model_dump()
+        return result
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

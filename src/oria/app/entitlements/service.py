@@ -56,14 +56,14 @@ class Entitlements:
 
     # -- Lecture / mise à jour des limites (pour le panel admin) --
 
-    def get_limits(self) -> dict[str, dict]:
+    def get_limits(self) -> dict[str, dict[str, object]]:
         """Renvoie les limites actuelles free et premium."""
         return {
             "free": self._free_limits.model_dump(),
             "premium": self._premium_limits.model_dump(),
         }
 
-    def update_limits(self, tier: str, **fields: object) -> dict:
+    def update_limits(self, tier: str, **fields: object) -> dict[str, object]:
         """Met à jour les limites d'un palier (free ou premium) à chaud."""
         if tier == "free":
             for k, v in fields.items():

@@ -2,9 +2,15 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any, cast
 
 from fastapi import FastAPI
+
+if TYPE_CHECKING:
+    from oria.app.admin.service import AdminService
+    from oria.app.entitlements.service import Entitlements
+    from oria.monitoring.collector import Collector
+    from oria.providers.apifootball.client import ApiFootballClient
 
 from oria.adapters.web.account_routes import init_account_routes
 from oria.adapters.web.account_routes import router as account_router
@@ -131,8 +137,8 @@ def init_web(
         admin_token=admin_token,
         jwt_secret=jwt_secret,
         health_registry=health,
-        collector=collector,
-        apifootball=apifootball,
-        admin_service=admin_service,
-        entitlements_service=entitlements_service,
+        collector=cast("Collector | None", collector),
+        apifootball=cast("ApiFootballClient | None", apifootball),
+        admin_service=cast("AdminService | None", admin_service),
+        entitlements_service=cast("Entitlements | None", entitlements_service),
     )

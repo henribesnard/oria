@@ -41,7 +41,8 @@ async def get_notification_settings(
     if _notif_settings_service is None:
         raise HTTPException(status_code=503, detail="service not available")
     ns = await _notif_settings_service.get(user["user_id"])
-    return ns.model_dump()
+    result: dict[str, Any] = ns.model_dump()
+    return result
 
 
 @router.patch("/notifications")
@@ -53,7 +54,8 @@ async def update_notification_settings(
         raise HTTPException(status_code=503, detail="service not available")
     fields = req.model_dump(exclude_none=True)
     ns = await _notif_settings_service.update(user["user_id"], **fields)
-    return ns.model_dump()
+    result: dict[str, Any] = ns.model_dump()
+    return result
 
 
 @router.delete("/conversations")

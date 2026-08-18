@@ -38,7 +38,8 @@ async def get_profile(user: dict[str, str] = Depends(get_current_user)) -> dict[
     account = await _identity_service.get(user["user_id"])
     if account is None:
         raise HTTPException(status_code=404, detail="account not found")
-    return account.model_dump()
+    result: dict[str, Any] = account.model_dump()
+    return result
 
 
 @router.patch("")
@@ -52,7 +53,8 @@ async def update_profile(
     account = await _identity_service.update_profile(user["user_id"], **fields)
     if account is None:
         raise HTTPException(status_code=404, detail="account not found")
-    return account.model_dump()
+    result: dict[str, Any] = account.model_dump()
+    return result
 
 
 @router.delete("")
@@ -69,7 +71,8 @@ async def list_identities(
 ) -> list[dict[str, str]]:
     if _identity_service is None:
         raise HTTPException(status_code=503, detail="service not available")
-    return await _identity_service.get_identities(user["user_id"])
+    identities: list[dict[str, str]] = await _identity_service.get_identities(user["user_id"])
+    return identities
 
 
 @router.post("/identities/link")

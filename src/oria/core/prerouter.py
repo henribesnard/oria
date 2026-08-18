@@ -95,7 +95,7 @@ class PreRouter:
                 tid = team.get("id") or team.get("team", {}).get("id")
                 if tid:
                     logger.info("prerouter resolved '%s' -> team_id=%s", candidate, tid)
-                    return tid
+                    return int(tid)
         except Exception:
             logger.debug("team resolution failed for '%s'", candidate, exc_info=True)
         return None

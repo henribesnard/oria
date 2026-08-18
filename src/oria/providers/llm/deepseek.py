@@ -76,7 +76,8 @@ class DeepSeekProvider:
             kwargs["tool_choice"] = "auto"
 
         response = await self._client.chat.completions.create(**kwargs)
-        return response.model_dump()
+        result: dict[str, Any] = response.model_dump()
+        return result
 
     async def complete_stream(
         self,
