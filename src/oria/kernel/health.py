@@ -15,6 +15,7 @@ class Availability(StrEnum):
     UP = "up"
     DEGRADED = "degraded"
     DOWN = "down"
+    DISABLED = "disabled"
 
 
 class ModuleStatus(BaseModel):

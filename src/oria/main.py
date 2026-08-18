@@ -38,8 +38,11 @@ from oria.domain.team_statistics import TeamStatisticsRepository
 from oria.domain.teams import TeamsRepository
 from oria.domain.top_players import TopAssistsRepository, TopScorersRepository
 from oria.ingestion.scheduler import IngestionScheduler
+from oria.kernel.health import Availability, ModuleStatus
 from oria.kernel.logging import setup_logging
+from oria.kernel.resilience import Supervisor
 from oria.liveengine.engine import LiveEngine
+from oria.monitoring.collector import Collector
 from oria.notifications.dispatcher import NotificationDispatcher
 from oria.notifications.outbound_email import EmailOutboundPort
 from oria.notifications.outbound_sse import SSEOutboundPort
@@ -213,36 +216,69 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     container.add(orchestrator)
     container.add(pipeline)
 
-    # --- Ingestion & Live (M13) ---
-    ingestion = IngestionScheduler(
-        follow_service=follow_service,
-        standings=standings,
-        fixtures=fixtures,
-        lineups=lineups,
-        event_bus=container.bus,
-    )
-    container.add(ingestion)
+    # --- Supervisor ---
+    supervisor = Supervisor()
+    container._supervisor = supervisor  # type: ignore[attr-defined]
 
-    live_engine = LiveEngine(
-        live_repo=live,
-        follow_service=follow_service,
-        event_bus=container.bus,
-    )
-    container.add(live_engine)
+    # --- Ingestion (M13) — gated by enable_ingestion ---
+    ingestion: IngestionScheduler | None = None
+    if settings.enable_ingestion:
+        ingestion = IngestionScheduler(
+            follow_service=follow_service,
+            standings=standings,
+            fixtures=fixtures,
+            lineups=lineups,
+            event_bus=container.bus,
+        )
+        container.add(ingestion)
+    else:
+        container.health.set(
+            ModuleStatus(name="ingestion", availability=Availability.DISABLED),
+        )
 
-    # --- Notifications (M14) ---
+    # --- Live (M13) — gated by enable_live ---
+    live_engine: LiveEngine | None = None
+    if settings.enable_live:
+        live_engine = LiveEngine(
+            live_repo=live,
+            follow_service=follow_service,
+            event_bus=container.bus,
+        )
+        container.add(live_engine)
+    else:
+        container.health.set(
+            ModuleStatus(name="liveengine", availability=Availability.DISABLED),
+        )
+
+    # --- Notifications (M14) — gated by enable_push ---
     sse_port = SSEOutboundPort()
     email_port = EmailOutboundPort(mail=mail)
-    notif_dispatcher = NotificationDispatcher(
-        event_bus=container.bus,
-        follow_service=follow_service,
-        notif_settings=notif_settings_service,
-        entitlements=entitlements,
-        email_port=email_port,
-        sse_port=sse_port,
-    )
-    container.add(notif_dispatcher)
+    if settings.enable_push:
+        notif_dispatcher = NotificationDispatcher(
+            event_bus=container.bus,
+            follow_service=follow_service,
+            notif_settings=notif_settings_service,
+            entitlements=entitlements,
+            email_port=email_port,
+            sse_port=sse_port,
+        )
+        container.add(notif_dispatcher)
+    else:
+        container.health.set(
+            ModuleStatus(name="notifications", availability=Availability.DISABLED),
+        )
     container._sse_port = sse_port  # type: ignore[attr-defined]
+
+    # --- Monitoring (M15) — gated by enable_monitoring ---
+    collector: Collector | None = None
+    if settings.enable_monitoring:
+        collector = Collector(
+            buffer_size=settings.trace_buffer_size,
+            stage_budget_ms=settings.stage_budget_ms,
+        )
+        container.add(collector)
+        container.bus.subscribe("span", collector.handle_span)
+    container._collector = collector  # type: ignore[attr-defined]
 
     # --- Admin (M16) ---
     admin_service = AdminService(
@@ -281,6 +317,8 @@ def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     container._live = live  # type: ignore[attr-defined]
     container._squad = squad  # type: ignore[attr-defined]
     container._apifootball = apifootball  # type: ignore[attr-defined]
+    container._ingestion = ingestion  # type: ignore[attr-defined]
+    container._live_engine = live_engine  # type: ignore[attr-defined]
 
     return container, pipeline
 
@@ -290,6 +328,16 @@ async def run_console(settings: Settings) -> None:
     container, pipeline = build_container(settings)
 
     await container.start_all()
+
+    # Spawn supervised background loops
+    supervisor: Supervisor = container._supervisor  # type: ignore[attr-defined]
+    ingestion: IngestionScheduler | None = container._ingestion  # type: ignore[attr-defined]
+    live_engine: LiveEngine | None = container._live_engine  # type: ignore[attr-defined]
+    if ingestion is not None:
+        supervisor.spawn("ingestion", ingestion.run_loop)
+    if live_engine is not None:
+        supervisor.spawn("liveengine", live_engine.run_loop)
+
     logger.info("Oria started (console mode)")
 
     from oria.adapters.console import ConsoleAdapter
@@ -298,6 +346,7 @@ async def run_console(settings: Settings) -> None:
     try:
         await console.run()
     finally:
+        await supervisor.stop_all()
         await container.stop_all()
 
 
@@ -315,6 +364,16 @@ def create_app() -> FastAPI:
     @contextlib.asynccontextmanager
     async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         await container.start_all()
+
+        # Spawn supervised background loops
+        supervisor: Supervisor = container._supervisor  # type: ignore[attr-defined]
+        ingestion: IngestionScheduler | None = container._ingestion  # type: ignore[attr-defined]
+        live_engine: LiveEngine | None = container._live_engine  # type: ignore[attr-defined]
+        if ingestion is not None:
+            supervisor.spawn("ingestion", ingestion.run_loop)
+        if live_engine is not None:
+            supervisor.spawn("liveengine", live_engine.run_loop)
+
         init_web(
             health=container.health,
             handle_message=pipeline.handle_message,
@@ -337,10 +396,12 @@ def create_app() -> FastAPI:
             squad_repo=container._squad,  # type: ignore[attr-defined]
             admin_token=settings.admin_token,
             admin_service=container._admin_service,  # type: ignore[attr-defined]
+            collector=container._collector,  # type: ignore[attr-defined]
             apifootball=container._apifootball,  # type: ignore[attr-defined]
         )
         logger.info("Oria web started")
         yield
+        await supervisor.stop_all()
         await container.stop_all()
         logger.info("Oria web stopped")
 
