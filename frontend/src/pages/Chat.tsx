@@ -23,12 +23,18 @@ function TickerCard({ fixture }: { fixture: Fixture }) {
       {isLive && (
         <span className="w-[6px] h-[6px] rounded-full bg-warning animate-[oria-pulse_1.5s_infinite] shrink-0" />
       )}
+      {fixture.home_logo && (
+        <img src={fixture.home_logo} alt="" className="w-4 h-4 object-contain shrink-0" />
+      )}
       <span className="font-semibold text-text-dark whitespace-nowrap">
         {fixture.home_team?.slice(0, 3).toUpperCase()}
       </span>
       <span className="font-mono font-bold text-text-strong">
         {fixture.score_home ?? 0} - {fixture.score_away ?? 0}
       </span>
+      {fixture.away_logo && (
+        <img src={fixture.away_logo} alt="" className="w-4 h-4 object-contain shrink-0" />
+      )}
       <span className="font-semibold text-text-dark whitespace-nowrap">
         {fixture.away_team?.slice(0, 3).toUpperCase()}
       </span>
