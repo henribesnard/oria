@@ -67,6 +67,11 @@ logger = logging.getLogger(__name__)
 
 def build_container(settings: Settings) -> tuple[Container, Pipeline]:
     """Instancie et câble tous les modules."""
+    if not settings.jwt_secret or settings.jwt_secret.startswith("change-me"):
+        logger.critical(
+            "JWT_SECRET is not configured (using insecure default). "
+            "Set a strong JWT_SECRET in your .env for production."
+        )
     container = Container(settings=settings)
 
     # --- Modules requis ---

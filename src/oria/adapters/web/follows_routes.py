@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
@@ -20,14 +20,14 @@ def init_follows_routes(follow_service: object) -> None:
 
 
 class FollowRequest(BaseModel):
-    entity_type: str  # league | team | player
+    entity_type: Literal["league", "team", "player"]
     entity_id: int
     entity_name: str = ""
     logo_url: str = ""
 
 
 class UnfollowRequest(BaseModel):
-    entity_type: str
+    entity_type: Literal["league", "team", "player"]
     entity_id: int
 
 

@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
@@ -74,13 +75,20 @@ async def chat_stream(
 
 @router.post("/public")
 async def chat_public(
+    request: Request,
     req: ChatRequest,
     user: dict[str, str] | None = Depends(optional_user),
 ) -> dict[str, Any]:
     """Chat public (user optionnel, limité par IP)."""
     if _handle_message is None:
         raise HTTPException(status_code=503, detail="service not ready")
-    user_id = user["user_id"] if user else "anonymous"
+    if user:
+        user_id = user["user_id"]
+    else:
+        # Use hashed IP for anonymous rate-limit isolation
+        client_ip = request.client.host if request.client else "unknown"
+        ip_hash = hashlib.sha256(client_ip.encode()).hexdigest()[:16]
+        user_id = f"anon:{ip_hash}"
     incoming = IncomingRequest(
         user_id=user_id,
         text=req.text,

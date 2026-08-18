@@ -56,6 +56,16 @@ async def get_current_user(
     if not user_id:
         raise HTTPException(status_code=401, detail="invalid token")
 
+    # Revalidate account status from DB (suspended/deleted users rejected)
+    if _identity_service is not None:
+        account = await _identity_service.get(str(user_id))
+        if account is None:
+            raise HTTPException(status_code=401, detail="account not found")
+        if account.status in ("suspended", "deleted"):
+            raise HTTPException(status_code=403, detail="account suspended")
+        # Use current role from DB, not stale JWT value
+        role = account.role
+
     return {"user_id": str(user_id), "role": str(role)}
 
 

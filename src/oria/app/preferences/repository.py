@@ -134,10 +134,14 @@ class PreferencesRepository:
         )
         await self._db.conn.commit()
 
+    _SUBSCRIBER_COLUMNS = frozenset({"prematch", "result", "lineup", "live_goal", "digest"})
+
     async def get_subscribers(self, event_type: str) -> list[NotificationSettings]:
         """Tous les users abonnés à un type d'événement."""
+        if event_type not in self._SUBSCRIBER_COLUMNS:
+            return []
         cursor = await self._db.conn.execute(
-            f"SELECT user_id, prematch, result, lineup, live_goal, digest, "  # noqa: S608
+            f"SELECT user_id, prematch, result, lineup, live_goal, digest, "
             f"quiet_start, quiet_end, timezone, updated_at "
             f"FROM notification_settings WHERE {event_type} = 1",
         )

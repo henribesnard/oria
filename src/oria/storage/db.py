@@ -35,6 +35,7 @@ class Database:
     async def start(self) -> None:
         self._conn = await aiosqlite.connect(self._db_path)
         await self._conn.execute("PRAGMA journal_mode=WAL")
+        await self._conn.execute("PRAGMA foreign_keys=ON")
         await self._run_migrations()
         logger.info("database ready", extra={"db_path": self._db_path})
 
