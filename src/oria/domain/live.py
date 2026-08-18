@@ -19,10 +19,14 @@ class LiveRepository(BaseRepository):
     async def _fetch(self, key: str) -> Any:  # noqa: ANN401
         if self._client is None:
             return None
-        # Pour le live, on utilise le paramètre live=all
-        params: dict[str, str] = {"live": "all"}
-        if key:
-            params["league"] = key
+        # Parse key prefix: "fixture:<id>" for a specific match, otherwise league filter
+        if key.startswith("fixture:"):
+            fixture_id = key.removeprefix("fixture:")
+            params: dict[str, str] = {"id": fixture_id, "live": "all"}
+        else:
+            params = {"live": "all"}
+            if key:
+                params["league"] = key
         raw = await self._client.fetch("/fixtures", params)
         result = map_fixtures(raw)
         return result if result else None

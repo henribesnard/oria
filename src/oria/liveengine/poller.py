@@ -48,7 +48,7 @@ class MatchPoller:
         if self._live_repo is None:
             return
 
-        data = await self._live_repo.get(str(self.fixture_id), allow_stale=False)
+        data = await self._live_repo.get(f"fixture:{self.fixture_id}", allow_stale=False)
         if not data:
             return
 
