@@ -42,6 +42,16 @@ _NOTIF_ANALYSIS_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Patterns qui contiennent "match" sans être un intent de liste de matchs.
+# Exclut : cotes pre-match, stats du match, plus fort avant le match, etc.
+_MATCH_MODIFIER_RE = re.compile(
+    r"\b(cotes?|odds?|pronostics?|"
+    r"plus\s+fort|comparer|comparaison|"
+    r"pre[- ]match|avant\s+le\s+match|"
+    r"stats?\s+(?:du|de|d['']\s*)\s*match)\b",
+    re.IGNORECASE,
+)
+
 
 class PreRouter:
     """Module optionnel : filtre les requetes triviales sans LLM."""
@@ -162,8 +172,11 @@ class PreRouter:
         if re.search(r"\b(dernier\s+r[eé]sultat|last\s+result)\b", text, re.IGNORECASE):
             return await self._handle_last_result(req)
 
-        # Famille A : forme récente
-        if re.search(r"\b(forme|form)\b", text, re.IGNORECASE):
+        # Famille A : forme récente (exclure analyse/résumé qui contiennent "forme")
+        if (
+            re.search(r"\b(forme|form)\b", text, re.IGNORECASE)
+            and not _NOTIF_ANALYSIS_RE.search(text)
+        ):
             return await self._handle_form(req)
 
         # Famille A : calendrier
@@ -178,10 +191,11 @@ class PreRouter:
             if result:
                 return result
 
-        # Famille A : matchs (génériques)  [S2 : exclusion notif/analyse]
+        # Famille A : matchs (génériques)  [S2 : exclusions notif/analyse/modifiers]
         if (
             re.search(r"\b(matchs?|fixtures?|rencontres?)\b", text, re.IGNORECASE)
             and not _NOTIF_ANALYSIS_RE.search(text)
+            and not _MATCH_MODIFIER_RE.search(text)
         ):
             return await self._handle_matches(req)
 
@@ -214,7 +228,14 @@ class PreRouter:
         ):
             return None
 
-        # Famille B : joueurs / effectif (sans "stats")
+        # Famille B : "joueurs à surveiller / clés" → orchestrateur (intent analytique)
+        if re.search(r"\b(joueurs?|players?)\b", text, re.IGNORECASE) and re.search(
+            r"\b(surveiller|[àa]\s+suivre|cl[eé]s?|importants?|danger)\b",
+            text, re.IGNORECASE,
+        ):
+            return None
+
+        # Famille B : joueurs / effectif (sans "stats" ni intent analytique)
         if re.search(r"\b(joueurs?|players?|effectif)\b", text, re.IGNORECASE):
             return await self._handle_players(req)
 
@@ -492,6 +513,12 @@ class PreRouter:
                     text="Voici les statistiques du match.",
                     attachments=[Attachment(kind="table", data={"statistics": data})],
                 )
+            # Données vides (match pas encore commencé) : message explicite
+            return Response(
+                text="Les statistiques de match (possession, tirs, passes…) "
+                "ne sont pas encore disponibles — elles seront publiées "
+                "après le coup d'envoi.",
+            )
         except Exception:
             logger.debug("prerouter match statistics failed", exc_info=True)
         return None
