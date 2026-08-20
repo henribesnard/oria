@@ -250,9 +250,12 @@ class PreRouter:
         if re.search(r"\b(infos?|informations?|qui\s+est)\b", text, re.IGNORECASE):
             return await self._handle_team_info(req)
 
-        # Famille C : scores en direct
+        # Famille C : scores en direct (exclure bilan/résumé/analyse → orchestrateur)
         _live_pat = r"\b(en\s+direct|live|en\s+cours|score.+en\s+ce\s+moment)\b"
-        if re.search(_live_pat, text, re.IGNORECASE):
+        if (
+            re.search(_live_pat, text, re.IGNORECASE)
+            and not _NOTIF_ANALYSIS_RE.search(text)
+        ):
             return await self._handle_live(req)
 
         # Famille B : historique / h2h
