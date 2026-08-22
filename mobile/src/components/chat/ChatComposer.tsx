@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable, Image, ScrollView, StyleSheet, Platform } from 'react-native';
+import { View, Text, TextInput, Pressable, Image, ScrollView, StyleSheet } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
@@ -47,7 +47,7 @@ export function ChatComposer({ value, onChangeText, onSend, sending, onOpenConte
           onChangeText={onChangeText}
           onSubmitEditing={canSend ? onSend : undefined}
           placeholder="Pose ta question…"
-          placeholderTextColor={colors.textDisabled}
+          placeholderTextColor={colors.textGhost}
           returnKeyType="send"
           style={styles.input}
           multiline={false}
@@ -58,7 +58,7 @@ export function ChatComposer({ value, onChangeText, onSend, sending, onOpenConte
           style={[styles.sendBtn, { backgroundColor: canSend ? colors.primary : colors.textGhost }]}
         >
           <Svg width={16} height={16} viewBox="0 0 24 24" fill="none">
-            <Path d="M5 12h13M12 5l7 7-7 7" stroke="#fff" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" />
+            <Path d="M5 12h13M12 5l7 7-7 7" stroke={colors.white} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" />
           </Svg>
         </Pressable>
       </View>
@@ -74,8 +74,8 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 12,
     paddingTop: 8,
-    paddingBottom: Platform.OS === 'ios' ? 12 : 12,
-    backgroundColor: Platform.OS === 'ios' ? 'rgba(246,246,251,0.9)' : colors.surface,
+    paddingBottom: 12,
+    backgroundColor: colors.bgElevated,
   },
   chipScroll: {
     marginBottom: 6,
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   chipText: {
     fontFamily: fonts.sansSemiBold,
     fontSize: 12,
-    color: colors.primaryHover,
+    color: colors.primaryText,
     maxWidth: 120,
   },
   chipRemove: {
@@ -118,18 +118,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#fff',
+    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.borderMuted,
-    borderRadius: Platform.OS === 'ios' ? 20 : 26,
+    borderColor: colors.cardBorder,
+    borderRadius: 22,
     paddingVertical: 6,
     paddingLeft: 6,
     paddingRight: 6,
-    shadowColor: 'rgba(38,32,74,0.2)',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 1,
-    shadowRadius: 18,
-    elevation: 4,
   },
   addBtn: {
     width: 32,
@@ -137,7 +132,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.borderStrong,
-    backgroundColor: colors.surfaceAlt,
+    backgroundColor: colors.bgSurface,
     alignItems: 'center',
     justifyContent: 'center',
   },

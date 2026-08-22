@@ -241,6 +241,115 @@ async def get_squad(team_id: int) -> list[dict[str, Any]]:
     return data if isinstance(data, list) else [data]
 
 
+@router.get("/search")
+async def search_catalog(
+    q: str = Query(min_length=2, max_length=100),
+) -> dict[str, Any]:
+    """Recherche unifiée sur ligues, équipes et joueurs (filtrage mémoire)."""
+    import unicodedata
+
+    def _norm(s: str) -> str:
+        return unicodedata.normalize("NFD", s).encode("ascii", "ignore").decode().lower()
+
+    query = _norm(q)
+    results: list[dict[str, Any]] = []
+
+    # --- Ligues ---
+    if _leagues_repo is not None:
+        try:
+            data = await _leagues_repo.get("current=true")
+            if data:
+                items = data if isinstance(data, list) else [data]
+                for item in items:
+                    league = item.get("league", item)
+                    country = item.get("country", {})
+                    name = league.get("name", "")
+                    country_name = country.get("name", "") if isinstance(country, dict) else str(country)
+                    if query in _norm(name) or query in _norm(country_name):
+                        results.append({
+                            "type": "league",
+                            "id": league.get("id"),
+                            "name": name,
+                            "logo": league.get("logo"),
+                            "country": country_name,
+                        })
+                        if len(results) >= 7:
+                            break
+        except Exception:
+            pass
+
+    # --- Équipes (top ligues uniquement pour perf) ---
+    if _teams_repo is not None:
+        season = _current_season()
+        team_count = 0
+        for lid in sorted(MAJOR_LEAGUE_IDS):
+            if team_count >= 7:
+                break
+            try:
+                data = await _teams_repo.get(f"league={lid}&season={season}")
+                if not data:
+                    continue
+                items = data if isinstance(data, list) else [data]
+                for item in items:
+                    team = item.get("team", item)
+                    name = team.get("name", "")
+                    if query in _norm(name):
+                        results.append({
+                            "type": "team",
+                            "id": team.get("id"),
+                            "name": name,
+                            "logo": team.get("logo"),
+                        })
+                        team_count += 1
+                        if team_count >= 7:
+                            break
+            except Exception:
+                continue
+
+    # --- Joueurs (recherche dans les squads en cache) ---
+    if _squad_repo is not None:
+        player_count = 0
+        for lid in sorted(MAJOR_LEAGUE_IDS):
+            if player_count >= 6:
+                break
+            if _teams_repo is None:
+                break
+            try:
+                season = _current_season()
+                tdata = await _teams_repo.get(f"league={lid}&season={season}")
+                if not tdata:
+                    continue
+                titems = tdata if isinstance(tdata, list) else [tdata]
+                for titem in titems:
+                    if player_count >= 6:
+                        break
+                    team = titem.get("team", titem)
+                    tid = team.get("id")
+                    if not tid:
+                        continue
+                    sdata = await _squad_repo.get(f"team={tid}")
+                    if not sdata:
+                        continue
+                    sitems = sdata if isinstance(sdata, list) else [sdata]
+                    for p in sitems:
+                        pname = p.get("name", "")
+                        if query in _norm(pname):
+                            results.append({
+                                "type": "player",
+                                "id": p.get("id"),
+                                "name": pname,
+                                "photo": p.get("photo"),
+                                "team": team.get("name"),
+                            })
+                            player_count += 1
+                            if player_count >= 6:
+                                break
+            except Exception:
+                continue
+
+    return {"results": results[:20]}
+
+
 def _flatten_fixture(fx: dict[str, Any]) -> dict[str, Any]:
     """Aplatit un fixture du mapper vers le format frontend."""
     home = fx.get("home", {})

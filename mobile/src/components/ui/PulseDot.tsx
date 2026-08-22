@@ -7,7 +7,7 @@ interface Props {
   color?: string;
 }
 
-export function PulseDot({ size = 6, color = '#E0782A' }: Props) {
+export function PulseDot({ size = 6, color = '#FF5340' }: Props) {
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
 

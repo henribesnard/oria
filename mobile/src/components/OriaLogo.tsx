@@ -5,7 +5,7 @@ interface Props {
   color?: string;
 }
 
-export function OriaLogo({ size = 40, color = '#5B4FD6' }: Props) {
+export function OriaLogo({ size = 40, color = '#8B7CFF' }: Props) {
   return (
     <Svg width={size} height={size} viewBox="0 0 40 40" fill="none">
       <Circle cx={20} cy={20} r={15.5} stroke={color} strokeWidth={2.8} />

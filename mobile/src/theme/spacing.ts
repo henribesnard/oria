@@ -14,11 +14,14 @@ export const spacing = {
 } as const;
 
 export const radius = {
-  sm: 7,
-  md: 10,
+  xs: 6,
+  sm: 8,
+  md: 11,
   lg: 14,
   xl: 16,
   '2xl': 18,
-  '3xl': 24,
+  '3xl': 20,
+  '4xl': 24,
+  '5xl': 28,
   full: 999,
 } as const;

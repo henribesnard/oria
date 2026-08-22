@@ -6,9 +6,9 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "oria",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
-      "backgroundColor": "#5B4FD6"
+      "backgroundColor": "#0B0A12"
     },
     "ios": {
       "supportsTablet": false,

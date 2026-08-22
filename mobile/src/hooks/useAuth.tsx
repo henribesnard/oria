@@ -147,7 +147,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!user && !guest && !inAuth) {
       router.replace('/(auth)/landing');
     } else if (user && inAuth) {
-      router.replace('/(tabs)');
+      router.replace('/(main)');
     }
   }, [user, guest, loading, segments, router]);
 

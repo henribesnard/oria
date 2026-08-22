@@ -17,7 +17,6 @@ interface Props {
 }
 
 export function MessageBubble({ role, text, streaming, degraded, suggested_actions, onSuggestedAction }: Props) {
-  // oriaMsgIn animation: fade + slide-up
   const translateY = useSharedValue(12);
   const opacity = useSharedValue(0);
 
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sans,
     fontSize: 14,
     lineHeight: 20,
-    color: '#fff',
+    color: colors.white,
   },
   assistantRow: {
     flexDirection: 'row',
@@ -105,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     backgroundColor: colors.primarySurface,
     borderWidth: 1,
-    borderColor: colors.borderAccent,
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 2,
@@ -117,9 +116,9 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   assistantBubble: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.borderLight,
+    borderColor: colors.cardBorder,
     borderRadius: 14,
     borderTopLeftRadius: 4,
     paddingVertical: 10,
@@ -129,7 +128,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sans,
     fontSize: 14,
     lineHeight: 21,
-    color: colors.textStrong,
+    color: colors.text,
   },
   suggestedRow: {
     flexDirection: 'row',
@@ -148,7 +147,7 @@ const styles = StyleSheet.create({
   suggestedText: {
     fontFamily: fonts.sansSemiBold,
     fontSize: 12,
-    color: colors.primaryHover,
+    color: colors.primaryText,
   },
   dotsRow: {
     flexDirection: 'row',

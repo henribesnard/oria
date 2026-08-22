@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet, Platform } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 
@@ -14,29 +14,19 @@ interface Props {
 }
 
 export function SegmentedControl({ tabs, selected, onSelect }: Props) {
-  if (Platform.OS === 'ios') {
-    return (
-      <View style={styles.iosContainer}>
-        {tabs.map(t => {
-          const active = t.key === selected;
-          return (
-            <Pressable key={t.key} onPress={() => onSelect(t.key)} style={[styles.iosTab, active && styles.iosTabActive]}>
-              <Text style={[styles.iosLabel, active && styles.iosLabelActive]}>{t.label}</Text>
-            </Pressable>
-          );
-        })}
-      </View>
-    );
-  }
-
-  // Android: underline tabs
   return (
-    <View style={styles.androidContainer}>
+    <View style={styles.container}>
       {tabs.map(t => {
         const active = t.key === selected;
         return (
-          <Pressable key={t.key} onPress={() => onSelect(t.key)} style={[styles.androidTab, active && styles.androidTabActive]}>
-            <Text style={[styles.androidLabel, active && styles.androidLabelActive]}>{t.label}</Text>
+          <Pressable
+            key={t.key}
+            onPress={() => onSelect(t.key)}
+            style={[styles.tab, active && styles.tabActive]}
+          >
+            <Text style={[styles.label, active && styles.labelActive]}>
+              {t.label}
+            </Text>
           </Pressable>
         );
       })}
@@ -45,67 +35,32 @@ export function SegmentedControl({ tabs, selected, onSelect }: Props) {
 }
 
 const styles = StyleSheet.create({
-  // iOS segmented control
-  iosContainer: {
+  container: {
     flexDirection: 'row',
-    gap: 2,
-    backgroundColor: '#E7E4F2',
-    borderRadius: 9,
+    gap: 3,
+    backgroundColor: colors.bgElevated,
+    borderRadius: 13,
     padding: 3,
-    marginHorizontal: 14,
-    marginTop: 10,
-    marginBottom: 6,
   },
-  iosTab: {
+  tab: {
     flex: 1,
-    paddingVertical: 6,
-    borderRadius: 7,
+    paddingVertical: 8,
+    borderRadius: 11,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'transparent',
   },
-  iosTabActive: {
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.12,
-    shadowRadius: 3,
-    elevation: 2,
+  tabActive: {
+    backgroundColor: colors.primaryDark,
+    borderColor: colors.primary,
   },
-  iosLabel: {
+  label: {
     fontFamily: fonts.sansSemiBold,
     fontSize: 12.5,
-    color: colors.textLabel,
+    color: colors.textSubtle,
   },
-  iosLabelActive: {
-    color: colors.text,
-  },
-
-  // Android underline tabs
-  androidContainer: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    marginTop: 2,
-    marginBottom: 6,
-    paddingHorizontal: 8,
-  },
-  androidTab: {
-    flex: 1,
-    paddingVertical: 11,
-    alignItems: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: 'transparent',
-  },
-  androidTabActive: {
-    borderBottomColor: colors.primary,
-  },
-  androidLabel: {
+  labelActive: {
+    color: colors.primaryText,
     fontFamily: fonts.sansBold,
-    fontSize: 12.5,
-    letterSpacing: 0.3,
-    textTransform: 'uppercase',
-    color: colors.textMuted,
-  },
-  androidLabelActive: {
-    color: colors.primary,
   },
 });

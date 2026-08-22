@@ -1,56 +1,58 @@
 export const colors = {
-  // Primary
-  primary: '#5B4FD6',
-  primaryHover: '#4A3FC0',
-  primaryLight: '#7A5CE0',
-  primaryMuted: '#9C90F5',
-  primarySoft: '#8B82D8',
-  primarySurface: '#EEEDFA',
+  // ── Backgrounds (layers, du plus profond au plus élevé) ─────────────
+  bg: '#0B0A12',
+  bgElevated: '#0F0D18',
+  bgSurface: '#15131F',
 
-  // Surfaces
-  surface: '#F6F6FB',
-  surfaceCard: '#FFFFFF',
-  surfaceAlt: '#FBFBFE',
-  surfaceLight: '#F8F7FD',
-  surfaceHover: '#F5F4FC',
-  surfaceMuted: '#F3F2F9',
+  // ── Cards / surfaces interactives ───────────────────────────────────
+  card: '#1B1826',
+  cardMuted: '#15131F',
+  cardBorder: '#262233',
+  cardBorderStrong: '#2C2840',
 
-  // Borders
-  border: '#E9E7F2',
-  borderLight: '#EDEBF6',
-  borderMuted: '#E4E1F0',
-  borderStrong: '#E1DEF0',
-  borderFocus: '#DED9FA',
-  borderAccent: '#C9C3EC',
-  borderSubtle: '#F0EEF8',
+  // ── Primary (violet clair — CTA, sélections actives) ────────────────
+  primary: '#8B7CFF',
+  primaryHover: '#7A6BEE',
+  primaryMuted: '#6B5CD4',
+  primaryDark: '#2B2547',
+  primarySurface: '#2B2547',
+  primaryText: '#B9AEFF',
 
-  // Text
-  textStrong: '#221E33',
-  text: '#191526',
-  textDark: '#3F3B54',
-  textSecondary: '#605C74',
-  textMuted: '#86829A',
-  textDisabled: '#A5A0BC',
-  textFaint: '#B4AFCA',
-  textGhost: '#C6C1DC',
-  textLabel: '#6B6684',
-  textPale: '#9A95B0',
-  textSubtle: '#8B85A6',
+  // ── Text (du plus fort au plus discret) ─────────────────────────────
+  text: '#F4F3F8',
+  textSecondary: '#DCD8EC',
+  textMuted: '#B6B0CC',
+  textSubtle: '#8C86A6',
+  textDisabled: '#7A7492',
+  textGhost: '#6E6889',
+  textFaint: '#4E4864',
 
-  // Semantic
-  success: '#3B9B6E',
-  successLight: '#B9E4D0',
+  // ── Borders ─────────────────────────────────────────────────────────
+  border: '#262233',
+  borderLight: '#1D1A28',
+  borderStrong: '#2C2840',
+  borderFocus: '#8B7CFF',
+
+  // ── Live / temps réel ───────────────────────────────────────────────
+  live: '#FF5340',
+  liveLight: '#FF8574',
+  liveSurface: '#100D1C',
+
+  // ── Semantic ────────────────────────────────────────────────────────
+  success: '#2E7D5B',
+  successLight: '#4FC48A',
   warning: '#E0782A',
-  warningDark: '#C4691F',
-  warningLight: '#FBEEE2',
   danger: '#D5443B',
+  dangerLight: '#FF5340',
 
-  // Backgrounds
-  background: '#EEECF4',
-  backgroundGradientStart: '#F3F1FA',
-  backgroundGradientEnd: '#EAE8F2',
+  // ── Formes / résultats ──────────────────────────────────────────────
+  formWin: '#2E7D5B',
+  formDraw: '#6B6488',
+  formLoss: '#A33B2C',
 
-  // App chrome
-  dark: '#0E0B18',
-  darkAlt: '#2A2540',
+  // ── Utility ─────────────────────────────────────────────────────────
+  white: '#FFFFFF',
+  black: '#000000',
+  overlay: 'rgba(11,10,18,0.7)',
+  overlayLight: 'rgba(11,10,18,0.4)',
 } as const;

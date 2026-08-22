@@ -57,13 +57,13 @@ export default function ForgotPassword() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.surface },
+  container: { flex: 1, backgroundColor: colors.bg },
   content: { flexGrow: 1 },
   body: { flex: 1, paddingHorizontal: 24, paddingTop: 16 },
   backBtn: { marginBottom: 16 },
   backText: { fontFamily: fonts.sansSemiBold, fontSize: 14, color: colors.primary },
   title: { fontFamily: fonts.serif, fontSize: 30, color: colors.text, marginBottom: 4 },
   subtitle: { fontFamily: fonts.sans, fontSize: 14, color: colors.textMuted, marginBottom: 22 },
-  successBox: { backgroundColor: '#F0FDF4', borderWidth: 1, borderColor: '#BBF7D0', borderRadius: 12, padding: 16 },
-  successText: { fontFamily: fonts.sans, fontSize: 14, color: colors.success, lineHeight: 20 },
+  successBox: { backgroundColor: 'rgba(46,125,91,0.12)', borderWidth: 1, borderColor: 'rgba(46,125,91,0.3)', borderRadius: 12, padding: 16 },
+  successText: { fontFamily: fonts.sans, fontSize: 14, color: colors.successLight, lineHeight: 20 },
 });

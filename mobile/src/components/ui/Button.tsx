@@ -1,6 +1,7 @@
-import { Pressable, Text, StyleSheet, Platform, type ViewStyle, ActivityIndicator } from 'react-native';
+import { Pressable, Text, StyleSheet, type ViewStyle, ActivityIndicator } from 'react-native';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
+import { radius } from '@/src/theme/spacing';
 
 interface Props {
   label: string;
@@ -30,7 +31,7 @@ export function Button({ label, onPress, variant = 'primary', disabled, loading,
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={isPrimary ? '#fff' : colors.primary} size="small" />
+        <ActivityIndicator color={isPrimary ? colors.bg : colors.primary} size="small" />
       ) : (
         <Text style={[
           styles.label,
@@ -49,21 +50,16 @@ const styles = StyleSheet.create({
   base: {
     width: '100%',
     paddingVertical: 14,
-    borderRadius: Platform.OS === 'ios' ? 13 : 24,
+    borderRadius: radius['5xl'],
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 48,
   },
   primary: {
     backgroundColor: colors.primary,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.4,
-    shadowRadius: 24,
-    elevation: 8,
   },
   secondary: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.cardMuted,
     borderWidth: 1,
     borderColor: colors.borderStrong,
   },
@@ -75,13 +71,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   primaryLabel: {
-    color: '#fff',
+    color: colors.bg,
   },
   secondaryLabel: {
-    color: colors.textStrong,
+    color: colors.text,
   },
   ghostLabel: {
-    color: colors.textMuted,
+    color: colors.textSubtle,
     fontSize: 13,
     fontFamily: fonts.sansSemiBold,
   },

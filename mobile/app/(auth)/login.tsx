@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, Pressable, ScrollView, StyleSheet, Platform, Alert } from 'react-native';
+import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '@/src/hooks/useAuth';
@@ -93,7 +93,7 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.surface },
+  container: { flex: 1, backgroundColor: colors.bg },
   content: { flexGrow: 1 },
   body: { flex: 1, paddingHorizontal: 24, paddingTop: 16 },
   backBtn: { marginBottom: 16 },
@@ -109,17 +109,17 @@ const styles = StyleSheet.create({
     gap: 9,
     borderWidth: 1,
     borderColor: colors.borderStrong,
-    backgroundColor: '#fff',
+    backgroundColor: colors.card,
     paddingVertical: 12,
-    borderRadius: Platform.OS === 'ios' ? 12 : 24,
+    borderRadius: 14,
   },
   oauthGlyph: { fontFamily: fonts.monoBold, fontWeight: '700', color: colors.primary },
-  oauthLabel: { fontFamily: fonts.sansSemiBold, fontSize: 14, color: colors.textStrong },
+  oauthLabel: { fontFamily: fonts.sansSemiBold, fontSize: 14, color: colors.text },
   divider: { flexDirection: 'row', alignItems: 'center', gap: 12, marginVertical: 18 },
   dividerLine: { flex: 1, height: 1, backgroundColor: colors.border },
   dividerText: { fontFamily: fonts.sans, fontSize: 12, color: colors.textDisabled },
-  errorBox: { backgroundColor: '#FEF2F2', borderWidth: 1, borderColor: '#FECACA', borderRadius: 10, padding: 12, marginBottom: 12 },
-  errorText: { fontFamily: fonts.sans, fontSize: 13, color: colors.danger },
+  errorBox: { backgroundColor: 'rgba(213,68,59,0.12)', borderWidth: 1, borderColor: 'rgba(213,68,59,0.3)', borderRadius: 10, padding: 12, marginBottom: 12 },
+  errorText: { fontFamily: fonts.sans, fontSize: 13, color: colors.dangerLight },
   forgotBtn: { alignSelf: 'center', paddingTop: 14 },
   forgotText: { fontFamily: fonts.sansSemiBold, fontSize: 13, color: colors.primary },
   footer: { flexDirection: 'row', justifyContent: 'center', paddingVertical: 12 },

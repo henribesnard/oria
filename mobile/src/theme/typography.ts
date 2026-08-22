@@ -28,4 +28,4 @@ export const fontSize = {
   '7xl': 44,
 } as const;
 
-export const buttonRadius = Platform.OS === 'ios' ? 13 : 24;
+export const buttonRadius = 14;

@@ -1,6 +1,7 @@
-import { View, Text, TextInput, StyleSheet, Platform, type TextInputProps } from 'react-native';
+import { View, Text, TextInput, StyleSheet, type TextInputProps } from 'react-native';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
+import { radius } from '@/src/theme/spacing';
 
 interface Props extends TextInputProps {
   label: string;
@@ -11,7 +12,7 @@ export function Input({ label, ...rest }: Props) {
     <View style={styles.wrapper}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
-        placeholderTextColor={colors.textDisabled}
+        placeholderTextColor={colors.textGhost}
         style={styles.input}
         autoCapitalize="none"
         {...rest}
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: fonts.sansSemiBold,
     fontSize: 12.5,
-    color: colors.textDark,
+    color: colors.textMuted,
     marginBottom: 6,
   },
   input: {
@@ -35,11 +36,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 13,
     borderWidth: 1,
-    borderColor: colors.borderStrong,
-    borderRadius: Platform.OS === 'ios' ? 12 : 10,
+    borderColor: colors.border,
+    borderRadius: radius.md,
     fontFamily: fonts.sans,
     fontSize: 14,
     color: colors.text,
-    backgroundColor: colors.surfaceAlt,
+    backgroundColor: colors.bgSurface,
   },
 });

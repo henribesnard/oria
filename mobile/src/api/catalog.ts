@@ -113,3 +113,20 @@ export async function listFixtures(opts?: {
 export async function getSquad(teamId: number): Promise<Player[]> {
   return api.get<Player[]>(`/catalog/squad?team_id=${teamId}`);
 }
+
+export interface SearchResult {
+  type: 'league' | 'team' | 'player';
+  id: number;
+  name: string;
+  logo?: string;
+  photo?: string;
+  country?: string;
+  team?: string;
+}
+
+export async function searchCatalog(query: string): Promise<SearchResult[]> {
+  const res = await api.get<{ results: SearchResult[] }>(
+    `/catalog/search?q=${encodeURIComponent(query)}`,
+  );
+  return res.results;
+}

@@ -8,9 +8,9 @@ import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 
 const features: [string, string][] = [
-  ['Données fraîches, fraîcheur affichée', '#3B9B6E'],
-  ['Scores en direct sur tes équipes', '#E0782A'],
-  ['Contexte cascadant, jamais imposé', '#5B4FD6'],
+  ['Données fraîches, fraîcheur affichée', '#4FC48A'],
+  ['Scores en direct sur tes équipes', '#FF8574'],
+  ['Contexte cascadant, jamais imposé', '#8B7CFF'],
 ];
 
 const STATS = [
@@ -21,7 +21,7 @@ const STATS = [
 
 const SHOWCASE = [
   { title: 'Sélecteur de contexte', desc: 'Choisis ligue, équipe ou joueur pour cadrer ta question.', color: colors.primary },
-  { title: 'Fraîcheur des données', desc: 'Chaque réponse affiche quand les données ont été mises à jour.', color: colors.success },
+  { title: 'Fraîcheur des données', desc: 'Chaque réponse affiche quand les données ont été mises à jour.', color: colors.successLight },
   { title: 'Cotes & tendances', desc: 'Analyse avancée avec les cotes et les tendances de forme.', color: colors.warning },
 ];
 
@@ -102,7 +102,7 @@ export default function Landing() {
         <View style={[styles.ctas, { paddingBottom: insets.bottom + 16 }]}>
           <Button label="Créer un compte" onPress={() => router.push('/(auth)/register')} />
           <Button label="J'ai déjà un compte" variant="secondary" onPress={() => router.push('/(auth)/login')} />
-          <Button label="Explorer sans compte" variant="ghost" onPress={() => { enterGuest(); router.replace('/(tabs)'); }} />
+          <Button label="Explorer sans compte" variant="ghost" onPress={() => { enterGuest(); router.replace('/(main)'); }} />
         </View>
       </ScrollView>
     </View>
@@ -112,7 +112,7 @@ export default function Landing() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.bg,
   },
   scroll: {
     paddingTop: 20,
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 18,
-    backgroundColor: colors.primarySurface,
+    backgroundColor: colors.primaryDark,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   featureText: {
     fontFamily: fonts.sansMedium,
     fontSize: 13.5,
-    color: colors.textDark,
+    color: colors.text,
   },
   statsRow: {
     flexDirection: 'row',
@@ -169,9 +169,9 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.borderLight,
+    borderColor: colors.cardBorder,
     borderRadius: 14,
     paddingVertical: 14,
     alignItems: 'center',
@@ -195,9 +195,9 @@ const styles = StyleSheet.create({
   showcaseCard: {
     flexDirection: 'row',
     gap: 12,
-    backgroundColor: '#fff',
+    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.borderLight,
+    borderColor: colors.cardBorder,
     borderRadius: 14,
     padding: 14,
   },
@@ -243,14 +243,14 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 999,
-    backgroundColor: colors.primarySurface,
+    backgroundColor: colors.primaryDark,
     borderWidth: 1,
     borderColor: colors.borderFocus,
   },
   leagueChipText: {
     fontFamily: fonts.sansSemiBold,
     fontSize: 12,
-    color: colors.primaryHover,
+    color: colors.primaryText,
   },
   ctaSection: {
     paddingHorizontal: 26,
