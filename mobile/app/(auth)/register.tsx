@@ -25,8 +25,16 @@ export default function Register() {
     try {
       await register(email.trim(), password, name.trim() || undefined);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Erreur';
-      setError(msg.includes('409') ? 'Un compte existe déjà avec cet email' : msg);
+      const raw = err instanceof Error ? err.message : '';
+      if (raw.includes('409')) {
+        setError('Un compte existe déjà avec cet email');
+      } else if (raw.includes('500') || raw.includes('internal_error')) {
+        setError('Le serveur a rencontré un problème. Réessaie plus tard.');
+      } else if (raw.includes('Network') || raw.includes('fetch')) {
+        setError('Impossible de joindre le serveur. Vérifie ta connexion.');
+      } else {
+        setError('Erreur lors de la création du compte');
+      }
     } finally {
       setLoading(false);
     }

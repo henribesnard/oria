@@ -12,7 +12,17 @@ from oria.kernel.health import Availability, ModuleStatus
 
 logger = logging.getLogger(__name__)
 
-_MIGRATIONS_DIR = Path(__file__).resolve().parent.parent.parent.parent / "migrations"
+def _find_migrations_dir() -> Path:
+    """Resolve migrations dir: works both in dev (relative) and in Docker (installed)."""
+    dev = Path(__file__).resolve().parent.parent.parent.parent / "migrations"
+    if dev.exists():
+        return dev
+    installed = Path("/app/migrations")
+    if installed.exists():
+        return installed
+    return dev  # fallback (will be skipped if missing)
+
+_MIGRATIONS_DIR = _find_migrations_dir()
 
 
 class Database:

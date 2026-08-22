@@ -24,8 +24,16 @@ export default function Login() {
     try {
       await login(email.trim(), password);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Erreur de connexion';
-      setError(msg.includes('401') ? 'Email ou mot de passe incorrect' : msg);
+      const raw = err instanceof Error ? err.message : '';
+      if (raw.includes('401')) {
+        setError('Email ou mot de passe incorrect');
+      } else if (raw.includes('500') || raw.includes('internal_error')) {
+        setError('Le serveur a rencontré un problème. Réessaie plus tard.');
+      } else if (raw.includes('Network') || raw.includes('fetch')) {
+        setError('Impossible de joindre le serveur. Vérifie ta connexion.');
+      } else {
+        setError('Erreur de connexion');
+      }
     } finally {
       setLoading(false);
     }
