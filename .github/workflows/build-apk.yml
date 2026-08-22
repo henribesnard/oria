@@ -33,16 +33,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Build APK
-        run: eas build --platform android --profile preview --local --non-interactive --output ./oria.apk
+      - name: Generate native project
+        run: npx expo prebuild --platform android --no-install
         env:
           EXPO_PUBLIC_API_URL: https://oria.wezon.fr
+
+      - name: Build APK
+        run: cd android && ./gradlew assembleRelease --no-daemon
+        env:
+          EXPO_PUBLIC_API_URL: https://oria.wezon.fr
+
+      - name: Rename APK
+        run: |
+          APK=$(find android/app/build/outputs/apk/release -name '*.apk' | head -1)
+          cp "$APK" ./oria.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
