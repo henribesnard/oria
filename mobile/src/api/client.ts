@@ -1,7 +1,7 @@
-// API base URL — change to your backend address
-// For local dev with Expo Go on a physical device use your LAN IP (e.g. http://192.168.1.x:8000/api)
-// For simulator/emulator you can use http://localhost:8000/api (or 10.0.2.2 on Android)
-const API_BASE = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000/api';
+// API base URL — set via EXPO_PUBLIC_API_URL in .env
+// Production: https://oria.wezon.fr
+// Local dev: http://192.168.1.x:8000 (LAN IP) or http://10.0.2.2:8000 (Android emulator)
+const API_BASE = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000';
 
 class ApiClient {
   private token: string | null = null;
