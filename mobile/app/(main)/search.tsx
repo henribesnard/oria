@@ -1,12 +1,12 @@
-import { View, Text, FlatList, Pressable, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { useState, useRef, useCallback } from 'react';
+import { View, Text, FlatList, Image, Pressable, ActivityIndicator, TextInput, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
-import { SearchInput } from '@/src/components/ui/SearchInput';
-import { useSearch } from '@/src/hooks/useSearch';
+import { searchCatalog, type SearchResult } from '@/src/api/catalog';
+import { follow as addFollow } from '@/src/api/follows';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
-import type { SearchResult } from '@/src/api/catalog';
 
 const SHORTCUTS = [
   { label: 'Suivis', route: '/(main)/follows' },
@@ -15,24 +15,55 @@ const SHORTCUTS = [
   { label: 'Profil', route: '/(main)/profile' },
 ] as const;
 
-export default function PaletteScreen() {
+export default function SearchScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { query, results, loading, search, clear } = useSearch();
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [loading, setLoading] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
-  const hasResults = results.length > 0;
-  const showShortcuts = !query;
+  const handleSearch = useCallback((text: string) => {
+    setQuery(text);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (text.length < 2) { setResults([]); setLoading(false); return; }
+    setLoading(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const data = await searchCatalog(text);
+        setResults(data);
+      } catch { setResults([]); }
+      setLoading(false);
+    }, 300);
+  }, []);
+
+  const handleSelect = (r: SearchResult) => {
+    if (r.type === 'league') {
+      router.push({ pathname: '/(main)/chat', params: { prefill: `Infos sur ${r.name}` } });
+    } else if (r.type === 'team') {
+      router.push(`/(main)/team/${r.id}`);
+    } else if (r.type === 'player') {
+      router.push(`/(main)/player/${r.id}`);
+    }
+  };
+
+  const handleFollow = useCallback(async (r: SearchResult) => {
+    try {
+      await addFollow(r.type, r.id, r.name, r.logo ?? r.photo);
+    } catch { /* ignore */ }
+  }, []);
 
   const leagues = results.filter(r => r.type === 'league');
   const teams = results.filter(r => r.type === 'team');
   const players = results.filter(r => r.type === 'player');
 
   const sections: { title: string; data: SearchResult[] }[] = [];
-  if (leagues.length > 0) sections.push({ title: 'COMPÉTITIONS', data: leagues });
+  if (leagues.length > 0) sections.push({ title: 'COMPETITIONS', data: leagues });
   if (teams.length > 0) sections.push({ title: 'CLUBS', data: teams });
   if (players.length > 0) sections.push({ title: 'JOUEURS', data: players });
 
-  const flatData: ({ type: 'header'; title: string } | { type: 'result'; result: SearchResult })[] = [];
+  type FlatItem = { type: 'header'; title: string } | { type: 'result'; result: SearchResult };
+  const flatData: FlatItem[] = [];
   for (const s of sections) {
     flatData.push({ type: 'header', title: s.title });
     for (const r of s.data) {
@@ -40,15 +71,8 @@ export default function PaletteScreen() {
     }
   }
 
-  const handleSelect = (result: SearchResult) => {
-    if (result.type === 'league') {
-      router.push({ pathname: '/(main)/chat', params: { prefill: `Infos sur ${result.name}` } });
-    } else if (result.type === 'team') {
-      router.push(`/(main)/team/${result.id}`);
-    } else if (result.type === 'player') {
-      router.push(`/(main)/player/${result.id}`);
-    }
-  };
+  const hasResults = results.length > 0;
+  const showShortcuts = !query;
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
@@ -58,14 +82,15 @@ export default function PaletteScreen() {
             <Path d="M15 18l-6-6 6-6" stroke={colors.text} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
           </Svg>
         </Pressable>
-        <View style={styles.searchWrap}>
-          <SearchInput
-            value={query}
-            onChangeText={search}
-            placeholder="Rechercher…"
-            autoFocus
-          />
-        </View>
+        <TextInput
+          style={styles.searchInput}
+          value={query}
+          onChangeText={handleSearch}
+          placeholder="Rechercher..."
+          placeholderTextColor={colors.textGhost}
+          autoFocus
+          returnKeyType="search"
+        />
       </View>
 
       {loading && query.length >= 2 && (
@@ -77,7 +102,7 @@ export default function PaletteScreen() {
       {hasResults && (
         <FlatList
           data={flatData}
-          keyExtractor={(item, i) => item.type === 'header' ? `h-${item.title}` : `r-${(item as any).result.type}-${(item as any).result.id}`}
+          keyExtractor={(item, i) => item.type === 'header' ? `h-${item.title}` : `r-${(item as { type: 'result'; result: SearchResult }).result.type}-${(item as { type: 'result'; result: SearchResult }).result.id}`}
           renderItem={({ item }) => {
             if (item.type === 'header') {
               return <Text style={styles.sectionHeader}>{item.title}</Text>;
@@ -100,23 +125,26 @@ export default function PaletteScreen() {
                     <Text style={styles.resultSub} numberOfLines={1}>{r.country ?? r.team}</Text>
                   )}
                 </View>
+                <Pressable onPress={() => handleFollow(r)} style={styles.followBtn} hitSlop={8}>
+                  <Text style={styles.followBtnText}>Suivre</Text>
+                </Pressable>
               </Pressable>
             );
           }}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={[styles.list, { paddingBottom: insets.bottom + 20 }]}
           showsVerticalScrollIndicator={false}
         />
       )}
 
       {!loading && query.length >= 2 && !hasResults && (
         <View style={styles.empty}>
-          <Text style={styles.emptyText}>Aucun résultat pour « {query} »</Text>
+          <Text style={styles.emptyText}>Aucun resultat pour "{query}"</Text>
         </View>
       )}
 
       {showShortcuts && (
         <View style={styles.shortcuts}>
-          <Text style={styles.sectionHeader}>ALLER À</Text>
+          <Text style={styles.sectionHeader}>ALLER A</Text>
           {SHORTCUTS.map(s => (
             <Pressable key={s.label} style={styles.shortcutRow} onPress={() => router.push(s.route as any)}>
               <Text style={styles.shortcutText}>{s.label}</Text>
@@ -153,8 +181,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  searchWrap: {
+  searchInput: {
     flex: 1,
+    fontFamily: fonts.sans,
+    fontSize: 14,
+    color: colors.text,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
   loadingRow: {
     paddingVertical: 20,
@@ -162,7 +199,6 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingHorizontal: 16,
-    paddingBottom: 40,
   },
   sectionHeader: {
     fontFamily: fonts.mono,
@@ -214,6 +250,17 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sans,
     fontSize: 11.5,
     color: colors.textSubtle,
+  },
+  followBtn: {
+    backgroundColor: colors.primarySurface,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  followBtnText: {
+    fontFamily: fonts.sansSemiBold,
+    fontSize: 11,
+    color: colors.primary,
   },
   empty: {
     paddingVertical: 40,

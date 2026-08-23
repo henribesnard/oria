@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Pressable, ScrollView, Alert, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '@/src/hooks/useAuth';
+import { getErrorMessage } from '@/src/api/client';
 import { Input } from '@/src/components/ui/Input';
 import { Button } from '@/src/components/ui/Button';
 import { colors } from '@/src/theme/colors';
@@ -11,7 +12,7 @@ import { fonts } from '@/src/theme/typography';
 export default function Login() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { login } = useAuth();
+  const { login, oauthLogin } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -24,16 +25,7 @@ export default function Login() {
     try {
       await login(email.trim(), password);
     } catch (err: unknown) {
-      const raw = err instanceof Error ? err.message : '';
-      if (raw.includes('401')) {
-        setError('Email ou mot de passe incorrect');
-      } else if (raw.includes('500') || raw.includes('internal_error')) {
-        setError('Le serveur a rencontré un problème. Réessaie plus tard.');
-      } else if (raw.includes('Network') || raw.includes('fetch')) {
-        setError('Impossible de joindre le serveur. Vérifie ta connexion.');
-      } else {
-        setError('Erreur de connexion');
-      }
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -55,11 +47,11 @@ export default function Login() {
 
         {/* OAuth */}
         <View style={styles.oauthSection}>
-          <Pressable style={styles.oauthBtn}>
+          <Pressable style={styles.oauthBtn} onPress={() => Alert.alert('Bientot disponible', 'La connexion Google sera disponible prochainement.')}>
             <Text style={styles.oauthGlyph}>G</Text>
             <Text style={styles.oauthLabel}>Continuer avec Google</Text>
           </Pressable>
-          <Pressable style={styles.oauthBtn}>
+          <Pressable style={styles.oauthBtn} onPress={() => Alert.alert('Bientot disponible', 'La connexion Apple sera disponible prochainement.')}>
             <Text style={styles.oauthGlyph}>{'\uF8FF'}</Text>
             <Text style={styles.oauthLabel}>Continuer avec Apple</Text>
           </Pressable>

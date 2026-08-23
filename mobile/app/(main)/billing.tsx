@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Pressable, ActivityIndicator, Linking, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Header } from '@/src/components/ui/Header';
-import { getSubscription, listInvoices, type Subscription, type Invoice } from '@/src/api/billing';
+import { getSubscription, listInvoices, startCheckout, openPortal, type Subscription, type Invoice } from '@/src/api/billing';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 
@@ -16,6 +16,23 @@ export default function BillingScreen() {
   const [sub, setSub] = useState<Subscription | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
+  const [upgrading, setUpgrading] = useState(false);
+
+  const handleUpgrade = async () => {
+    setUpgrading(true);
+    try {
+      const { checkout_url } = await startCheckout('premium');
+      await Linking.openURL(checkout_url);
+    } catch { /* ignore */ }
+    setUpgrading(false);
+  };
+
+  const handleManage = async () => {
+    try {
+      const { portal_url } = await openPortal();
+      await Linking.openURL(portal_url);
+    } catch { /* ignore */ }
+  };
 
   useEffect(() => {
     Promise.all([
@@ -64,6 +81,16 @@ export default function BillingScreen() {
                 <View style={styles.activeBadge}>
                   <Text style={styles.activeBadgeText}>Actif</Text>
                 </View>
+              )}
+              {!isActive && plan.tier === 'premium' && (sub?.tier === 'free' || !sub) && (
+                <Pressable style={styles.upgradeBtn} onPress={handleUpgrade} disabled={upgrading}>
+                  <Text style={styles.upgradeBtnText}>{upgrading ? 'Redirection…' : 'Passer Premium'}</Text>
+                </Pressable>
+              )}
+              {isActive && plan.tier === 'premium' && (
+                <Pressable style={styles.manageBtn} onPress={handleManage}>
+                  <Text style={styles.manageBtnText}>Gérer l'abonnement</Text>
+                </Pressable>
               )}
             </Pressable>
           );
@@ -218,5 +245,31 @@ const styles = StyleSheet.create({
   },
   invoiceStatusPaid: {
     color: colors.success,
+  },
+  upgradeBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: 10,
+    paddingVertical: 10,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  upgradeBtnText: {
+    fontFamily: fonts.sansBold,
+    fontSize: 14,
+    color: colors.bg,
+  },
+  manageBtn: {
+    backgroundColor: colors.bgSurface,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingVertical: 10,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  manageBtnText: {
+    fontFamily: fonts.sansSemiBold,
+    fontSize: 13,
+    color: colors.textMuted,
   },
 });

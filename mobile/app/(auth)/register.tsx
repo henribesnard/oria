@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { View, Text, Pressable, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Pressable, ScrollView, Alert, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '@/src/hooks/useAuth';
+import { getErrorMessage } from '@/src/api/client';
 import { Input } from '@/src/components/ui/Input';
 import { Button } from '@/src/components/ui/Button';
 import { colors } from '@/src/theme/colors';
@@ -20,21 +21,16 @@ export default function Register() {
 
   const handleRegister = async () => {
     if (!email.trim() || !password) return;
+    if (password.length < 8) {
+      setError('Le mot de passe doit contenir au moins 8 caractères');
+      return;
+    }
     setLoading(true);
     setError('');
     try {
       await register(email.trim(), password, name.trim() || undefined);
     } catch (err: unknown) {
-      const raw = err instanceof Error ? err.message : '';
-      if (raw.includes('409')) {
-        setError('Un compte existe déjà avec cet email');
-      } else if (raw.includes('500') || raw.includes('internal_error')) {
-        setError('Le serveur a rencontré un problème. Réessaie plus tard.');
-      } else if (raw.includes('Network') || raw.includes('fetch')) {
-        setError('Impossible de joindre le serveur. Vérifie ta connexion.');
-      } else {
-        setError('Erreur lors de la création du compte');
-      }
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -56,11 +52,11 @@ export default function Register() {
 
         {/* OAuth */}
         <View style={styles.oauthSection}>
-          <Pressable style={styles.oauthBtn}>
+          <Pressable style={styles.oauthBtn} onPress={() => Alert.alert('Bientot disponible', 'La connexion Google sera disponible prochainement.')}>
             <Text style={styles.oauthGlyph}>G</Text>
             <Text style={styles.oauthLabel}>Continuer avec Google</Text>
           </Pressable>
-          <Pressable style={styles.oauthBtn}>
+          <Pressable style={styles.oauthBtn} onPress={() => Alert.alert('Bientot disponible', 'La connexion Apple sera disponible prochainement.')}>
             <Text style={styles.oauthGlyph}>{'\uF8FF'}</Text>
             <Text style={styles.oauthLabel}>Continuer avec Apple</Text>
           </Pressable>

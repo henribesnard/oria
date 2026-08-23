@@ -30,3 +30,11 @@ export async function listInvoices(): Promise<Invoice[]> {
 export async function cancelSubscription(): Promise<{ status: string }> {
   return api.post<{ status: string }>('/me/subscription/cancel');
 }
+
+export async function startCheckout(plan: string = 'premium'): Promise<{ checkout_url: string }> {
+  return api.post<{ checkout_url: string }>('/billing/checkout', { plan });
+}
+
+export async function openPortal(): Promise<{ portal_url: string }> {
+  return api.post<{ portal_url: string }>('/billing/portal');
+}

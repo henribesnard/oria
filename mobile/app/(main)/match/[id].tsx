@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Header } from '@/src/components/ui/Header';
 import { ScoreDisplay } from '@/src/components/match/ScoreDisplay';
 import { StatBar } from '@/src/components/match/StatBar';
+import { EventTimeline, type MatchEvent } from '@/src/components/match/EventTimeline';
 import { useFixture } from '@/src/hooks/useFixture';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
@@ -76,15 +77,30 @@ export default function MatchScreen() {
           </View>
         </View>
 
-        {/* Stats section */}
-        <Text style={styles.sectionTitle}>STATISTIQUES</Text>
-        <View style={styles.statsCard}>
-          <StatBar label="Possession %" home={55} away={45} />
-          <StatBar label="Tirs" home={12} away={8} />
-          <StatBar label="Tirs cadrés" home={5} away={3} />
-          <StatBar label="Corners" home={6} away={4} />
-          <StatBar label="Fautes" home={10} away={14} />
-        </View>
+        {/* Events timeline */}
+        {Array.isArray((fixture as Record<string, unknown>).events) && ((fixture as Record<string, unknown>).events as unknown[]).length > 0 ? (
+          <>
+            <Text style={styles.sectionTitle}>EVENEMENTS</Text>
+            <View style={styles.eventsCard}>
+              <EventTimeline
+                events={(fixture as Record<string, unknown>).events as MatchEvent[]}
+                homeId={fixture.home_id}
+              />
+            </View>
+          </>
+        ) : null}
+
+        {/* Stats section — only shown when real data is available */}
+        {Array.isArray((fixture as Record<string, unknown>).statistics) && ((fixture as Record<string, unknown>).statistics as unknown[]).length > 0 ? (
+          <>
+            <Text style={styles.sectionTitle}>STATISTIQUES</Text>
+            <View style={styles.statsCard}>
+              {((fixture as Record<string, unknown>).statistics as { type: string; home: string | number; away: string | number }[]).map((s, i) => (
+                <StatBar key={i} label={s.type} home={Number(String(s.home).replace('%', '')) || 0} away={Number(String(s.away).replace('%', '')) || 0} />
+              ))}
+            </View>
+          </>
+        ) : null}
 
         {/* CTA */}
         <Pressable style={styles.ctaBtn} onPress={openChat}>
@@ -159,6 +175,14 @@ const styles = StyleSheet.create({
     color: colors.textDisabled,
     letterSpacing: 0.8,
     marginBottom: 8,
+  },
+  eventsCard: {
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    borderRadius: 14,
+    padding: 14,
+    marginBottom: 20,
   },
   statsCard: {
     backgroundColor: colors.card,

@@ -10,7 +10,7 @@ import {
   selectTeam,
   selectPlayer,
 } from '@/src/lib/contextRules';
-import { ContextBreadcrumb } from './ContextBreadcrumb';
+import { ContextBreadcrumb, type Crumb } from './ContextBreadcrumb';
 import { LeagueSelector } from './LeagueSelector';
 import { AllCountriesView } from './AllCountriesView';
 import { FixtureTeamSelector } from './FixtureTeamSelector';
@@ -111,76 +111,87 @@ export function ContextSelector({ visible, onClose, onApply }: Props) {
     setLevel('league');
   }, []);
 
-  const handleBack = useCallback(() => {
-    switch (level) {
-      case 'allCountries':
-        setLevel('league');
-        break;
-      case 'fixture':
-        setSelectedLeague(null);
-        setCtxState(EMPTY_CONTEXT_STATE);
-        setLevel('league');
-        break;
-      case 'teamFromFixture':
-        setSelectedFixture(null);
-        setLevel('fixture');
-        break;
-      case 'player':
-        setSelectedTeam(null);
-        if (selectedFixture) {
-          setLevel('teamFromFixture');
-        } else {
-          setLevel('fixture');
-        }
-        break;
-    }
-  }, [level, selectedFixture]);
-
   const handleApply = useCallback(() => {
     onApply(ctxState);
     reset();
     onClose();
   }, [ctxState, onApply, onClose, reset]);
 
-  const buildCrumbs = () => {
-    const crumbs: { label: string; onPress?: () => void }[] = [];
-    crumbs.push({
-      label: 'Ligue',
-      onPress: level !== 'league' ? () => {
-        setSelectedLeague(null);
-        setSelectedFixture(null);
-        setSelectedTeam(null);
-        setCtxState(EMPTY_CONTEXT_STATE);
-        setLevel('league');
-      } : undefined,
-    });
-    if (level === 'allCountries') {
-      crumbs.push({ label: 'Pays' });
-    }
+  const handleStayAtTeam = useCallback(() => {
+    // Apply context at team level (skip player selection)
+    onApply(ctxState);
+    reset();
+    onClose();
+  }, [ctxState, onApply, onClose, reset]);
+
+  const buildCrumbs = (): Crumb[] => {
+    const crumbs: Crumb[] = [];
+
+    // League crumb (when a league is selected and we're past league level)
     if (selectedLeague && level !== 'league' && level !== 'allCountries') {
+      const isLastCrumb = level === 'fixture';
       crumbs.push({
         label: selectedLeague.name,
-        onPress: level !== 'fixture' ? () => {
+        crest: selectedLeague.logo,
+        onPress: !isLastCrumb ? () => {
           setSelectedFixture(null);
           setSelectedTeam(null);
           setLevel('fixture');
         } : undefined,
-      });
-    }
-    if (selectedFixture && (level === 'teamFromFixture' || level === 'player')) {
-      crumbs.push({
-        label: `${selectedFixture.home_team.slice(0, 3)} - ${selectedFixture.away_team.slice(0, 3)}`,
-        onPress: level !== 'teamFromFixture' ? () => {
+        onRemove: isLastCrumb ? () => {
+          setSelectedLeague(null);
+          setSelectedFixture(null);
           setSelectedTeam(null);
-          setLevel('teamFromFixture');
+          setCtxState(EMPTY_CONTEXT_STATE);
+          setLevel('league');
         } : undefined,
       });
     }
-    if (selectedTeam && level === 'player') {
-      crumbs.push({ label: selectedTeam.name });
+
+    // Fixture crumb
+    if (selectedFixture && (level === 'teamFromFixture' || level === 'player')) {
+      const isLastCrumb = level === 'teamFromFixture';
+      crumbs.push({
+        label: `${selectedFixture.home_team.slice(0, 3)}\u2013${selectedFixture.away_team.slice(0, 3)}`,
+        crest: selectedFixture.home_logo,
+        onPress: !isLastCrumb ? () => {
+          setSelectedTeam(null);
+          setLevel('teamFromFixture');
+        } : undefined,
+        onRemove: isLastCrumb ? () => {
+          setSelectedFixture(null);
+          setLevel('fixture');
+        } : undefined,
+      });
     }
+
+    // Team crumb
+    if (selectedTeam && level === 'player') {
+      crumbs.push({
+        label: selectedTeam.name,
+        crest: selectedTeam.logo,
+        onRemove: () => {
+          setSelectedTeam(null);
+          if (selectedFixture) {
+            setLevel('teamFromFixture');
+          } else {
+            setLevel('fixture');
+          }
+        },
+      });
+    }
+
     return crumbs;
   };
+
+  // Ghost label for the next expected level
+  const nextLabel = (() => {
+    if (level === 'league' || level === 'allCountries') return 'Compétition';
+    if (level === 'fixture') return 'Affiche';
+    if (level === 'teamFromFixture') return 'Équipe';
+    if (level === 'player') return 'Joueur';
+    return null;
+  })();
 
   // Context summary label for the apply button
   const applyLabel = (() => {
@@ -197,18 +208,11 @@ export function ContextSelector({ visible, onClose, onApply }: Props) {
     <Modal visible={visible} animationType="slide" transparent>
       <View style={[styles.overlay, { paddingTop: insets.top }]}>
         <View style={[styles.panel, { paddingBottom: insets.bottom + 8 }]}>
-          {/* Header */}
-          <View style={styles.panelHeader}>
-            <Text style={styles.panelTitle}>Sélectionner un contexte</Text>
-            <Pressable onPress={handleClose} hitSlop={12}>
-              <Text style={styles.closeBtn}>{'\u2715'}</Text>
-            </Pressable>
-          </View>
-
-          {/* Breadcrumb */}
+          {/* Breadcrumb bar with integrated close */}
           <ContextBreadcrumb
             crumbs={buildCrumbs()}
-            onBack={level !== 'league' ? handleBack : undefined}
+            nextLabel={nextLabel}
+            onClose={handleClose}
           />
 
           {/* Content */}
@@ -240,6 +244,7 @@ export function ContextSelector({ visible, onClose, onApply }: Props) {
               <PlayerSelector
                 teamId={selectedTeam.id}
                 onSelectPlayer={handleSelectPlayer}
+                onStayAtTeam={handleStayAtTeam}
               />
             )}
           </View>
@@ -272,25 +277,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bgElevated,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    paddingTop: 8,
     maxHeight: '85%',
     minHeight: '55%',
-  },
-  panelHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 4,
-  },
-  panelTitle: {
-    fontFamily: fonts.sansBold,
-    fontSize: 16,
-    color: colors.text,
-  },
-  closeBtn: {
-    fontSize: 16,
-    color: colors.textMuted,
   },
   content: {
     flex: 1,

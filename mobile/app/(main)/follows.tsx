@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
-import { View, Text, FlatList, Image, Pressable, Switch, ActivityIndicator, StyleSheet } from 'react-native';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { View, Text, FlatList, Image, Pressable, Switch, ActivityIndicator, TextInput, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Header } from '@/src/components/ui/Header';
-import { listFollows, unfollow, type Follow } from '@/src/api/follows';
+import { listFollows, unfollow, follow as addFollow, type Follow } from '@/src/api/follows';
+import { searchCatalog, type SearchResult } from '@/src/api/catalog';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 
@@ -10,24 +11,55 @@ export default function FollowsScreen() {
   const insets = useSafeAreaInsets();
   const [follows, setFollows] = useState<Follow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
       try {
         const data = await listFollows();
-        if (!cancelled) setFollows(data);
-      } catch { /* ignore */ }
+        if (!cancelled) { setFollows(data); setError(false); }
+      } catch {
+        if (!cancelled) setError(true);
+      }
       if (!cancelled) setLoading(false);
     }
     load();
     return () => { cancelled = true; };
   }, []);
 
+  const [searchMode, setSearchMode] = useState(false);
+  const [query, setQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searching, setSearching] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+
   const handleToggle = useCallback(async (f: Follow) => {
     try {
       await unfollow(f.entity_type, f.entity_id);
       setFollows(prev => prev.filter(x => !(x.entity_type === f.entity_type && x.entity_id === f.entity_id)));
+    } catch { /* ignore */ }
+  }, []);
+
+  const handleSearch = useCallback((text: string) => {
+    setQuery(text);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (text.length < 2) { setSearchResults([]); return; }
+    setSearching(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const results = await searchCatalog(text);
+        setSearchResults(results);
+      } catch { setSearchResults([]); }
+      setSearching(false);
+    }, 300);
+  }, []);
+
+  const handleFollow = useCallback(async (r: SearchResult) => {
+    try {
+      const newFollow = await addFollow(r.type, r.id, r.name, r.logo ?? r.photo);
+      setFollows(prev => [...prev, newFollow]);
+      setSearchResults(prev => prev.filter(x => !(x.type === r.type && x.id === r.id)));
     } catch { /* ignore */ }
   }, []);
 
@@ -48,13 +80,58 @@ export default function FollowsScreen() {
     }
   }
 
+  const alreadyFollowed = new Set(follows.map(f => `${f.entity_type}-${f.entity_id}`));
+  const filteredResults = searchResults.filter(r => !alreadyFollowed.has(`${r.type}-${r.id}`));
+
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
-      <Header title="Suivis" />
+      <Header title="Suivis" right={
+        <Pressable onPress={() => setSearchMode(prev => !prev)} style={styles.addBtn}>
+          <Text style={styles.addBtnText}>{searchMode ? '✕' : '+'}</Text>
+        </Pressable>
+      } />
+
+      {searchMode && (
+        <View style={styles.searchSection}>
+          <TextInput
+            style={styles.searchInput}
+            value={query}
+            onChangeText={handleSearch}
+            placeholder="Rechercher un club, ligue, joueur…"
+            placeholderTextColor={colors.textGhost}
+            autoFocus
+          />
+          {searching && <ActivityIndicator color={colors.primary} style={{ marginVertical: 8 }} />}
+          {filteredResults.map(r => (
+            <Pressable key={`${r.type}-${r.id}`} style={styles.searchRow} onPress={() => handleFollow(r)}>
+              {(r.logo ?? r.photo) ? (
+                <Image source={{ uri: r.logo ?? r.photo }} style={[styles.logo, r.type === 'player' && styles.logoCircle]} resizeMode="contain" />
+              ) : (
+                <View style={[styles.monogram, r.type === 'player' && styles.logoCircle]}>
+                  <Text style={styles.monogramText}>{r.name[0]}</Text>
+                </View>
+              )}
+              <View style={{ flex: 1 }}>
+                <Text style={styles.followName} numberOfLines={1}>{r.name}</Text>
+                {r.country && <Text style={styles.searchSub}>{r.country}</Text>}
+              </View>
+              <Text style={styles.addLabel}>Suivre</Text>
+            </Pressable>
+          ))}
+          {query.length >= 2 && !searching && filteredResults.length === 0 && (
+            <Text style={styles.noResult}>Aucun résultat</Text>
+          )}
+        </View>
+      )}
 
       {loading ? (
         <View style={styles.loading}>
           <ActivityIndicator color={colors.primary} />
+        </View>
+      ) : error ? (
+        <View style={styles.empty}>
+          <Text style={styles.emptyTitle}>Erreur de chargement</Text>
+          <Text style={styles.emptyBody}>Impossible de charger tes suivis. Vérifie ta connexion et réessaie.</Text>
         </View>
       ) : follows.length === 0 ? (
         <View style={styles.empty}>
@@ -169,5 +246,60 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sansSemiBold,
     fontSize: 14,
     color: colors.text,
+  },
+  addBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.primarySurface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addBtnText: {
+    fontFamily: fonts.sansBold,
+    fontSize: 18,
+    color: colors.primary,
+    marginTop: -1,
+  },
+  searchSection: {
+    paddingHorizontal: 18,
+    paddingBottom: 8,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.borderLight,
+  },
+  searchInput: {
+    fontFamily: fonts.sans,
+    fontSize: 14,
+    color: colors.text,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 8,
+  },
+  searchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 8,
+  },
+  searchSub: {
+    fontFamily: fonts.sans,
+    fontSize: 11,
+    color: colors.textSubtle,
+  },
+  addLabel: {
+    fontFamily: fonts.sansSemiBold,
+    fontSize: 12,
+    color: colors.primary,
+  },
+  noResult: {
+    fontFamily: fonts.sans,
+    fontSize: 13,
+    color: colors.textMuted,
+    textAlign: 'center',
+    paddingVertical: 12,
   },
 });

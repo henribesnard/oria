@@ -50,6 +50,8 @@ def map_fixtures(raw: dict[str, Any]) -> list[dict[str, Any]]:
             "goals_home": goals.get("home"),
             "goals_away": goals.get("away"),
             "score": score,
+            "events": item.get("events", []),
+            "statistics": item.get("statistics", []),
         })
     return out
 

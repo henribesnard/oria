@@ -17,9 +17,11 @@ const POSITION_LABELS: Record<string, string> = {
 interface Props {
   teamId: number;
   onSelectPlayer: (player: Player) => void;
+  /** Called when the user opts to stay at team level instead of picking a player */
+  onStayAtTeam?: () => void;
 }
 
-export function PlayerSelector({ teamId, onSelectPlayer }: Props) {
+export function PlayerSelector({ teamId, onSelectPlayer, onStayAtTeam }: Props) {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [players, setPlayers] = useState<Player[]>([]);
@@ -72,6 +74,22 @@ export function PlayerSelector({ teamId, onSelectPlayer }: Props) {
     return (
       <View style={styles.loading}>
         <ActivityIndicator color={colors.primary} />
+      </View>
+    );
+  }
+
+  if (players.length === 0) {
+    return (
+      <View style={styles.noSquad}>
+        <Text style={styles.noSquadTitle}>Effectif non publié.</Text>
+        <Text style={styles.noSquadBody}>
+          Le fournisseur ne donne pas la liste des joueurs pour cette équipe. Les trois premiers niveaux restent utilisables.
+        </Text>
+        {onStayAtTeam ? (
+          <Pressable style={styles.noSquadBtn} onPress={onStayAtTeam}>
+            <Text style={styles.noSquadBtnText}>Rester au niveau équipe</Text>
+          </Pressable>
+        ) : null}
       </View>
     );
   }
@@ -175,5 +193,37 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sansSemiBold,
     fontSize: 14,
     color: colors.text,
+  },
+  noSquad: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 30,
+    gap: 9,
+  },
+  noSquadTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 23,
+    color: colors.text,
+    lineHeight: 28,
+  },
+  noSquadBody: {
+    fontFamily: fonts.sans,
+    fontSize: 12.5,
+    lineHeight: 20,
+    color: colors.textSubtle,
+  },
+  noSquadBtn: {
+    alignSelf: 'flex-start',
+    height: 40,
+    backgroundColor: colors.primaryDark,
+    borderRadius: 12,
+    paddingHorizontal: 15,
+    justifyContent: 'center',
+    marginTop: 6,
+  },
+  noSquadBtnText: {
+    fontFamily: fonts.sansBold,
+    fontSize: 12.5,
+    color: colors.primaryText,
   },
 });

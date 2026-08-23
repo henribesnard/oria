@@ -30,6 +30,7 @@ export interface AuthState {
   guest: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, displayName?: string) => Promise<void>;
+  oauthLogin: (provider: 'google' | 'apple', code: string) => Promise<void>;
   logout: () => Promise<void>;
   enterGuest: () => void;
 }
@@ -43,6 +44,7 @@ const AuthContext = createContext<AuthState>({
   guest: false,
   login: async () => {},
   register: async () => {},
+  oauthLogin: async () => {},
   logout: async () => {},
   enterGuest: () => {},
 });
@@ -174,6 +176,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.replace('/(auth)/onboarding');
   }, [persistTokens, scheduleRefresh, router]);
 
+  // --- oauthLogin ---
+  const oauthLogin = useCallback(async (provider: 'google' | 'apple', code: string) => {
+    const data = await api.get<TokenResponse>(`/auth/oauth/${provider}?code=${encodeURIComponent(code)}`);
+    const exp = await persistTokens(data);
+    setToken(data.access_token);
+    const profile = await api.get<User>('/me');
+    setUser(profile);
+    scheduleRefresh(exp);
+  }, [persistTokens, scheduleRefresh]);
+
   // --- logout ---
   const logout = useCallback(async () => {
     const rt = await storage.getRefreshToken();
@@ -193,7 +205,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, guest, login, register, logout, enterGuest }}>
+    <AuthContext.Provider value={{ user, token, loading, guest, login, register, oauthLogin, logout, enterGuest }}>
       {children}
     </AuthContext.Provider>
   );

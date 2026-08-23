@@ -1,4 +1,4 @@
-import { View, Text, Switch, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Switch, ScrollView, TextInput, StyleSheet } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Header } from '@/src/components/ui/Header';
@@ -56,6 +56,48 @@ export default function NotificationsScreen() {
             />
           </View>
         ))}
+
+        <Text style={[styles.sectionTitle, { marginTop: 24 }]}>HEURES SILENCIEUSES</Text>
+        <Text style={styles.quietDesc}>Aucune notification ne sera envoyée pendant cette plage horaire.</Text>
+
+        <View style={styles.quietRow}>
+          <View style={styles.quietField}>
+            <Text style={styles.quietLabel}>De</Text>
+            <TextInput
+              style={styles.quietInput}
+              value={settings?.quiet_start ?? ''}
+              onChangeText={(v) => {
+                if (!settings) return;
+                setSettings({ ...settings, quiet_start: v || null });
+              }}
+              onBlur={() => {
+                if (settings) updateNotificationSettings({ quiet_start: settings.quiet_start }).catch(() => {});
+              }}
+              placeholder="22:00"
+              placeholderTextColor={colors.textGhost}
+              keyboardType="numbers-and-punctuation"
+              maxLength={5}
+            />
+          </View>
+          <View style={styles.quietField}>
+            <Text style={styles.quietLabel}>À</Text>
+            <TextInput
+              style={styles.quietInput}
+              value={settings?.quiet_end ?? ''}
+              onChangeText={(v) => {
+                if (!settings) return;
+                setSettings({ ...settings, quiet_end: v || null });
+              }}
+              onBlur={() => {
+                if (settings) updateNotificationSettings({ quiet_end: settings.quiet_end }).catch(() => {});
+              }}
+              placeholder="08:00"
+              placeholderTextColor={colors.textGhost}
+              keyboardType="numbers-and-punctuation"
+              maxLength={5}
+            />
+          </View>
+        </View>
       </ScrollView>
     </View>
   );
@@ -99,5 +141,36 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sans,
     fontSize: 11.5,
     color: colors.textSubtle,
+  },
+  quietDesc: {
+    fontFamily: fonts.sans,
+    fontSize: 12,
+    color: colors.textSubtle,
+    marginBottom: 12,
+  },
+  quietRow: {
+    flexDirection: 'row',
+    gap: 16,
+    marginBottom: 16,
+  },
+  quietField: {
+    flex: 1,
+    gap: 4,
+  },
+  quietLabel: {
+    fontFamily: fonts.sansSemiBold,
+    fontSize: 12,
+    color: colors.textMuted,
+  },
+  quietInput: {
+    fontFamily: fonts.mono,
+    fontSize: 16,
+    color: colors.text,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
 });

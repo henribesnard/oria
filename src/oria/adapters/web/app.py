@@ -56,7 +56,7 @@ def _health_check() -> dict[str, Any]:
 
 def create_fastapi_app(*, lifespan: Any = None) -> FastAPI:
     """Factory : crée une instance FastAPI avec routers et error handlers."""
-    instance = FastAPI(title="Oria", version="0.1.0", lifespan=lifespan)
+    instance = FastAPI(title="Oria", version="0.1.0", lifespan=lifespan, docs_url="/docs", redoc_url="/redoc")
 
     instance.include_router(admin_router)
     instance.include_router(auth_router)

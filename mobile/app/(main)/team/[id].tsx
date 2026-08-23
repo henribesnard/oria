@@ -42,7 +42,7 @@ export default function TeamScreen() {
     });
 
   const openPlayer = (playerId: number) =>
-    router.push(`/(main)/player/${playerId}`);
+    router.push({ pathname: `/(main)/player/${playerId}`, params: { teamId: String(teamId) } });
 
   const positions = ['Goalkeeper', 'Defender', 'Midfielder', 'Attacker'];
   const groupedSquad = positions

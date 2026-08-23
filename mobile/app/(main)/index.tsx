@@ -26,13 +26,17 @@ export default function HomeScreen() {
   const { user } = useAuth();
   const [fixtures, setFixtures] = useState<Fixture[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval>>();
 
   const fetchData = useCallback(async () => {
     try {
       const data = await listLiveFixtures();
       setFixtures(data);
-    } catch { /* silently fail */ }
+      setFetchError(false);
+    } catch {
+      setFetchError(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -90,7 +94,7 @@ export default function HomeScreen() {
           )}
         </View>
         <View style={styles.headerRight}>
-          <Pressable onPress={() => router.push('/(main)/palette')} style={styles.iconBtn}>
+          <Pressable onPress={() => router.push('/(main)/search')} style={styles.iconBtn}>
             <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
               <Circle cx={11} cy={11} r={7} stroke={colors.text} strokeWidth={2} />
               <Path d="m20 20-4.3-4.3" stroke={colors.text} strokeWidth={2} />
@@ -156,7 +160,14 @@ export default function HomeScreen() {
           </View>
         )}
         ListEmptyComponent={
-          !featured ? (
+          fetchError ? (
+            <View style={styles.empty}>
+              <Text style={styles.emptyTitle}>Impossible de charger les matchs</Text>
+              <Text style={styles.emptyBody}>
+                Vérifie ta connexion et tire vers le bas pour réessayer.
+              </Text>
+            </View>
+          ) : !featured ? (
             <View style={styles.empty}>
               <Text style={styles.emptyTitle}>Pas de match en ce moment.</Text>
               <Text style={styles.emptyBody}>

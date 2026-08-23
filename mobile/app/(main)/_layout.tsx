@@ -14,7 +14,7 @@ export default function MainLayout() {
       <Stack.Screen name="match/[id]" />
       <Stack.Screen name="team/[id]" />
       <Stack.Screen name="player/[id]" />
-      <Stack.Screen name="palette" options={{ animation: 'fade' }} />
+      <Stack.Screen name="search" options={{ animation: 'fade' }} />
       <Stack.Screen name="follows" />
       <Stack.Screen name="notifications" />
       <Stack.Screen name="profile" />

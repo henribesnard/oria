@@ -379,4 +379,43 @@ def _flatten_fixture(fx: dict[str, Any]) -> dict[str, Any]:
         "round": league.get("round"),
         "venue": fx.get("venue", {}),
         "referee": fx.get("referee"),
+        "statistics": _flatten_statistics(fx.get("statistics", [])),
+        "events": _flatten_events(fx.get("events", [])),
     }
+
+
+def _flatten_statistics(raw: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Convertit les stats par équipe en liste [{type, home, away}]."""
+    if not raw or len(raw) < 2:
+        return []
+    home_stats = {s["type"]: s.get("value") for s in raw[0].get("statistics", [])}
+    away_stats = {s["type"]: s.get("value") for s in raw[1].get("statistics", [])}
+    out: list[dict[str, Any]] = []
+    for stat_type in home_stats:
+        out.append({
+            "type": stat_type,
+            "home": home_stats.get(stat_type, 0),
+            "away": away_stats.get(stat_type, 0),
+        })
+    return out
+
+
+def _flatten_events(raw: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Convertit les événements en format frontend simplifié."""
+    out: list[dict[str, Any]] = []
+    for ev in raw:
+        time_info = ev.get("time", {})
+        team = ev.get("team", {})
+        player = ev.get("player", {})
+        assist = ev.get("assist", {})
+        out.append({
+            "time": time_info.get("elapsed"),
+            "extra_time": time_info.get("extra"),
+            "type": ev.get("type", ""),
+            "detail": ev.get("detail", ""),
+            "team_id": team.get("id"),
+            "team_name": team.get("name"),
+            "player_name": player.get("name"),
+            "assist_name": assist.get("name") if assist else None,
+        })
+    return out

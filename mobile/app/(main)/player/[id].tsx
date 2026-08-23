@@ -4,8 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Header } from '@/src/components/ui/Header';
 import { StatsGrid } from '@/src/components/player/StatsGrid';
-import { listPlayers, type Player } from '@/src/api/catalog';
-import { currentSeason } from '@/src/lib/contextRules';
+import { getSquad, searchCatalog, type Player } from '@/src/api/catalog';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 
@@ -16,7 +15,7 @@ const SUGGESTIONS = [
 ];
 
 export default function PlayerScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, teamId } = useLocalSearchParams<{ id: string; teamId?: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [player, setPlayer] = useState<Player | null>(null);
@@ -26,16 +25,25 @@ export default function PlayerScreen() {
     let cancelled = false;
     async function load() {
       try {
-        const season = currentSeason();
-        const data = await listPlayers(undefined, season);
-        const found = data.find(p => p.id === Number(id));
+        let found: Player | undefined;
+        if (teamId) {
+          const squad = await getSquad(Number(teamId));
+          found = squad.find(p => p.id === Number(id));
+        }
+        if (!found) {
+          const results = await searchCatalog(id);
+          const match = results.find(r => r.type === 'player' && r.id === Number(id));
+          if (match) {
+            found = { id: match.id, name: match.name, photo: match.photo };
+          }
+        }
         if (!cancelled && found) setPlayer(found);
       } catch { /* ignore */ }
       if (!cancelled) setLoading(false);
     }
     load();
     return () => { cancelled = true; };
-  }, [id]);
+  }, [id, teamId]);
 
   const openChat = (prefill?: string) =>
     router.push({
@@ -80,12 +88,18 @@ export default function PlayerScreen() {
 
         {/* Stats grid */}
         <Text style={styles.sectionTitle}>STATISTIQUES</Text>
-        <StatsGrid stats={[
-          { label: 'Matchs', value: '—' },
-          { label: 'Buts', value: '—' },
-          { label: 'Passes D.', value: '—' },
-          { label: 'Note moy.', value: '—' },
-        ]} />
+        <StatsGrid stats={(() => {
+          const s = (player as Record<string, unknown> | null)?.statistics;
+          const first = Array.isArray(s) && s.length > 0 ? (s[0] as Record<string, unknown>) : null;
+          const games = first?.games as Record<string, unknown> | undefined;
+          const goals = first?.goals as Record<string, unknown> | undefined;
+          return [
+            { label: 'Matchs', value: games?.appearences != null ? String(games.appearences) : '—' },
+            { label: 'Buts', value: goals?.total != null ? String(goals.total) : '—' },
+            { label: 'Passes D.', value: goals?.assists != null ? String(goals.assists) : '—' },
+            { label: 'Note moy.', value: first?.rating != null ? String(first.rating) : '—' },
+          ];
+        })()} />
 
         {/* Suggestions */}
         <Text style={[styles.sectionTitle, { marginTop: 20 }]}>À DEMANDER</Text>

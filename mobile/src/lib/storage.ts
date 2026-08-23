@@ -6,20 +6,21 @@ const KEY_REFRESH = 'oria_refresh_token';
 const KEY_EXPIRY = 'oria_token_expiry';
 
 // Fallback for web where SecureStore is not available
-const webStore: Record<string, string> = {};
+// Uses sessionStorage (cleared on tab close) instead of plain JS object
+const hasSessionStorage = Platform.OS === 'web' && typeof sessionStorage !== 'undefined';
 
 async function getItem(key: string): Promise<string | null> {
-  if (Platform.OS === 'web') return webStore[key] ?? null;
+  if (Platform.OS === 'web') return hasSessionStorage ? sessionStorage.getItem(key) : null;
   return SecureStore.getItemAsync(key);
 }
 
 async function setItem(key: string, value: string): Promise<void> {
-  if (Platform.OS === 'web') { webStore[key] = value; return; }
+  if (Platform.OS === 'web') { if (hasSessionStorage) sessionStorage.setItem(key, value); return; }
   await SecureStore.setItemAsync(key, value);
 }
 
 async function deleteItem(key: string): Promise<void> {
-  if (Platform.OS === 'web') { delete webStore[key]; return; }
+  if (Platform.OS === 'web') { if (hasSessionStorage) sessionStorage.removeItem(key); return; }
   await SecureStore.deleteItemAsync(key);
 }
 

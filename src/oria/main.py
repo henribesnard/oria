@@ -357,6 +357,9 @@ async def run_console(settings: Settings) -> None:
 
 def create_app() -> FastAPI:
     """Crée l'application FastAPI câblée — utilisée par uvicorn."""
+    from starlette.middleware.base import BaseHTTPMiddleware
+    from starlette.requests import Request as StarletteRequest
+    from starlette.responses import Response as StarletteResponse
     from fastapi.middleware.cors import CORSMiddleware
 
     from oria.adapters.web.app import create_fastapi_app, init_web
@@ -412,14 +415,25 @@ def create_app() -> FastAPI:
 
     app = create_fastapi_app(lifespan=lifespan)
 
+    # Security headers middleware
+    class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+        async def dispatch(self, request: StarletteRequest, call_next):  # type: ignore[override]
+            response: StarletteResponse = await call_next(request)
+            response.headers["X-Content-Type-Options"] = "nosniff"
+            response.headers["X-Frame-Options"] = "DENY"
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+            return response
+
+    app.add_middleware(SecurityHeadersMiddleware)
+
     # CORS doit être ajouté AVANT le startup (Starlette interdit après)
     origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
         allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Content-Type", "Authorization"],
     )
 
     return app
