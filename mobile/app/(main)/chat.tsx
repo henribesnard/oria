@@ -124,7 +124,8 @@ export default function ChatScreen() {
       <Pressable style={styles.backdrop} onPress={() => router.back()} />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 24}
         style={[styles.sheet, { paddingBottom: insets.bottom }]}
       >
         {/* Drag handle */}
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   backdrop: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: colors.overlay,
   },
   sheet: {

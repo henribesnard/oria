@@ -27,7 +27,7 @@ export default function HomeScreen() {
   const [fixtures, setFixtures] = useState<Fixture[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [fetchError, setFetchError] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval>>();
+  const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
   const fetchData = useCallback(async () => {
     try {
@@ -129,6 +129,9 @@ export default function HomeScreen() {
             {/* Featured match */}
             {featured && (
               <View style={styles.section}>
+                <Text style={styles.sectionTitle}>
+                  {liveCount > 0 ? 'MATCH EN DIRECT' : 'MATCH DU JOUR'}
+                </Text>
                 <FeaturedMatchCard fixture={featured} onPress={() => openMatch(featured)} />
               </View>
             )}

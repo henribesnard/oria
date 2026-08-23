@@ -160,10 +160,15 @@ class PreRouter:
         if re.search(r"\b(classement|standings?)\b", text, re.IGNORECASE):
             return await self._handle_standings(req)
 
-        # Famille A : prochain match  [A2 élargi]
+        # Famille A : prochain match / horaire du match  [A2 élargi]
         if re.search(
             r"\b(prochain\s+match|next\s+match|quand\s+joue|"
-            r"c[''']est\s+quand\s+le\s+prochain)\b",
+            r"c[''']est\s+quand\s+le\s+prochain|"
+            r"[àa]\s+quelle\s+heure|quelle\s+heure|"
+            r"heure\s+d[ue]|horaire|"
+            r"quand\s+(?:d[ée]bute|commence|se\s+joue|est\s+(?:le|ce))|"
+            r"(?:le|ce)\s+match\s+(?:est|se\s+joue)\s+quand|"
+            r"coup\s+d[''']envoi)\b",
             text, re.IGNORECASE,
         ):
             return await self._handle_next_match(req)
@@ -338,8 +343,17 @@ class PreRouter:
                     params["league_id"] = req.context.league_id
             data = await self._tools.call("get_fixtures", params)
             if data:
+                # Build context-aware response text
+                label = "Voici le prochain match."
+                if req.context.fixture_id and isinstance(data, list) and data:
+                    fx = data[0]
+                    home = fx.get("home", {}).get("name", "")
+                    away = fx.get("away", {}).get("name", "")
+                    date_str = fx.get("date", "")
+                    if home and away:
+                        label = f"Voici les informations pour {home} – {away}."
                 return Response(
-                    text="Voici le prochain match.",
+                    text=label,
                     attachments=[Attachment(kind="fixture_card", data={"fixtures": data})],
                 )
         except Exception:
@@ -426,8 +440,21 @@ class PreRouter:
                     params["season"] = req.context.season
             data = await self._tools.call("get_fixtures", params)
             if data:
+                # Context-aware response text
+                if req.context.fixture_id and isinstance(data, list) and data:
+                    fx = data[0]
+                    home = fx.get("home", {}).get("name", "")
+                    away = fx.get("away", {}).get("name", "")
+                    if home and away:
+                        label = f"Voici le match {home} – {away}."
+                    else:
+                        label = "Voici le match."
+                elif req.context.team_id:
+                    label = "Voici les prochains matchs."
+                else:
+                    label = "Voici les matchs."
                 return Response(
-                    text="Voici les matchs.",
+                    text=label,
                     attachments=[Attachment(kind="table", data={"fixtures": data})],
                 )
         except Exception:

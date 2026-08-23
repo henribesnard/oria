@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { View, Text, SectionList, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
+import { SvgUri } from 'react-native-svg';
 import { listLeagues, type League } from '@/src/api/catalog';
 import { SearchInput } from '../ui/SearchInput';
 import { EmptyState } from './EmptyState';
@@ -89,7 +90,9 @@ export function AllCountriesView({ onSelectCountry }: Props) {
         renderItem={({ item }) => (
           <Pressable style={styles.row} onPress={() => onSelectCountry(item.country)}>
             {item.flag ? (
-              <Text style={styles.flag}>{item.flag}</Text>
+              <View style={styles.flagWrap}>
+                <SvgUri uri={item.flag} width={22} height={16} />
+              </View>
             ) : (
               <View style={styles.flagPlaceholder} />
             )}
@@ -136,10 +139,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.borderLight,
   },
-  flag: {
-    fontSize: 18,
+  flagWrap: {
     width: 26,
-    textAlign: 'center',
+    height: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 3,
+    overflow: 'hidden',
   },
   flagPlaceholder: {
     width: 26,

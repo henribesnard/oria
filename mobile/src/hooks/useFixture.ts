@@ -4,7 +4,7 @@ import { listFixtures, type Fixture } from '../api/catalog';
 export function useFixture(fixtureId: number) {
   const [fixture, setFixture] = useState<Fixture | null>(null);
   const [loading, setLoading] = useState(true);
-  const timerRef = useRef<ReturnType<typeof setInterval>>();
+  const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
   const fetch = useCallback(async () => {
     try {
