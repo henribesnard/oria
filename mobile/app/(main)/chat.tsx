@@ -16,7 +16,6 @@ import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 import { useChat, type Message } from '@/src/hooks/useChat';
 import { MessageBubble } from '@/src/components/chat/MessageBubble';
-import { TypingIndicator } from '@/src/components/chat/TypingIndicator';
 import { ChatComposer } from '@/src/components/chat/ChatComposer';
 import { ContextRail } from '@/src/components/chat/ContextRail';
 import { ContextSelector } from '@/src/components/context/ContextSelector';
@@ -174,7 +173,6 @@ export default function ChatScreen() {
           )}
           contentContainerStyle={styles.messageList}
           ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-          ListFooterComponent={sending && messages[messages.length - 1]?.streaming ? <TypingIndicator /> : null}
           ListEmptyComponent={
             <View style={styles.empty}>
               <Text style={styles.emptyTitle}>Pose ta question</Text>
@@ -225,7 +223,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     maxHeight: '92%',
-    minHeight: '60%',
+    minHeight: '75%',
   },
   handleRow: {
     alignItems: 'center',
@@ -294,6 +292,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   messageList: {
+    flexGrow: 1,
+    justifyContent: 'flex-end',
     paddingHorizontal: 16,
     paddingVertical: 12,
   },

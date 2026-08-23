@@ -47,8 +47,14 @@ export function MessageBubble({ role, text, streaming, degraded, suggested_actio
       </View>
       <View style={styles.assistantContent}>
         <View style={[styles.assistantBubble, degraded && { opacity: 0.6 }]}>
-          <Text style={styles.assistantText}>{text}</Text>
-          {streaming && !text && <TypingDots />}
+          {streaming && !text ? (
+            <View style={styles.streamingRow}>
+              <Text style={styles.streamingLabel}>Oria réfléchit</Text>
+              <TypingDots />
+            </View>
+          ) : (
+            <Text style={styles.assistantText}>{text}</Text>
+          )}
         </View>
         {suggested_actions && suggested_actions.length > 0 && (
           <View style={styles.suggestedRow}>
@@ -148,6 +154,16 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sansSemiBold,
     fontSize: 12,
     color: colors.primaryText,
+  },
+  streamingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  streamingLabel: {
+    fontFamily: fonts.sansMedium,
+    fontSize: 12.5,
+    color: colors.textMuted,
   },
   dotsRow: {
     flexDirection: 'row',

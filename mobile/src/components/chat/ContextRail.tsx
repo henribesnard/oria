@@ -101,6 +101,7 @@ export function ContextRail({ onSelect, onOpenSelector }: Props) {
 const styles = StyleSheet.create({
   rail: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 6,
     paddingHorizontal: 12,
     paddingVertical: 6,

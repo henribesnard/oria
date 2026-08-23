@@ -1,6 +1,6 @@
 import { api } from './client';
 
-const API_BASE = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000/api';
+const API_BASE = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000';
 
 export interface ChatContext {
   country?: string;

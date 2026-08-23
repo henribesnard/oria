@@ -85,7 +85,7 @@ export default function HomeScreen() {
           {liveCount > 0 && (
             <View style={styles.liveBadge}>
               <PulseDot size={5} />
-              <Text style={styles.liveText}>{liveCount} EN DIRECT</Text>
+              <Text style={styles.liveText}>{liveCount} {liveCount > 1 ? 'MATCHS' : 'MATCH'} EN DIRECT</Text>
             </View>
           )}
         </View>

@@ -12,11 +12,11 @@ export interface NotificationSettings {
 }
 
 export async function getNotificationSettings(): Promise<NotificationSettings> {
-  return api.get<NotificationSettings>('/me/notifications');
+  return api.get<NotificationSettings>('/settings/notifications');
 }
 
 export async function updateNotificationSettings(settings: Partial<NotificationSettings>): Promise<NotificationSettings> {
-  return api.patch<NotificationSettings>('/me/notifications', settings);
+  return api.patch<NotificationSettings>('/settings/notifications', settings);
 }
 
 export async function updateProfile(data: { display_name?: string; locale?: string; timezone?: string }): Promise<unknown> {
