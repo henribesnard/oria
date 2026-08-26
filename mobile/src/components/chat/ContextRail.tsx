@@ -18,9 +18,10 @@ interface RailItem {
 interface Props {
   onSelect: (entityType: string, entityId: number, entityName: string, logo?: string) => void;
   onOpenSelector: () => void;
+  hasContext?: boolean;
 }
 
-export function ContextRail({ onSelect, onOpenSelector }: Props) {
+export function ContextRail({ onSelect, onOpenSelector, hasContext }: Props) {
   const [items, setItems] = useState<RailItem[]>([]);
 
   useEffect(() => {
@@ -92,7 +93,9 @@ export function ContextRail({ onSelect, onOpenSelector }: Props) {
       ))}
 
       <Pressable style={styles.frameBtn} onPress={onOpenSelector}>
-        <Text style={styles.frameBtnText}>Cadrer</Text>
+        <Text style={styles.frameBtnText}>
+          {hasContext ? 'Modifier le contexte' : 'Ajouter un contexte'}
+        </Text>
       </Pressable>
     </ScrollView>
   );
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 3,
   },
   chip: {
     flexDirection: 'row',

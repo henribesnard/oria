@@ -18,6 +18,27 @@ class Turn(BaseModel):
     created_at: float = 0.0
 
 
+class Thread(BaseModel):
+    """Un fil de conversation."""
+
+    id: str
+    user_id: str
+    title: str = ""
+    context: dict[str, object] = {}
+    created_at: float = 0.0
+    updated_at: float = 0.0
+
+
+class ThreadSummary(BaseModel):
+    """Résumé d'un thread pour la liste."""
+
+    id: str
+    title: str = ""
+    context: dict[str, object] = {}
+    last_message: str = ""
+    updated_at: float = 0.0
+
+
 class ConversationWindow(BaseModel):
     """Fenêtre de conversation récente."""
 

@@ -100,7 +100,7 @@ async def _stream_process(
                 await conversations.set_context(req.user_id, merged)
             req = req.model_copy(update={"context": merged})
 
-            turns = await conversations.recent(req.user_id)
+            turns = await conversations.recent(req.user_id, thread_id=req.thread_id)
             if turns:
                 conversation_history = [{"role": t.role, "content": t.text} for t in turns]
 
@@ -175,8 +175,8 @@ async def _persist_stream_turn(
     """Persiste le tour et consomme le quota."""
     if conversations is not None:
         async with guard("stream_persist", on_error=lambda: None):
-            await conversations.append(req.user_id, "user", req.text)
-            await conversations.append(req.user_id, "assistant", text)
+            await conversations.append(req.user_id, "user", req.text, thread_id=req.thread_id)
+            await conversations.append(req.user_id, "assistant", text, thread_id=req.thread_id)
 
     _exempt = bool(
         _GREETING_RE.search(req.text) or _ACK_RE.search(req.text) or _HELP_RE.search(req.text)

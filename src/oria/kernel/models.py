@@ -26,6 +26,7 @@ class IncomingRequest(BaseModel):
     text: str
     context: Context = Context()
     locale: str = "fr"
+    thread_id: str | None = None
 
 
 class Attachment(BaseModel):

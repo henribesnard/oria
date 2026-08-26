@@ -97,7 +97,7 @@ class Pipeline:
         conversation_history: list[dict[str, str]] | None = None
         if self._conversations is not None:
             async with guard("conversation_history", on_error=lambda: None):
-                conversation_history = await self._get_conversation_history(req.user_id)
+                conversation_history = await self._get_conversation_history(req.user_id, req.thread_id)
 
         # Stage 1 : pré-routeur (templates, sans LLM)
         if self._prerouter is not None:
@@ -147,12 +147,12 @@ class Pipeline:
         return req.model_copy(update={"context": merged})
 
     async def _get_conversation_history(
-        self, user_id: str,
+        self, user_id: str, thread_id: str | None = None,
     ) -> list[dict[str, str]] | None:
         """Récupère l'historique récent pour l'orchestrateur."""
         if self._conversations is None:
             return None
-        turns = await self._conversations.recent(user_id)
+        turns = await self._conversations.recent(user_id, thread_id=thread_id)
         if not turns:
             return None
         return [{"role": t.role, "content": t.text} for t in turns]
@@ -161,8 +161,8 @@ class Pipeline:
         """Persiste le tour de conversation et consomme le quota."""
         if self._conversations is not None:
             async with guard("persist_turn", on_error=lambda: None):
-                await self._conversations.append(req.user_id, "user", req.text)
-                await self._conversations.append(req.user_id, "assistant", resp.text)
+                await self._conversations.append(req.user_id, "user", req.text, thread_id=req.thread_id)
+                await self._conversations.append(req.user_id, "assistant", resp.text, thread_id=req.thread_id)
 
         if self._entitlements is not None and not self._is_quota_exempt(req.text):
             async with guard("consume_quota", on_error=lambda: None):

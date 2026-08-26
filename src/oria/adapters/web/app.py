@@ -113,7 +113,7 @@ def init_web(
         auth_service=auth_service,
         identity_service=identity_service,
     )
-    init_chat_routes(handle_message, stream_message)
+    init_chat_routes(handle_message, stream_message, conversation_service)
     init_live_routes(sse_port)
     init_catalog_routes(
         leagues=leagues_repo,

@@ -7,6 +7,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
   StyleSheet,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -19,11 +20,14 @@ import { MessageBubble } from '@/src/components/chat/MessageBubble';
 import { ChatComposer } from '@/src/components/chat/ChatComposer';
 import { ContextRail } from '@/src/components/chat/ContextRail';
 import { ContextSelector } from '@/src/components/context/ContextSelector';
+import { ThreadListSheet } from '@/src/components/chat/ThreadListSheet';
+import { createThread, type ThreadSummary } from '@/src/api/chat';
 import {
   type ContextLabel,
   type ContextState,
   EMPTY_CONTEXT_STATE,
   selectLeague,
+  selectFixture,
   selectTeam,
   clearLevel,
   deepestLevel,
@@ -32,34 +36,130 @@ import {
 export default function ChatScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const params = useLocalSearchParams<{ prefill?: string }>();
+  const params = useLocalSearchParams<{
+    prefill?: string;
+    fixtureId?: string;
+    fixtureHome?: string;
+    fixtureAway?: string;
+    fixtureHomeId?: string;
+    fixtureAwayId?: string;
+    fixtureHomeLogo?: string;
+    fixtureAwayLogo?: string;
+    leagueId?: string;
+    leagueName?: string;
+    leagueLogo?: string;
+    leagueCountry?: string;
+    fixtureStatus?: string;
+    fixtureRound?: string;
+  }>();
   const listRef = useRef<FlatList<Message>>(null);
 
   const [input, setInput] = useState(params.prefill ?? '');
   const [ctxState, setCtxState] = useState<ContextState>(EMPTY_CONTEXT_STATE);
   const [selectorVisible, setSelectorVisible] = useState(false);
-  const { messages, sending, setContext, send, handleSuggestedAction } = useChat(ctxState.context);
+  const [threadListVisible, setThreadListVisible] = useState(false);
+  const [displayTitle, setDisplayTitle] = useState('');
+
+  const {
+    messages, sending, setContext, send, handleSuggestedAction,
+    threadId, setThreadId, switchThread, historyLoaded,
+  } = useChat(ctxState.context);
 
   // Sync context to useChat when ctxState changes
   useEffect(() => {
     setContext(ctxState.context);
   }, [ctxState, setContext]);
 
-  // Auto-send prefill on mount
+  // Generate title from current context labels
+  const contextTitle = useMemo(() => {
+    if (ctxState.labels.fixture) {
+      return `${ctxState.labels.fixture.home} - ${ctxState.labels.fixture.away}`;
+    }
+    if (ctxState.labels.team) return ctxState.labels.team.name;
+    if (ctxState.labels.league) return ctxState.labels.league.name;
+    return '';
+  }, [ctxState.labels]);
+
+  // Initialize context from navigation params (e.g. from home screen match)
+  const contextInitRef = useRef(false);
+  useEffect(() => {
+    if (contextInitRef.current || !params.fixtureId) return;
+    contextInitRef.current = true;
+    let state = EMPTY_CONTEXT_STATE;
+    if (params.leagueId) {
+      state = selectLeague(state, {
+        id: Number(params.leagueId),
+        name: params.leagueName ?? '',
+        logo: params.leagueLogo,
+        country: params.leagueCountry,
+      });
+    }
+    state = selectFixture(state, {
+      id: Number(params.fixtureId),
+      home: params.fixtureHome ?? '',
+      away: params.fixtureAway ?? '',
+      homeId: params.fixtureHomeId ? Number(params.fixtureHomeId) : undefined,
+      awayId: params.fixtureAwayId ? Number(params.fixtureAwayId) : undefined,
+      homeLogo: params.fixtureHomeLogo,
+      awayLogo: params.fixtureAwayLogo,
+      status: params.fixtureStatus,
+      round: params.fixtureRound,
+    });
+    setCtxState(state);
+
+    // Auto-create thread for fixture context
+    const title = `${params.fixtureHome ?? ''} - ${params.fixtureAway ?? ''}`;
+    setDisplayTitle(title);
+    createThread(title, state.context)
+      .then(({ id }) => setThreadId(id))
+      .catch(() => {});
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-send prefill — wait for thread when opening with fixture params
   const prefillSent = useRef(false);
   useEffect(() => {
-    if (params.prefill && !prefillSent.current) {
-      prefillSent.current = true;
-      send(params.prefill);
-      setInput('');
-    }
-  }, [params.prefill, send]);
-
-  const handleSend = useCallback(() => {
-    if (!input.trim()) return;
-    send(input.trim());
+    if (!params.prefill || prefillSent.current) return;
+    if (params.fixtureId && !threadId) return; // wait for thread creation
+    prefillSent.current = true;
+    send(params.prefill, threadId);
     setInput('');
-  }, [input, send]);
+  }, [params.prefill, params.fixtureId, threadId, send]);
+
+  const handleSend = useCallback(async () => {
+    if (!input.trim()) return;
+    const text = input.trim();
+    setInput('');
+
+    if (!threadId) {
+      // Auto-create thread on first message
+      const title = contextTitle || text.slice(0, 40);
+      setDisplayTitle(title);
+      try {
+        const { id } = await createThread(
+          title,
+          Object.keys(ctxState.context).length > 0 ? ctxState.context : undefined,
+        );
+        setThreadId(id);
+        send(text, id);
+      } catch {
+        send(text);
+      }
+    } else {
+      send(text);
+    }
+  }, [input, send, threadId, setThreadId, contextTitle, ctxState.context]);
+
+  const handleNewThread = useCallback(() => {
+    switchThread(undefined);
+    setCtxState(EMPTY_CONTEXT_STATE);
+    setDisplayTitle('');
+  }, [switchThread]);
+
+  const handleSelectThread = useCallback((thread: ThreadSummary) => {
+    switchThread(thread.id);
+    setDisplayTitle(thread.title || 'Conversation');
+    setCtxState(EMPTY_CONTEXT_STATE);
+  }, [switchThread]);
 
   const contextLabels = useMemo<ContextLabel[]>(() => {
     const labels: ContextLabel[] = [];
@@ -107,7 +207,7 @@ export default function ChatScreen() {
     }
   }, [messages.length]);
 
-  // Context summary for header
+  // Context summary for context chip
   const contextSummary = useMemo(() => {
     const level = deepestLevel(ctxState);
     if (level === 'none') return null;
@@ -118,6 +218,9 @@ export default function ChatScreen() {
     if (labels.league) return { label: labels.league.name, logo: labels.league.logo };
     return null;
   }, [ctxState]);
+
+  // Header title
+  const headerTitle = displayTitle || (threadId ? 'Conversation' : 'Nouvelle conversation');
 
   return (
     <View style={styles.overlay}>
@@ -131,6 +234,23 @@ export default function ChatScreen() {
         {/* Drag handle */}
         <View style={styles.handleRow}>
           <View style={styles.handle} />
+        </View>
+
+        {/* Thread header */}
+        <View style={styles.threadHeader}>
+          <Pressable onPress={() => setThreadListVisible(true)} style={styles.headerBtn} hitSlop={8}>
+            <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
+              <Path d="M3 6h18M3 12h18M3 18h18" stroke={colors.textMuted} strokeWidth={2} strokeLinecap="round" />
+            </Svg>
+          </Pressable>
+
+          <Text style={styles.threadTitle} numberOfLines={1}>{headerTitle}</Text>
+
+          <Pressable onPress={handleNewThread} style={styles.headerBtn} hitSlop={8}>
+            <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
+              <Path d="M12 5v14M5 12h14" stroke={colors.textMuted} strokeWidth={2} strokeLinecap="round" />
+            </Svg>
+          </Pressable>
         </View>
 
         {/* Context header */}
@@ -175,19 +295,25 @@ export default function ChatScreen() {
           contentContainerStyle={styles.messageList}
           ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
           ListEmptyComponent={
-            <View style={styles.empty}>
-              <Text style={styles.emptyTitle}>Pose ta question</Text>
-              <Text style={styles.emptyBody}>
-                Oria analyse le match en direct, les stats et l'historique pour te répondre.
-              </Text>
-            </View>
+            !historyLoaded ? (
+              <View style={styles.empty}>
+                <ActivityIndicator color={colors.primary} />
+              </View>
+            ) : (
+              <View style={styles.empty}>
+                <Text style={styles.emptyTitle}>Pose ta question</Text>
+                <Text style={styles.emptyBody}>
+                  {"Oria analyse le match en direct, les stats et l'historique pour te r\u00E9pondre."}
+                </Text>
+              </View>
+            )
           }
           style={styles.list}
           keyboardDismissMode="on-drag"
         />
 
         {/* Context Rail */}
-        <ContextRail onSelect={handleRailSelect} onOpenSelector={handleOpenSelector} />
+        <ContextRail onSelect={handleRailSelect} onOpenSelector={handleOpenSelector} hasContext={contextLabels.length > 0} />
 
         {/* Composer */}
         <ChatComposer
@@ -205,6 +331,12 @@ export default function ChatScreen() {
         visible={selectorVisible}
         onClose={() => setSelectorVisible(false)}
         onApply={handleApplyContext}
+      />
+
+      <ThreadListSheet
+        visible={threadListVisible}
+        onClose={() => setThreadListVisible(false)}
+        onSelect={handleSelectThread}
       />
     </View>
   );
@@ -236,6 +368,29 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 2,
     backgroundColor: 'rgba(255,255,255,0.2)',
+  },
+  threadHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+  },
+  headerBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.bgSurface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  threadTitle: {
+    flex: 1,
+    fontFamily: fonts.sansSemiBold,
+    fontSize: 14,
+    color: colors.text,
+    textAlign: 'center',
+    marginHorizontal: 8,
   },
   contextHeader: {
     paddingHorizontal: 16,

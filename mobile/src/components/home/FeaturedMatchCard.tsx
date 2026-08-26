@@ -1,4 +1,5 @@
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 import { PulseDot } from '@/src/components/ui/PulseDot';
@@ -7,9 +8,10 @@ import type { Fixture } from '@/src/api/catalog';
 interface Props {
   fixture: Fixture;
   onPress: () => void;
+  onContextPress?: () => void;
 }
 
-export function FeaturedMatchCard({ fixture, onPress }: Props) {
+export function FeaturedMatchCard({ fixture, onPress, onContextPress }: Props) {
   const live = ['1H', '2H', 'HT', 'ET', 'BT', 'P', 'LIVE'].includes(
     (fixture.status ?? '').toUpperCase(),
   );
@@ -17,11 +19,31 @@ export function FeaturedMatchCard({ fixture, onPress }: Props) {
   const clock = live
     ? (fixture.elapsed ? `${fixture.elapsed}'` : 'EN DIRECT')
     : hasScore
-      ? 'TERMINÉ'
-      : (() => { try { return new Date(fixture.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); } catch { return '—'; } })();
+      ? 'TERMIN\u00C9'
+      : (() => { try { return new Date(fixture.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); } catch { return '\u2014'; } })();
+
+  const leagueLabel = [
+    fixture.league_country ? fixture.league_country.toUpperCase() : '',
+    (fixture.league_name ?? '').toUpperCase(),
+  ].filter(Boolean).join(' \u00B7 ');
 
   return (
     <Pressable onPress={onPress} style={styles.card}>
+      {/* Context action button */}
+      {onContextPress && (
+        <Pressable style={styles.contextBtn} onPress={onContextPress} hitSlop={8}>
+          <Svg width={16} height={16} viewBox="0 0 24 24" fill="none">
+            <Path
+              d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+              stroke={colors.primary}
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </Svg>
+        </Pressable>
+      )}
+
       {/* League badge */}
       <View style={styles.leagueRow}>
         {fixture.league_logo ? (
@@ -30,8 +52,8 @@ export function FeaturedMatchCard({ fixture, onPress }: Props) {
           </View>
         ) : null}
         <Text style={styles.leagueTag}>
-          {(fixture.league_name ?? '').toUpperCase()}
-          {fixture.round ? ` · ${fixture.round}` : ''}
+          {leagueLabel}
+          {fixture.round ? ` \u00B7 ${fixture.round}` : ''}
         </Text>
       </View>
 
@@ -48,7 +70,7 @@ export function FeaturedMatchCard({ fixture, onPress }: Props) {
 
         <View style={styles.scoreCol}>
           <Text style={styles.score}>
-            {hasScore ? `${fixture.score_home}–${fixture.score_away}` : '– –'}
+            {hasScore ? `${fixture.score_home}\u2013${fixture.score_away}` : '\u2013 \u2013'}
           </Text>
           <View style={styles.clockRow}>
             {live && <PulseDot size={6} />}
@@ -78,10 +100,23 @@ const styles = StyleSheet.create({
     padding: 20,
     gap: 18,
   },
+  contextBtn: {
+    position: 'absolute',
+    top: 14,
+    right: 14,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.primarySurface,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
+  },
   leagueRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 7,
+    paddingRight: 36,
   },
   leagueLogoWrap: {
     width: 20,
@@ -101,6 +136,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: colors.textMuted,
     letterSpacing: 0.5,
+    flex: 1,
   },
   matchRow: {
     flexDirection: 'row',

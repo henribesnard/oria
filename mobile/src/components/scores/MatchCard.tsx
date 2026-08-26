@@ -1,4 +1,5 @@
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 import { colors } from '@/src/theme/colors';
 import { fonts } from '@/src/theme/typography';
 import { PulseDot } from '@/src/components/ui/PulseDot';
@@ -7,6 +8,7 @@ import type { Fixture } from '@/src/api/catalog';
 interface Props {
   fixture: Fixture;
   onPress?: (fixture: Fixture) => void;
+  onContextPress?: (fixture: Fixture) => void;
 }
 
 const LIVE_STATUSES = ['1H', '2H', 'HT', 'ET', 'BT', 'P', 'LIVE', 'SUSP', 'INT'];
@@ -22,14 +24,30 @@ function clockText(fixture: Fixture) {
     if (s === 'HT') return 'MT';
     return fixture.elapsed ? `${fixture.elapsed}'` : 'live';
   }
-  if (FINISHED_STATUSES.includes(s)) return 'Fin';
   try {
     const d = new Date(fixture.date);
-    return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-  } catch { return '—'; }
+    const now = new Date();
+    const isToday =
+      d.getDate() === now.getDate() &&
+      d.getMonth() === now.getMonth() &&
+      d.getFullYear() === now.getFullYear();
+
+    if (FINISHED_STATUSES.includes(s)) {
+      if (isToday) return 'Fin';
+      return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    }
+
+    // Upcoming
+    const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    if (isToday) return time;
+    const weekday = d.toLocaleDateString('fr-FR', { weekday: 'short' });
+    return `${weekday} ${time}`;
+  } catch {
+    return '\u2014';
+  }
 }
 
-export function MatchCard({ fixture, onPress }: Props) {
+export function MatchCard({ fixture, onPress, onContextPress }: Props) {
   const live = isLive(fixture.status);
   const clock = clockText(fixture);
   const hasScore = fixture.score_home != null && fixture.score_away != null;
@@ -38,6 +56,8 @@ export function MatchCard({ fixture, onPress }: Props) {
     <Pressable
       style={[styles.card, live && styles.cardLive]}
       onPress={() => onPress?.(fixture)}
+      onLongPress={onContextPress ? () => onContextPress(fixture) : undefined}
+      delayLongPress={400}
     >
       {/* Home team */}
       <View style={styles.teamSide}>
@@ -52,7 +72,7 @@ export function MatchCard({ fixture, onPress }: Props) {
       {/* Score / time center */}
       <View style={styles.center}>
         {hasScore ? (
-          <Text style={styles.score}>{fixture.score_home}–{fixture.score_away}</Text>
+          <Text style={styles.score}>{`${fixture.score_home}\u2013${fixture.score_away}`}</Text>
         ) : (
           <Text style={styles.time}>{clock}</Text>
         )}
@@ -75,6 +95,25 @@ export function MatchCard({ fixture, onPress }: Props) {
           </View>
         ) : null}
       </View>
+
+      {/* Context action icon */}
+      {onContextPress && (
+        <Pressable
+          style={styles.contextBtn}
+          onPress={() => onContextPress(fixture)}
+          hitSlop={6}
+        >
+          <Svg width={12} height={12} viewBox="0 0 24 24" fill="none">
+            <Path
+              d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+              stroke={colors.textSubtle}
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </Svg>
+        </Pressable>
+      )}
     </Pressable>
   );
 }
@@ -152,5 +191,13 @@ const styles = StyleSheet.create({
   },
   clockLive: {
     color: colors.liveLight,
+  },
+  contextBtn: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 2,
   },
 });

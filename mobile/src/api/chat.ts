@@ -40,6 +40,54 @@ export interface SSEEvent {
   degraded?: boolean;
 }
 
+// ── Threads ───────────────────────────────────────────────────────────
+
+export interface ThreadSummary {
+  id: string;
+  title: string;
+  context: ChatContext;
+  last_message: string;
+  updated_at: number;
+}
+
+export interface ThreadDetail {
+  id: string;
+  user_id: string;
+  title: string;
+  context: Record<string, unknown>;
+  created_at: number;
+  updated_at: number;
+}
+
+export interface ThreadMessage {
+  id: number;
+  role: 'user' | 'assistant';
+  text: string;
+  metadata: Record<string, unknown>;
+  created_at: number;
+}
+
+export async function listThreads(): Promise<ThreadSummary[]> {
+  return api.get<ThreadSummary[]>('/chat/threads');
+}
+
+export async function createThread(
+  title: string = '',
+  context?: ChatContext,
+): Promise<ThreadDetail> {
+  return api.post<ThreadDetail>('/chat/threads', { title, context: context ?? {} });
+}
+
+export async function getThreadMessages(threadId: string): Promise<ThreadMessage[]> {
+  return api.get<ThreadMessage[]>(`/chat/threads/${threadId}/messages`);
+}
+
+export async function deleteThread(threadId: string): Promise<void> {
+  await api.del(`/chat/threads/${threadId}`);
+}
+
+// ── Chat ──────────────────────────────────────────────────────────────
+
 /** Blocking chat — single request/response */
 export async function sendMessage(text: string, context?: ChatContext): Promise<ChatResponse> {
   return api.post<ChatResponse>('/chat', { text, context: context ?? {} });
@@ -53,6 +101,7 @@ export function streamMessage(
   onChunk: (content: string) => void,
   onDone: (event: SSEEvent) => void,
   onError: (message: string) => void,
+  threadId?: string,
 ): AbortController {
   const controller = new AbortController();
 
@@ -62,7 +111,11 @@ export function streamMessage(
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ text, context: context ?? {} }),
+    body: JSON.stringify({
+      text,
+      context: context ?? {},
+      thread_id: threadId ?? null,
+    }),
     signal: controller.signal,
     // @ts-expect-error -- React Native streaming option
     reactNative: { textStreaming: true },
