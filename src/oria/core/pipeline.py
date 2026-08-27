@@ -65,28 +65,31 @@ class Pipeline:
         except Exception:
             logger.exception("pipeline error — fallback")
             try:
-                return await self._synthesis.fallback()
+                resp = await self._synthesis.fallback()
+                return resp.model_copy(update={"route": "fallback"})
             except Exception:
                 logger.exception("synthesis fallback also failed")
                 return Response(
                     text="Une erreur inattendue est survenue. Réessaie plus tard.",
                     degraded=True,
+                    route="fallback",
                 )
 
     async def _process(self, req: IncomingRequest) -> Response:
         """Enchaîne les stages sous guard."""
         # Stage 0 : filtres de sécurité (AVANT quota — ne doivent jamais être bloqués)
         if detect_injection(req.text):
-            return Response(text=INJECTION_RESPONSE)
+            return Response(text=INJECTION_RESPONSE, route="safety:injection")
         if detect_gambling_distress(req.text):
-            return Response(text=GAMBLING_HELP_RESPONSE)
+            return Response(text=GAMBLING_HELP_RESPONSE, route="safety:gambling")
 
         # Stage 0b : entitlements (quotas) — bypass pour routes triviales
         if self._entitlements is not None and not self._is_quota_exempt(req.text):
             async with guard("entitlements", on_error=lambda: None):
                 decision = await self._entitlements.check(req.user_id, "chat_message")
                 if decision.kind != DecisionKind.ALLOW:
-                    return await self._synthesis.quota_exceeded(decision.reason)
+                    resp = await self._synthesis.quota_exceeded(decision.reason)
+                    return resp.model_copy(update={"route": "quota"})
 
         # Enrichir la requête avec le contexte persistant
         if self._conversations is not None:
@@ -104,6 +107,8 @@ class Pipeline:
             async with guard("prerouter", on_error=lambda: None):
                 result = await self._prerouter.try_route(req)
                 if result is not None:
+                    if result.route is None:
+                        result = result.model_copy(update={"route": "prerouter"})
                     await self._persist_turn(req, result)
                     return result
 
@@ -116,15 +121,17 @@ class Pipeline:
                 )
                 if text:
                     resp = await self._synthesis.render(text)
+                    resp = resp.model_copy(update={"route": "orchestrator"})
                     await self._persist_turn(req, resp)
                     return resp
 
         # Stage 3 : fallback — réponse minimale
-        return await self._synthesis.render(
+        resp = await self._synthesis.render(
             f"Je n'ai pas pu traiter ta demande « {req.text} » pour le moment. "
             "Essaie de reformuler ou réessaie plus tard.",
             degraded=True,
         )
+        return resp.model_copy(update={"route": "fallback"})
 
     @staticmethod
     def _is_quota_exempt(text: str) -> bool:

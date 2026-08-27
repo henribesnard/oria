@@ -56,7 +56,18 @@ class Exchange:
 
 
 def classify_route(resp: dict[str, Any]) -> str:
-    """Determine la route empruntee depuis la reponse."""
+    """Determine la route empruntee depuis la reponse.
+
+    Utilise le champ ``route`` positionne par le pipeline si disponible.
+    Retombe sur une heuristique textuelle en dernier recours (ancienne
+    methode, conservee pour compatibilite avec les runs anterieurs).
+    """
+    # Prefer the authoritative route set by the pipeline
+    route = resp.get("route")
+    if route:
+        return route
+
+    # Fallback: text-based heuristic (for old runs without route field)
     text = resp.get("text", "")
     degraded = resp.get("degraded", False)
     attachments = resp.get("attachments", [])
